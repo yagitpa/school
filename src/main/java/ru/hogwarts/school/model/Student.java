@@ -1,7 +1,9 @@
 package ru.hogwarts.school.model;
 
+import java.util.Objects;
+
 public class Student {
-    private final long id;
+    private long id;
     private String name;
     private int age;
 
@@ -32,12 +34,15 @@ public class Student {
     }
 
     @Override
-    public final boolean equals(Object o) {
-        if (!(o instanceof Student student))
+    public boolean equals(Object o) {
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
             return false;
-        return id == student.id &&
-                age == student.age &&
-                name.equals(student.name);
+        Student student = (Student) o;
+        return age == student.age &&
+                Objects.equals(id, student.id) &&
+                Objects.equals(name, student.name);
     }
 
     @Override
@@ -55,5 +60,9 @@ public class Student {
                 ", name='" + name + '\'' +
                 ", age=" + age +
                 '}';
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 }
