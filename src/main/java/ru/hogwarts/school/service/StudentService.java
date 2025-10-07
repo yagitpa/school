@@ -1,65 +1,44 @@
 package ru.hogwarts.school.service;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 import ru.hogwarts.school.model.Student;
+import ru.hogwarts.school.repository.StudentRepository;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
 public class StudentService {
-    private final Map<Long, Student> students = new HashMap<>();
-    private long counter = 0;
+    private final StudentRepository studentRepository;
 
-    public Student createStudent(Student student) {
-        student.setId(++counter);
-        students.put(student.getId(), student);
-        return student;
+    public StudentService(StudentRepository studentRepository) {
+        this.studentRepository = studentRepository;
     }
 
-    public Student findStudent(long id) {
-        Student student = students.get(id);
-        if (student == null) {
-            throw new ResponseStatusException(
-                    HttpStatus.NOT_FOUND,
-                    "There is no student with ID " + id
-            );
-        }
-        return student;
+    public Student createStudent(Student student) {
+        return studentRepository.save(student);
+    }
+
+    public Optional<Student> findStudent(long id) {
+        return studentRepository.findById(id);
     }
 
     public Student updateStudent(Student student) {
-        if (!students.containsKey(student.getId())) {
-            throw new ResponseStatusException(
-                    HttpStatus.NOT_FOUND,
-                    "There is no student with ID " + student.getId()
-            );
-        }
-        students.put(student.getId(), student);
-        return student;
+        return studentRepository.save(student);
     }
 
-    public Student deleteStudent(long id) {
-        if (!students.containsKey(id)) {
-            throw new ResponseStatusException(
-                    HttpStatus.NOT_FOUND,
-                    "There is no student with ID " + id
-            );
-        }
-        return students.remove(id);
+    public void deleteStudent(long id) {
+        studentRepository.deleteById(id);
     }
 
-    public List<Student> getStudentsByAge(int age) {
-        return students.values().stream()
-                .filter(student -> student.getAge() == age)
-                .collect(Collectors.toList());
-    }
+//    public List<Student> getStudentsByAge(int age) {
+//        return studentRepository.
+//                .filter(student -> student.getAge() == age)
+//                .collect(Collectors.toList());
+//    }
 
     public List<Student> getAllStudents() {
-        return List.copyOf(students.values());
+        return studentRepository.findAll();
     }
 }
