@@ -5,7 +5,6 @@ import ru.hogwarts.school.model.Student;
 import ru.hogwarts.school.service.StudentService;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/student")
@@ -22,7 +21,7 @@ public class StudentController {
     }
 
     @GetMapping("/{id}")
-    public Optional<Student> findStudent(@PathVariable long id) {
+    public Student findStudent(@PathVariable long id) {
         return studentService.findStudent(id);
     }
 
