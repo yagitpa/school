@@ -26,7 +26,7 @@ public class StudentService {
         if (student == null) {
             throw new ResponseStatusException(
                     HttpStatus.NOT_FOUND,
-                    "There is no student with ID " + id + " exist"
+                    "There is no student with ID " + id
             );
         }
         return student;
@@ -36,7 +36,8 @@ public class StudentService {
         if (!students.containsKey(student.getId())) {
             throw new ResponseStatusException(
                     HttpStatus.NOT_FOUND,
-                    "There is no student with ID " + student.getId() + " exist");
+                    "There is no student with ID " + student.getId()
+            );
         }
         students.put(student.getId(), student);
         return student;
@@ -46,7 +47,8 @@ public class StudentService {
         if (!students.containsKey(id)) {
             throw new ResponseStatusException(
                     HttpStatus.NOT_FOUND,
-                    "There is no student with ID " + id + " exist");
+                    "There is no student with ID " + id
+            );
         }
         return students.remove(id);
     }
