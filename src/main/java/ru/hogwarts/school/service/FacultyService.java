@@ -4,6 +4,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import ru.hogwarts.school.model.Faculty;
+import ru.hogwarts.school.model.Student;
 import ru.hogwarts.school.repository.FacultyRepository;
 
 import java.util.List;
@@ -11,9 +12,11 @@ import java.util.List;
 @Service
 public class FacultyService {
     private final FacultyRepository facultyRepository;
+    private final StudentService studentService;
 
-    public FacultyService(FacultyRepository facultyRepository) {
+    public FacultyService(FacultyRepository facultyRepository, StudentService studentService) {
         this.facultyRepository = facultyRepository;
+        this.studentService = studentService;
     }
 
     public Faculty createFaculty(Faculty faculty) {
@@ -38,14 +41,18 @@ public class FacultyService {
         return facultyRepository.save(faculty);
     }
 
-    public Faculty deleteFaculty(long id) {
-        Faculty faculty = facultyRepository.findById(id)
+    public void deleteFaculty(Long facultyId) {
+        Faculty faculty = facultyRepository.findById(facultyId)
                 .orElseThrow(() -> new ResponseStatusException(
                         HttpStatus.NOT_FOUND,
-                        "There is no faculty with ID " + id
+                        "There is no faculty with ID " + facultyId
                 ));
-        facultyRepository.deleteById(id);
-        return faculty;
+        List<Student> facultyStudents = studentService.getStudentsByFaculty(facultyId);
+        for (Student student : facultyStudents) {
+            student.setFaculty(null);
+            studentService.updateStudent(student);
+        }
+        facultyRepository.deleteById(facultyId);
     }
 
     public List<Faculty> getFacultiesByColor(String color) {
@@ -54,5 +61,19 @@ public class FacultyService {
 
     public List<Faculty> getAllFaculties() {
         return facultyRepository.findAll();
+    }
+
+    public List<Faculty> getFacultiesByNameOrColor(String nameOrColor) {
+        return facultyRepository.findByNameIgnoreCaseOrColorIgnoreCase(nameOrColor, nameOrColor);
+    }
+
+    public List<Student> getFacultyStudents(Long facultyId) {
+        if (!facultyRepository.existsById(facultyId)) {
+            throw new ResponseStatusException(
+                    HttpStatus.NOT_FOUND,
+                    "There is no faculty with ID " + facultyId
+            );
+        }
+        return studentService.getStudentsByFaculty(facultyId);
     }
 }
