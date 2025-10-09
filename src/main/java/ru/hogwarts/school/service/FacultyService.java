@@ -4,62 +4,55 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import ru.hogwarts.school.model.Faculty;
+import ru.hogwarts.school.repository.FacultyRepository;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 @Service
 public class FacultyService {
-    private final Map<Long, Faculty> faculties = new HashMap<>();
-    private long counter = 0;
+    private final FacultyRepository facultyRepository;
+
+    public FacultyService(FacultyRepository facultyRepository) {
+        this.facultyRepository = facultyRepository;
+    }
 
     public Faculty createFaculty(Faculty faculty) {
-        faculty.setId(++counter);
-        faculties.put(faculty.getId(), faculty);
-        return faculty;
+        return facultyRepository.save(faculty);
     }
 
     public Faculty findFaculty(long id) {
-        Faculty faculty = faculties.get(id);
-        if (faculty == null) {
-            throw new ResponseStatusException(
-                    HttpStatus.NOT_FOUND,
-                    "There is no faculty with ID " + id
-            );
-        }
-        return faculty;
+        return facultyRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND,
+                        "There is no faculty with ID " + id
+                ));
     }
 
     public Faculty updateFaculty(Faculty faculty) {
-        if (!faculties.containsKey(faculty.getId())) {
+        if (!facultyRepository.existsById(faculty.getId())) {
             throw new ResponseStatusException(
                     HttpStatus.NOT_FOUND,
                     "There is no faculty with ID " + faculty.getId()
             );
         }
-        faculties.put(faculty.getId(), faculty);
-        return faculty;
+        return facultyRepository.save(faculty);
     }
 
     public Faculty deleteFaculty(long id) {
-        if (!faculties.containsKey(id)) {
-            throw new ResponseStatusException(
-                    HttpStatus.NOT_FOUND,
-                    "There is no faculty with ID " + id
-            );
-        }
-        return faculties.remove(id);
+        Faculty faculty = facultyRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND,
+                        "There is no faculty with ID " + id
+                ));
+        facultyRepository.deleteById(id);
+        return faculty;
     }
 
     public List<Faculty> getFacultiesByColor(String color) {
-        return faculties.values().stream()
-                .filter(faculty -> faculty.getColor().equalsIgnoreCase(color))
-                .collect(Collectors.toList());
+        return facultyRepository.findByColorIgnoreCase(color);
     }
 
     public List<Faculty> getAllFaculties() {
-        return List.copyOf(faculties.values());
+        return facultyRepository.findAll();
     }
 }

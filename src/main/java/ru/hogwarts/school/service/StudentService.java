@@ -4,62 +4,55 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import ru.hogwarts.school.model.Student;
+import ru.hogwarts.school.repository.StudentRepository;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 @Service
 public class StudentService {
-    private final Map<Long, Student> students = new HashMap<>();
-    private long counter = 0;
+    private final StudentRepository studentRepository;
+
+    public StudentService(StudentRepository studentRepository) {
+        this.studentRepository = studentRepository;
+    }
 
     public Student createStudent(Student student) {
-        student.setId(++counter);
-        students.put(student.getId(), student);
-        return student;
+        return studentRepository.save(student);
     }
 
     public Student findStudent(long id) {
-        Student student = students.get(id);
-        if (student == null) {
-            throw new ResponseStatusException(
-                    HttpStatus.NOT_FOUND,
-                    "There is no student with ID " + id
-            );
-        }
-        return student;
+        return studentRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND,
+                        "There is no student with ID " + id
+                ));
     }
 
     public Student updateStudent(Student student) {
-        if (!students.containsKey(student.getId())) {
+        if (!studentRepository.existsById(student.getId())) {
             throw new ResponseStatusException(
                     HttpStatus.NOT_FOUND,
                     "There is no student with ID " + student.getId()
             );
         }
-        students.put(student.getId(), student);
-        return student;
+        return studentRepository.save(student);
     }
 
     public Student deleteStudent(long id) {
-        if (!students.containsKey(id)) {
-            throw new ResponseStatusException(
-                    HttpStatus.NOT_FOUND,
-                    "There is no student with ID " + id
-            );
-        }
-        return students.remove(id);
+        Student student = studentRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND,
+                        "There is no student with ID " + id
+                ));
+        studentRepository.deleteById(id);
+        return student;
     }
 
     public List<Student> getStudentsByAge(int age) {
-        return students.values().stream()
-                .filter(student -> student.getAge() == age)
-                .collect(Collectors.toList());
+        return studentRepository.findByAge(age);
     }
 
     public List<Student> getAllStudents() {
-        return List.copyOf(students.values());
+        return studentRepository.findAll();
     }
 }
