@@ -63,6 +63,7 @@ public class AvatarService {
         return savedAvatar.getId();
     }
 
+    @Transactional
     private Avatar findOrCreateAvatar(Long studentId) {
         return avatarRepository.findByStudentId(studentId)
                 .orElse(new Avatar());
@@ -93,6 +94,7 @@ public class AvatarService {
         return fileName.substring(fileName.lastIndexOf(".") + 1);
     }
 
+    @Transactional
     public Avatar findAvatar(Long studentId) {
         return avatarRepository.findByStudentId(studentId)
                 .orElseThrow(() -> new ResponseStatusException(
@@ -101,6 +103,7 @@ public class AvatarService {
                 ));
     }
 
+    @Transactional
     public void getAvatarFromFile(Long studentId, HttpServletResponse response) throws IOException {
         Avatar avatar = findAvatar(studentId);
         File file = new File(avatar.getFilePath());

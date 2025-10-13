@@ -1,11 +1,13 @@
 package ru.hogwarts.school.controller;
 
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import ru.hogwarts.school.model.Avatar;
 import ru.hogwarts.school.service.AvatarService;
 
 import java.io.IOException;
@@ -26,8 +28,20 @@ public class AvatarController {
     }
 
     @GetMapping("/{studentId}/from-db")
-    public byte[] getAvatarFromDb(@PathVariable Long studentId) {
-        return avatarService.findAvatar(studentId).getData();
+    public ResponseEntity<byte[]> getAvatarFromDb(@PathVariable Long studentId) {
+        try {
+            Avatar avatar = avatarService.findAvatar(studentId);
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.parseMediaType(avatar.getMediaType()));
+            headers.setContentLength(avatar.getData().length);
+            headers.set("Content-Disposition", "inline; filename=preview.jpg");
+
+            return new ResponseEntity<>(avatar.getData(), headers, HttpStatus.OK);
+
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 
     @GetMapping("/{studentId}/from-file")
