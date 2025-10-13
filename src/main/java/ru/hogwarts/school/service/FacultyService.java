@@ -1,5 +1,6 @@
 package ru.hogwarts.school.service;
 
+import jakarta.transaction.Transactional;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -19,6 +20,7 @@ public class FacultyService {
         this.studentService = studentService;
     }
 
+    @Transactional
     public Faculty createFaculty(Faculty faculty) {
         return facultyRepository.save(faculty);
     }
@@ -31,6 +33,7 @@ public class FacultyService {
                 ));
     }
 
+    @Transactional
     public Faculty updateFaculty(Faculty faculty) {
         if (!facultyRepository.existsById(faculty.getId())) {
             throw new ResponseStatusException(
@@ -41,6 +44,7 @@ public class FacultyService {
         return facultyRepository.save(faculty);
     }
 
+    @Transactional
     public void deleteFaculty(Long facultyId) {
         Faculty faculty = facultyRepository.findById(facultyId)
                 .orElseThrow(() -> new ResponseStatusException(
