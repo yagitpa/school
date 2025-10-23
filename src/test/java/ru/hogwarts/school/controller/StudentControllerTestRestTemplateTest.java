@@ -13,7 +13,6 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import ru.hogwarts.school.model.Faculty;
 import ru.hogwarts.school.model.Student;
 import ru.hogwarts.school.service.AvatarService;
-import ru.hogwarts.school.testconfig.TestConstants;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static ru.hogwarts.school.testconfig.TestConstants.*;
@@ -35,7 +34,7 @@ public class StudentControllerTestRestTemplateTest {
 
     @BeforeEach
     void setUp() {
-        testUrl = BASE_URL + port + TestConstants.Student.ENDPOINT;
+        testUrl = BASE_URL + port + StudentConst.ENDPOINT;
     }
 
     // ========== POSITIVE TESTS ==========
@@ -44,7 +43,7 @@ public class StudentControllerTestRestTemplateTest {
     @DisplayName("Positive. Should create Student successfully with valid data")
     void createStudent_validData_shouldReturnOk() {
         // Given
-        String studentJson = createValidStudentJson(TestConstants.Student.TEST_NAME, TestConstants.Student.TEST_AGE);
+        String studentJson = createValidStudentJson(StudentConst.TEST_NAME, StudentConst.TEST_AGE);
         HttpEntity<String> request = createHttpEntity(studentJson);
 
         // When
@@ -55,14 +54,14 @@ public class StudentControllerTestRestTemplateTest {
         // Then
         assertTrue(postResponse.getStatusCode()
                                .is2xxSuccessful(), "Expected 2xx but got " + postResponse.getStatusCode());
-        assertStudentResponse(postResponse.getBody(), TestConstants.Student.TEST_NAME, TestConstants.Student.TEST_AGE);
+        assertStudentResponse(postResponse.getBody(), StudentConst.TEST_NAME, StudentConst.TEST_AGE);
     }
 
     @Test
     @DisplayName("Positive. Should Find Student by ID")
     void findStudent_existingId_ShouldReturnStudent() {
         // Given
-        Student createdStudent = createStudentInDatabase(TestConstants.Student.TEST_NAME, TestConstants.Student.TEST_AGE);
+        Student createdStudent = createStudentInDatabase(StudentConst.TEST_NAME, StudentConst.TEST_AGE);
         assertNotNull(createdStudent, "Student should be created successfully");
 
         // When
@@ -72,15 +71,15 @@ public class StudentControllerTestRestTemplateTest {
 
         // Then
         assertEquals(HttpStatus.OK, getResponse.getStatusCode());
-        assertStudentResponse(getResponse.getBody(), TestConstants.Student.TEST_NAME, TestConstants.Student.TEST_AGE);
+        assertStudentResponse(getResponse.getBody(), StudentConst.TEST_NAME, StudentConst.TEST_AGE);
     }
 
     @Test
     @DisplayName("Positive. Should Update Student successfully")
     void updateStudent_existingStudent_shouldReturnUpdatedStudent() {
         // Given
-        Student createdStudent = createStudentInDatabase(TestConstants.Student.TEST_NAME, TestConstants.Student.TEST_AGE);
-        String updateJson = createValidStudentJson(TestConstants.Student.UPDATED_NAME, TestConstants.Student.UPDATED_AGE,
+        Student createdStudent = createStudentInDatabase(StudentConst.TEST_NAME, StudentConst.TEST_AGE);
+        String updateJson = createValidStudentJson(StudentConst.UPDATED_NAME, StudentConst.UPDATED_AGE,
                 createdStudent.getId());
         HttpEntity<String> request = createHttpEntity(updateJson);
 
@@ -91,7 +90,7 @@ public class StudentControllerTestRestTemplateTest {
 
         // Then
         assertEquals(HttpStatus.OK, putResponse.getStatusCode());
-        assertStudentResponse(putResponse.getBody(), TestConstants.Student.UPDATED_NAME, TestConstants.Student.UPDATED_AGE);
+        assertStudentResponse(putResponse.getBody(), StudentConst.UPDATED_NAME, StudentConst.UPDATED_AGE);
     }
 
     @Test
@@ -132,17 +131,17 @@ public class StudentControllerTestRestTemplateTest {
     @DisplayName("Positive. Should return students filtered by Age")
     void getStudentByAge_existingAge_shouldReturnFilteredStudents() {
         // Given
-        createStudentInDatabase("Age Filter Test", TestConstants.Student.AGE_FILTER_AGE);
+        createStudentInDatabase("Age Filter Test", StudentConst.AGE_FILTER_AGE);
 
         // When
         ResponseEntity<Student[]> getResponse = testRestTemplate.getForEntity(
-                testUrl + TestConstants.Student.AGE_ENDPOINT + "/{age}", Student[].class, TestConstants.Student.AGE_FILTER_AGE
+                testUrl + StudentConst.AGE_ENDPOINT + "/{age}", Student[].class, StudentConst.AGE_FILTER_AGE
         );
 
         // Then
         assertEquals(HttpStatus.OK, getResponse.getStatusCode());
         assertNotNull(getResponse.getBody());
-        assertAllStudentsHaveAge(getResponse.getBody(), TestConstants.Student.AGE_FILTER_AGE);
+        assertAllStudentsHaveAge(getResponse.getBody(), StudentConst.AGE_FILTER_AGE);
     }
 
     @Test
@@ -153,14 +152,14 @@ public class StudentControllerTestRestTemplateTest {
 
         // When
         ResponseEntity<Student[]> getResponse = testRestTemplate.getForEntity(
-                testUrl + TestConstants.Student.AGE_BETWEEN_ENDPOINT + "?minAge={minAge}&maxAge={maxAge}",
-                Student[].class, TestConstants.Student.MIN_AGE, TestConstants.Student.MAX_AGE
+                testUrl + StudentConst.AGE_BETWEEN_ENDPOINT + "?minAge={minAge}&maxAge={maxAge}",
+                Student[].class, StudentConst.MIN_AGE, StudentConst.MAX_AGE
         );
 
         // Then
         assertEquals(HttpStatus.OK, getResponse.getStatusCode());
         assertNotNull(getResponse.getBody());
-        assertAllStudentsInAgeRange(getResponse.getBody(), TestConstants.Student.MIN_AGE, TestConstants.Student.MAX_AGE);
+        assertAllStudentsInAgeRange(getResponse.getBody(), StudentConst.MIN_AGE, StudentConst.MAX_AGE);
     }
 
     @Test
@@ -168,14 +167,14 @@ public class StudentControllerTestRestTemplateTest {
     void getStudentFaculty_withFaculty_shouldReturnFaculty() {
         // Given
         Faculty faculty = createFacultyInDatabase("Gryffindor", "Red");
-        Student student = createStudentInDatabase(TestConstants.Student.WITH_FACULTY_NAME, TestConstants.Student.TEST_AGE);
+        Student student = createStudentInDatabase(StudentConst.WITH_FACULTY_NAME, StudentConst.TEST_AGE);
 
         assignFacultyToStudent(student.getId(), faculty.getId());
 
         // When
         // Без DTO не обойтись - циклические ссылки, поэтому String
         ResponseEntity<String> getResponse = testRestTemplate.getForEntity(
-                testUrl + "/{id}" + TestConstants.Student.FACULTY_ENDPOINT, String.class, student.getId()
+                testUrl + "/{id}" + StudentConst.FACULTY_ENDPOINT, String.class, student.getId()
         );
 
         // Then
@@ -204,7 +203,7 @@ public class StudentControllerTestRestTemplateTest {
     @DisplayName("Negative. Should return 404 when updating non-existent Student")
     void updateStudent_nonExistingId_shouldReturn404() {
         // Given
-        String studentJson = createValidStudentJson(TestConstants.Student.NON_EXISTENT_NAME, TestConstants.Student.TEST_AGE, NON_EXISTENT_ID);
+        String studentJson = createValidStudentJson(StudentConst.NON_EXISTENT_NAME, StudentConst.TEST_AGE, NON_EXISTENT_ID);
         HttpEntity<String> request = createHttpEntity(studentJson);
 
         // When & Then
@@ -235,7 +234,7 @@ public class StudentControllerTestRestTemplateTest {
     void getStudentByAge_nonExistentAge_shouldReturnEmptyArray() {
         // When
         ResponseEntity<Student[]> getResponse = testRestTemplate.getForEntity(
-                testUrl + TestConstants.Student.AGE_ENDPOINT + "/{age}", Student[].class, TestConstants.Student.NON_EXISTENT_AGE
+                testUrl + StudentConst.AGE_ENDPOINT + "/{age}", Student[].class, StudentConst.NON_EXISTENT_AGE
         );
 
         // Then
@@ -249,8 +248,8 @@ public class StudentControllerTestRestTemplateTest {
     void getStudentsByAgeBetween_noStudents_shouldReturnEmptyArray() {
         // When
         ResponseEntity<Student[]> getResponse = testRestTemplate.getForEntity(
-                testUrl + TestConstants.Student.AGE_BETWEEN_ENDPOINT + "?minAge={minAge}&maxAge={maxAge}",
-                Student[].class, TestConstants.Student.YOUNG_AGE, TestConstants.Student.YOUNG_AGE + 2
+                testUrl + StudentConst.AGE_BETWEEN_ENDPOINT + "?minAge={minAge}&maxAge={maxAge}",
+                Student[].class, StudentConst.YOUNG_AGE, StudentConst.YOUNG_AGE + 2
         );
 
         // Then
@@ -265,7 +264,7 @@ public class StudentControllerTestRestTemplateTest {
     void createStudent_emptyName_shouldReturnBadRequest() {
 
         // Given
-        String invalidJson = createValidStudentJson(EMPTY_STRING, TestConstants.Student.TEST_AGE);
+        String invalidJson = createValidStudentJson(EMPTY_STRING, StudentConst.TEST_AGE);
         HttpEntity<String> request = createHttpEntity(invalidJson);
 
         // When

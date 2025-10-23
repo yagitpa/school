@@ -13,7 +13,6 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import ru.hogwarts.school.model.Faculty;
 import ru.hogwarts.school.model.Student;
 import ru.hogwarts.school.service.AvatarService;
-import ru.hogwarts.school.testconfig.TestConstants;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static ru.hogwarts.school.testconfig.TestConstants.*;
@@ -35,7 +34,7 @@ class FacultyControllerTestRestTemplateTest {
 
     @BeforeEach
     void setUp() {
-        testUrl = BASE_URL + port + TestConstants.Faculty.ENDPOINT;
+        testUrl = BASE_URL + port + FacultyConst.ENDPOINT;
     }
 
     // ========== POSITIVE TESTS ==========
@@ -44,7 +43,7 @@ class FacultyControllerTestRestTemplateTest {
     @DisplayName("Positive. Should create faculty successfully with valid data")
     void createFaculty_validData_shouldReturnCreated() {
         // Given
-        String facultyJson = createFacultyJson(TestConstants.Faculty.TEST_NAME, TestConstants.Faculty.TEST_COLOR);
+        String facultyJson = createFacultyJson(FacultyConst.TEST_NAME, FacultyConst.TEST_COLOR);
         HttpEntity<String> request = createHttpEntity(facultyJson);
 
         // When
@@ -54,15 +53,15 @@ class FacultyControllerTestRestTemplateTest {
 
         // Then
         assertEquals(HttpStatus.OK, postResponse.getStatusCode());
-        assertFacultyResponse(postResponse.getBody(), TestConstants.Faculty.TEST_NAME,
-                TestConstants.Faculty.TEST_COLOR);
+        assertFacultyResponse(postResponse.getBody(), FacultyConst.TEST_NAME,
+                FacultyConst.TEST_COLOR);
     }
 
     @Test
     @DisplayName("Positive. Should find existing faculty by ID")
     void findFaculty_existingId_shouldReturnFaculty() {
         // Given
-        Faculty createdFaculty = createFacultyInDatabase(TestConstants.Faculty.GREEN_NAME, TestConstants.Faculty.GREEN_COLOR);
+        Faculty createdFaculty = createFacultyInDatabase(FacultyConst.GREEN_NAME, FacultyConst.GREEN_COLOR);
 
         // When
         ResponseEntity<Faculty> getResponse = testRestTemplate.getForEntity(
@@ -71,15 +70,15 @@ class FacultyControllerTestRestTemplateTest {
 
         // Then
         assertEquals(HttpStatus.OK, getResponse.getStatusCode());
-        assertFacultyResponse(getResponse.getBody(), TestConstants.Faculty.GREEN_NAME, TestConstants.Faculty.GREEN_COLOR);
+        assertFacultyResponse(getResponse.getBody(), FacultyConst.GREEN_NAME, FacultyConst.GREEN_COLOR);
     }
 
     @Test
     @DisplayName("Positive. Should update faculty successfully")
     void updateFaculty_existingFaculty_shouldReturnUpdatedFaculty() {
         // Given
-        Faculty createdFaculty = createFacultyInDatabase(TestConstants.Faculty.TEST_NAME, TestConstants.Faculty.TEST_COLOR);
-        String updateJson = createFacultyJson(TestConstants.Faculty.UPDATED_NAME, TestConstants.Faculty.UPDATED_COLOR, createdFaculty.getId());
+        Faculty createdFaculty = createFacultyInDatabase(FacultyConst.TEST_NAME, FacultyConst.TEST_COLOR);
+        String updateJson = createFacultyJson(FacultyConst.UPDATED_NAME, FacultyConst.UPDATED_COLOR, createdFaculty.getId());
         HttpEntity<String> request = createHttpEntity(updateJson);
 
         // When
@@ -89,14 +88,14 @@ class FacultyControllerTestRestTemplateTest {
 
         // Then
         assertEquals(HttpStatus.OK, putResponse.getStatusCode());
-        assertFacultyResponse(putResponse.getBody(), TestConstants.Faculty.UPDATED_NAME, TestConstants.Faculty.UPDATED_COLOR);
+        assertFacultyResponse(putResponse.getBody(), FacultyConst.UPDATED_NAME, FacultyConst.UPDATED_COLOR);
     }
 
     @Test
     @DisplayName("Positive. Should delete faculty successfully")
     void deleteFaculty_existingFaculty_shouldReturnOk() {
         // Given
-        Faculty createdFaculty = createFacultyInDatabase("Faculty to Delete", TestConstants.Faculty.BLUE_COLOR);
+        Faculty createdFaculty = createFacultyInDatabase("Faculty to Delete", FacultyConst.BLUE_COLOR);
 
         // When
         ResponseEntity<Void> deleteResponse = testRestTemplate.exchange(
@@ -131,28 +130,28 @@ class FacultyControllerTestRestTemplateTest {
     @DisplayName("Positive. Should filter faculties by color")
     void getFacultiesByColor_existingColor_shouldReturnFilteredFaculties() {
         // Given
-        createFacultyInDatabase("Color Test Faculty", TestConstants.Faculty.TEST_COLOR);
+        createFacultyInDatabase("Color Test Faculty", FacultyConst.TEST_COLOR);
 
         // When
         ResponseEntity<Faculty[]> getResponse = testRestTemplate.getForEntity(
-                testUrl + TestConstants.Faculty.COLOR_ENDPOINT + "/{color}", Faculty[].class, TestConstants.Faculty.TEST_COLOR
+                testUrl + FacultyConst.COLOR_ENDPOINT + "/{color}", Faculty[].class, FacultyConst.TEST_COLOR
         );
 
         // Then
         assertEquals(HttpStatus.OK, getResponse.getStatusCode());
         assertNotNull(getResponse.getBody());
-        assertAllFacultiesHaveColor(getResponse.getBody(), TestConstants.Faculty.TEST_COLOR);
+        assertAllFacultiesHaveColor(getResponse.getBody(), FacultyConst.TEST_COLOR);
     }
 
     @Test
     @DisplayName("Positive. Should search faculties by name or color")
     void getFacultiesByNameOrColor_existingValue_shouldReturnMatchingFaculties() {
         // Given
-        createFacultyInDatabase(TestConstants.Faculty.TEST_NAME, TestConstants.Faculty.TEST_COLOR);
+        createFacultyInDatabase(FacultyConst.TEST_NAME, FacultyConst.TEST_COLOR);
 
         // When
         ResponseEntity<Faculty[]> getResponse = testRestTemplate.getForEntity(
-                testUrl + TestConstants.Faculty.SEARCH_ENDPOINT + "?nameOrColor={nameOrColor}", Faculty[].class, TestConstants.Faculty.SEARCH_QUERY
+                testUrl + FacultyConst.SEARCH_ENDPOINT + "?nameOrColor={nameOrColor}", Faculty[].class, FacultyConst.SEARCH_QUERY
         );
 
         // Then
@@ -168,7 +167,7 @@ class FacultyControllerTestRestTemplateTest {
 
         // When
         ResponseEntity<Student[]> getResponse = testRestTemplate.getForEntity(
-                testUrl + "/{id}" + TestConstants.Faculty.STUDENTS_ENDPOINT, Student[].class, createdFaculty.getId()
+                testUrl + "/{id}" + FacultyConst.STUDENTS_ENDPOINT, Student[].class, createdFaculty.getId()
         );
 
         // Then
@@ -194,7 +193,7 @@ class FacultyControllerTestRestTemplateTest {
     @DisplayName("Negative. Should return 404 when updating non-existent faculty")
     void updateFaculty_nonExistentId_shouldReturn404() {
         // Given
-        String facultyJson = createFacultyJson(TestConstants.Faculty.NON_EXISTENT_NAME, TestConstants.Faculty.NON_EXISTENT_COLOR, NON_EXISTENT_ID);
+        String facultyJson = createFacultyJson(FacultyConst.NON_EXISTENT_NAME, FacultyConst.NON_EXISTENT_COLOR, NON_EXISTENT_ID);
         HttpEntity<String> request = createHttpEntity(facultyJson);
 
         // When & Then
@@ -225,7 +224,7 @@ class FacultyControllerTestRestTemplateTest {
     void getFacultiesByColor_nonExistentColor_shouldReturnEmptyArray() {
         // When
         ResponseEntity<Faculty[]> getResponse = testRestTemplate.getForEntity(
-                testUrl + TestConstants.Faculty.COLOR_ENDPOINT + "/{color}", Faculty[].class, TestConstants.Faculty.NON_EXISTENT_COLOR
+                testUrl + FacultyConst.COLOR_ENDPOINT + "/{color}", Faculty[].class, FacultyConst.NON_EXISTENT_COLOR
         );
 
         // Then
@@ -239,7 +238,7 @@ class FacultyControllerTestRestTemplateTest {
     void getFacultiesByNameOrColor_nonExistentValue_shouldReturnEmptyArray() {
         // When
         ResponseEntity<Faculty[]> getResponse = testRestTemplate.getForEntity(
-                testUrl + TestConstants.Faculty.SEARCH_ENDPOINT + "?nameOrColor={nameOrColor}", Faculty[].class, TestConstants.Faculty.NON_EXISTENT_NAME
+                testUrl + FacultyConst.SEARCH_ENDPOINT + "?nameOrColor={nameOrColor}", Faculty[].class, FacultyConst.NON_EXISTENT_NAME
         );
 
         // Then
@@ -253,7 +252,7 @@ class FacultyControllerTestRestTemplateTest {
     void getFacultyStudents_nonExistentFaculty_shouldReturnError() {
         // When
         ResponseEntity<String> getResponse = testRestTemplate.getForEntity(
-                testUrl + "/{id}" + TestConstants.Faculty.STUDENTS_ENDPOINT, String.class, NON_EXISTENT_ID
+                testUrl + "/{id}" + FacultyConst.STUDENTS_ENDPOINT, String.class, NON_EXISTENT_ID
         );
 
         // Then

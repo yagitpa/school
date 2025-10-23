@@ -8,7 +8,7 @@ public class TestConstants {
     public static final Long NON_EXISTENT_ID = 99999L;
 
     // ========== FACULTY TEST CONSTANTS ==========
-    public static class Faculty {
+    public static class FacultyConst {
         public static final String ENDPOINT = "/faculty";
         public static final String COLOR_ENDPOINT = "/color";
         public static final String SEARCH_ENDPOINT = "/search";
@@ -28,7 +28,7 @@ public class TestConstants {
     }
 
     // ========== STUDENT TEST CONSTANTS ==========
-    public static class Student {
+    public static class StudentConst {
         public static final String ENDPOINT = "/student";
         public static final String AGE_ENDPOINT = "/age";
         public static final String AGE_BETWEEN_ENDPOINT = "/age-between";
