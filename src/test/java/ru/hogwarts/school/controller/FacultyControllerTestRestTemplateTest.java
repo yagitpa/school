@@ -13,34 +13,14 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import ru.hogwarts.school.model.Faculty;
 import ru.hogwarts.school.model.Student;
 import ru.hogwarts.school.service.AvatarService;
+import ru.hogwarts.school.testconfig.TestConstants;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static ru.hogwarts.school.testconfig.TestConstants.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 class FacultyControllerTestRestTemplateTest {
-
-    // ========== CONSTANTS ==========
-    private static final String BASE_URL = "http://localhost:";
-    private static final String FACULTY_ENDPOINT = "/faculty";
-    private static final String COLOR_ENDPOINT = "/color";
-    private static final String SEARCH_ENDPOINT = "/search";
-    private static final String STUDENTS_ENDPOINT = "/students";
-
-    private static final String TEST_FACULTY_NAME = "Gryffindor";
-    private static final String TEST_FACULTY_COLOR = "Red";
-    private static final String UPDATED_FACULTY_NAME = "Updated Gryffindor";
-    private static final String UPDATED_FACULTY_COLOR = "Scarlet";
-    private static final String GREEN_FACULTY_NAME = "Slytherin";
-    private static final String GREEN_FACULTY_COLOR = "Green";
-    private static final String BLUE_FACULTY_COLOR = "Blue";
-
-    private static final String NON_EXISTENT_NAME = "NonExistentFaculty";
-    private static final String NON_EXISTENT_COLOR = "NonExistentColor";
-    private static final String SEARCH_QUERY = "Gryffindor";
-    private static final String EMPTY_STRING = "";
-
-    private static final Long NON_EXISTENT_ID = 99999L;
 
     @Autowired
     private TestRestTemplate testRestTemplate;
@@ -55,7 +35,7 @@ class FacultyControllerTestRestTemplateTest {
 
     @BeforeEach
     void setUp() {
-        testUrl = BASE_URL + port + FACULTY_ENDPOINT;
+        testUrl = BASE_URL + port + TestConstants.Faculty.ENDPOINT;
     }
 
     // ========== POSITIVE TESTS ==========
@@ -64,7 +44,7 @@ class FacultyControllerTestRestTemplateTest {
     @DisplayName("Positive. Should create faculty successfully with valid data")
     void createFaculty_validData_shouldReturnCreated() {
         // Given
-        String facultyJson = createFacultyJson(TEST_FACULTY_NAME, TEST_FACULTY_COLOR);
+        String facultyJson = createFacultyJson(TestConstants.Faculty.TEST_NAME, TestConstants.Faculty.TEST_COLOR);
         HttpEntity<String> request = createHttpEntity(facultyJson);
 
         // When
@@ -74,14 +54,15 @@ class FacultyControllerTestRestTemplateTest {
 
         // Then
         assertEquals(HttpStatus.OK, postResponse.getStatusCode());
-        assertFacultyResponse(postResponse.getBody(), TEST_FACULTY_NAME, TEST_FACULTY_COLOR);
+        assertFacultyResponse(postResponse.getBody(), TestConstants.Faculty.TEST_NAME,
+                TestConstants.Faculty.TEST_COLOR);
     }
 
     @Test
     @DisplayName("Positive. Should find existing faculty by ID")
     void findFaculty_existingId_shouldReturnFaculty() {
         // Given
-        Faculty createdFaculty = createFacultyInDatabase(GREEN_FACULTY_NAME, GREEN_FACULTY_COLOR);
+        Faculty createdFaculty = createFacultyInDatabase(TestConstants.Faculty.GREEN_NAME, TestConstants.Faculty.GREEN_COLOR);
 
         // When
         ResponseEntity<Faculty> getResponse = testRestTemplate.getForEntity(
@@ -90,15 +71,15 @@ class FacultyControllerTestRestTemplateTest {
 
         // Then
         assertEquals(HttpStatus.OK, getResponse.getStatusCode());
-        assertFacultyResponse(getResponse.getBody(), GREEN_FACULTY_NAME, GREEN_FACULTY_COLOR);
+        assertFacultyResponse(getResponse.getBody(), TestConstants.Faculty.GREEN_NAME, TestConstants.Faculty.GREEN_COLOR);
     }
 
     @Test
     @DisplayName("Positive. Should update faculty successfully")
     void updateFaculty_existingFaculty_shouldReturnUpdatedFaculty() {
         // Given
-        Faculty createdFaculty = createFacultyInDatabase(TEST_FACULTY_NAME, TEST_FACULTY_COLOR);
-        String updateJson = createFacultyJson(UPDATED_FACULTY_NAME, UPDATED_FACULTY_COLOR, createdFaculty.getId());
+        Faculty createdFaculty = createFacultyInDatabase(TestConstants.Faculty.TEST_NAME, TestConstants.Faculty.TEST_COLOR);
+        String updateJson = createFacultyJson(TestConstants.Faculty.UPDATED_NAME, TestConstants.Faculty.UPDATED_COLOR, createdFaculty.getId());
         HttpEntity<String> request = createHttpEntity(updateJson);
 
         // When
@@ -108,14 +89,14 @@ class FacultyControllerTestRestTemplateTest {
 
         // Then
         assertEquals(HttpStatus.OK, putResponse.getStatusCode());
-        assertFacultyResponse(putResponse.getBody(), UPDATED_FACULTY_NAME, UPDATED_FACULTY_COLOR);
+        assertFacultyResponse(putResponse.getBody(), TestConstants.Faculty.UPDATED_NAME, TestConstants.Faculty.UPDATED_COLOR);
     }
 
     @Test
     @DisplayName("Positive. Should delete faculty successfully")
     void deleteFaculty_existingFaculty_shouldReturnOk() {
         // Given
-        Faculty createdFaculty = createFacultyInDatabase("Faculty to Delete", BLUE_FACULTY_COLOR);
+        Faculty createdFaculty = createFacultyInDatabase("Faculty to Delete", TestConstants.Faculty.BLUE_COLOR);
 
         // When
         ResponseEntity<Void> deleteResponse = testRestTemplate.exchange(
@@ -150,28 +131,28 @@ class FacultyControllerTestRestTemplateTest {
     @DisplayName("Positive. Should filter faculties by color")
     void getFacultiesByColor_existingColor_shouldReturnFilteredFaculties() {
         // Given
-        createFacultyInDatabase("Color Test Faculty", TEST_FACULTY_COLOR);
+        createFacultyInDatabase("Color Test Faculty", TestConstants.Faculty.TEST_COLOR);
 
         // When
         ResponseEntity<Faculty[]> getResponse = testRestTemplate.getForEntity(
-                testUrl + COLOR_ENDPOINT + "/{color}", Faculty[].class, TEST_FACULTY_COLOR
+                testUrl + TestConstants.Faculty.COLOR_ENDPOINT + "/{color}", Faculty[].class, TestConstants.Faculty.TEST_COLOR
         );
 
         // Then
         assertEquals(HttpStatus.OK, getResponse.getStatusCode());
         assertNotNull(getResponse.getBody());
-        assertAllFacultiesHaveColor(getResponse.getBody(), TEST_FACULTY_COLOR);
+        assertAllFacultiesHaveColor(getResponse.getBody(), TestConstants.Faculty.TEST_COLOR);
     }
 
     @Test
     @DisplayName("Positive. Should search faculties by name or color")
     void getFacultiesByNameOrColor_existingValue_shouldReturnMatchingFaculties() {
         // Given
-        createFacultyInDatabase(TEST_FACULTY_NAME, TEST_FACULTY_COLOR);
+        createFacultyInDatabase(TestConstants.Faculty.TEST_NAME, TestConstants.Faculty.TEST_COLOR);
 
         // When
         ResponseEntity<Faculty[]> getResponse = testRestTemplate.getForEntity(
-                testUrl + SEARCH_ENDPOINT + "?nameOrColor={nameOrColor}", Faculty[].class, SEARCH_QUERY
+                testUrl + TestConstants.Faculty.SEARCH_ENDPOINT + "?nameOrColor={nameOrColor}", Faculty[].class, TestConstants.Faculty.SEARCH_QUERY
         );
 
         // Then
@@ -187,7 +168,7 @@ class FacultyControllerTestRestTemplateTest {
 
         // When
         ResponseEntity<Student[]> getResponse = testRestTemplate.getForEntity(
-                testUrl + "/{id}" + STUDENTS_ENDPOINT, Student[].class, createdFaculty.getId()
+                testUrl + "/{id}" + TestConstants.Faculty.STUDENTS_ENDPOINT, Student[].class, createdFaculty.getId()
         );
 
         // Then
@@ -213,7 +194,7 @@ class FacultyControllerTestRestTemplateTest {
     @DisplayName("Negative. Should return 404 when updating non-existent faculty")
     void updateFaculty_nonExistentId_shouldReturn404() {
         // Given
-        String facultyJson = createFacultyJson(NON_EXISTENT_NAME, NON_EXISTENT_COLOR, NON_EXISTENT_ID);
+        String facultyJson = createFacultyJson(TestConstants.Faculty.NON_EXISTENT_NAME, TestConstants.Faculty.NON_EXISTENT_COLOR, NON_EXISTENT_ID);
         HttpEntity<String> request = createHttpEntity(facultyJson);
 
         // When & Then
@@ -244,7 +225,7 @@ class FacultyControllerTestRestTemplateTest {
     void getFacultiesByColor_nonExistentColor_shouldReturnEmptyArray() {
         // When
         ResponseEntity<Faculty[]> getResponse = testRestTemplate.getForEntity(
-                testUrl + COLOR_ENDPOINT + "/{color}", Faculty[].class, NON_EXISTENT_COLOR
+                testUrl + TestConstants.Faculty.COLOR_ENDPOINT + "/{color}", Faculty[].class, TestConstants.Faculty.NON_EXISTENT_COLOR
         );
 
         // Then
@@ -258,7 +239,7 @@ class FacultyControllerTestRestTemplateTest {
     void getFacultiesByNameOrColor_nonExistentValue_shouldReturnEmptyArray() {
         // When
         ResponseEntity<Faculty[]> getResponse = testRestTemplate.getForEntity(
-                testUrl + SEARCH_ENDPOINT + "?nameOrColor={nameOrColor}", Faculty[].class, NON_EXISTENT_NAME
+                testUrl + TestConstants.Faculty.SEARCH_ENDPOINT + "?nameOrColor={nameOrColor}", Faculty[].class, TestConstants.Faculty.NON_EXISTENT_NAME
         );
 
         // Then
@@ -272,7 +253,7 @@ class FacultyControllerTestRestTemplateTest {
     void getFacultyStudents_nonExistentFaculty_shouldReturnError() {
         // When
         ResponseEntity<String> getResponse = testRestTemplate.getForEntity(
-                testUrl + "/{id}" + STUDENTS_ENDPOINT, String.class, NON_EXISTENT_ID
+                testUrl + "/{id}" + TestConstants.Faculty.STUDENTS_ENDPOINT, String.class, NON_EXISTENT_ID
         );
 
         // Then
