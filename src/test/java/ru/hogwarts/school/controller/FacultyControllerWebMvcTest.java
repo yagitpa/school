@@ -20,37 +20,14 @@ import java.util.List;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static ru.hogwarts.school.testconfig.TestConstants.*;
 
 @WebMvcTest(FacultyController.class)
 public class FacultyControllerWebMvcTest {
-
-    // ========== CONSTANTS ==========
-
-    private static final String BASE_URL = "/faculty";
-    private static final String COLOR_ENDPOINT = "/color";
-    private static final String SEARCH_ENDPOINT = "/search";
-    private static final String STUDENTS_ENDPOINT = "/students";
-
-    private static final String TEST_FACULTY_NAME = "Gryffindor";
-    private static final String TEST_FACULTY_COLOR = "Red";
-    private static final String UPDATED_FACULTY_NAME = "Gryffindor Updated";
-    private static final String UPDATED_FACULTY_COLOR = "Blue";
-    private static final String GREEN_FACULTY_NAME = "Slytherin";
-    private static final String GREEN_FACULTY_COLOR = "Green";
-    private static final String NON_EXISTENT_FACULTY_NAME = "NonExistentFacultyName";
-
-    private static final Long EXISTING_ID = 1L;
-    private static final Long NON_EXISTENT_ID = 999999L;
-    private static final String NON_EXISTENT_COLOR = "NonExistentColor";
-    private static final String SEARCH_QUERY = "Gryffindor";
-    private static final String EMPTY_STRING = "";
 
     @Autowired
     private MockMvc mockMvc;
@@ -63,7 +40,7 @@ public class FacultyControllerWebMvcTest {
 
     @BeforeEach
     void setUp() {
-        testFaculty = new Faculty(TEST_FACULTY_NAME, TEST_FACULTY_COLOR);
+        testFaculty = new Faculty(FacultyConst.TEST_NAME, FacultyConst.TEST_COLOR);
         testFaculty.setId(EXISTING_ID);
 
         testStudent = new Student("Test Student", 17);
@@ -76,17 +53,17 @@ public class FacultyControllerWebMvcTest {
     @DisplayName("Positive. Should create Faculty successfully")
     void createFaculty_validData_shouldReturnFaculty() throws Exception {
         // Given
-        String facultyJson = createValidFacultyJson(TEST_FACULTY_NAME, TEST_FACULTY_COLOR);
+        String facultyJson = createValidFacultyJson(FacultyConst.TEST_NAME, FacultyConst.TEST_COLOR);
         when(facultyService.createFaculty(any(Faculty.class))).thenReturn(testFaculty);
 
         // When & Then
-        mockMvc.perform(post(BASE_URL)
+        mockMvc.perform(post(FacultyConst.ENDPOINT)
                        .content(facultyJson)
                        .contentType(MediaType.APPLICATION_JSON))
                .andExpect(status().isOk())
                .andExpect(jsonPath("$.id").value(EXISTING_ID))
-               .andExpect(jsonPath("$.name").value(TEST_FACULTY_NAME))
-               .andExpect(jsonPath("$.color").value(TEST_FACULTY_COLOR))
+               .andExpect(jsonPath("$.name").value(FacultyConst.TEST_NAME))
+               .andExpect(jsonPath("$.color").value(FacultyConst.TEST_COLOR))
                .andDo(print());
     }
 
@@ -97,11 +74,11 @@ public class FacultyControllerWebMvcTest {
         when(facultyService.findFaculty(EXISTING_ID)).thenReturn(testFaculty);
 
         // When & Then
-        mockMvc.perform(get(BASE_URL + "/{id}", EXISTING_ID))
+        mockMvc.perform(get(FacultyConst.ENDPOINT + "/{id}", EXISTING_ID))
                .andExpect(status().isOk())
                .andExpect(jsonPath("$.id").value(EXISTING_ID))
-               .andExpect(jsonPath("$.name").value(TEST_FACULTY_NAME))
-               .andExpect(jsonPath("$.color").value(TEST_FACULTY_COLOR))
+               .andExpect(jsonPath("$.name").value(FacultyConst.TEST_NAME))
+               .andExpect(jsonPath("$.color").value(FacultyConst.TEST_COLOR))
                .andDo(print());
     }
 
@@ -109,19 +86,19 @@ public class FacultyControllerWebMvcTest {
     @DisplayName("Positive. Should Update Faculty successfully")
     void updateFaculty_existingFaculty_shouldReturnUpdatedFaculty() throws Exception {
         // Given
-        Faculty updatedFaculty = new Faculty(UPDATED_FACULTY_NAME, UPDATED_FACULTY_COLOR);
+        Faculty updatedFaculty = new Faculty(FacultyConst.UPDATED_WEB_NAME, FacultyConst.UPDATED_WEB_COLOR);
         updatedFaculty.setId(EXISTING_ID);
         when(facultyService.updateFaculty(any(Faculty.class))).thenReturn(updatedFaculty);
 
-        String updateFacultyJson = createValidFacultyJson(UPDATED_FACULTY_NAME, UPDATED_FACULTY_COLOR, EXISTING_ID);
+        String updateFacultyJson = createValidFacultyJson(FacultyConst.UPDATED_WEB_NAME, FacultyConst.UPDATED_WEB_COLOR, EXISTING_ID);
 
         // When & Then
-        mockMvc.perform(put(BASE_URL)
+        mockMvc.perform(put(FacultyConst.ENDPOINT)
                        .content(updateFacultyJson)
                        .contentType(MediaType.APPLICATION_JSON))
                .andExpect(status().isOk())
-               .andExpect(jsonPath("$.name").value(UPDATED_FACULTY_NAME))
-               .andExpect(jsonPath("$.color").value(UPDATED_FACULTY_COLOR))
+               .andExpect(jsonPath("$.name").value(FacultyConst.UPDATED_WEB_NAME))
+               .andExpect(jsonPath("$.color").value(FacultyConst.UPDATED_WEB_COLOR))
                .andDo(print());
     }
 
@@ -131,7 +108,7 @@ public class FacultyControllerWebMvcTest {
     @DisplayName("Positive. Should Delete Faculty successfully")
     void deleteFaculty_existingFaculty_shouldReturnOk() throws Exception {
         // When & Then
-        mockMvc.perform(delete(BASE_URL + "/{id}", EXISTING_ID))
+        mockMvc.perform(delete(FacultyConst.ENDPOINT + "/{id}", EXISTING_ID))
                .andExpect(status().isOk())
                .andDo(print());
     }
@@ -144,12 +121,12 @@ public class FacultyControllerWebMvcTest {
         when(facultyService.getAllFaculties()).thenReturn(faculties);
 
         // When & Then
-        mockMvc.perform(get(BASE_URL))
+        mockMvc.perform(get(FacultyConst.ENDPOINT))
                .andExpect(status().isOk())
                .andExpect(jsonPath("$").isArray())
                .andExpect(jsonPath("$.length()").value(1))
-               .andExpect(jsonPath("$[0].name").value(TEST_FACULTY_NAME))
-               .andExpect(jsonPath("$[0].color").value(TEST_FACULTY_COLOR))
+               .andExpect(jsonPath("$[0].name").value(FacultyConst.TEST_NAME))
+               .andExpect(jsonPath("$[0].color").value(FacultyConst.TEST_COLOR))
                .andDo(print());
     }
 
@@ -157,18 +134,18 @@ public class FacultyControllerWebMvcTest {
     @DisplayName("Positive. Should return faculties filtered by Color")
     void getFacultiesByColor_existingColor_shoulrReturnFilteredFaculties() throws Exception {
         // Given
-        Faculty greenFaculty = new Faculty(GREEN_FACULTY_NAME, GREEN_FACULTY_COLOR);
+        Faculty greenFaculty = new Faculty(FacultyConst.GREEN_NAME, FacultyConst.GREEN_COLOR);
         greenFaculty.setId(2L);
 
         List<Faculty> faculties = Collections.singletonList(greenFaculty);
-        when(facultyService.getFacultiesByColor(GREEN_FACULTY_COLOR)).thenReturn(faculties);
+        when(facultyService.getFacultiesByColor(FacultyConst.GREEN_COLOR)).thenReturn(faculties);
 
         // When & Then
-        mockMvc.perform(get(BASE_URL + COLOR_ENDPOINT + "/{color}", GREEN_FACULTY_COLOR))
+        mockMvc.perform(get(FacultyConst.ENDPOINT + FacultyConst.COLOR_ENDPOINT + "/{color}", FacultyConst.GREEN_COLOR))
                .andExpect(status().isOk())
                .andExpect(jsonPath("$").isArray())
                .andExpect(jsonPath("$.length()").value(1))
-               .andExpect(jsonPath("$[0].color").value(GREEN_FACULTY_COLOR))
+               .andExpect(jsonPath("$[0].color").value(FacultyConst.GREEN_COLOR))
                .andDo(print());
     }
 
@@ -177,15 +154,15 @@ public class FacultyControllerWebMvcTest {
     void getFacultiesByNameOrColor_existingValue_shouldReturnMatchingFaculties() throws Exception {
         // Given
         List<Faculty> faculties = Collections.singletonList(testFaculty);
-        when(facultyService.getFacultiesByNameOrColor(SEARCH_QUERY)).thenReturn(faculties);
+        when(facultyService.getFacultiesByNameOrColor(FacultyConst.SEARCH_QUERY)).thenReturn(faculties);
 
         // When & Then
-        mockMvc.perform(get(BASE_URL + SEARCH_ENDPOINT)
-                       .param("nameOrColor", SEARCH_QUERY))
+        mockMvc.perform(get(FacultyConst.ENDPOINT + FacultyConst.SEARCH_ENDPOINT)
+                       .param("nameOrColor", FacultyConst.SEARCH_QUERY))
                .andExpect(status().isOk())
                .andExpect(jsonPath("$").isArray())
                .andExpect(jsonPath("$.length()").value(1))
-               .andExpect(jsonPath("$[0].name").value(TEST_FACULTY_NAME))
+               .andExpect(jsonPath("$[0].name").value(FacultyConst.TEST_NAME))
                .andDo(print());
     }
 
@@ -197,7 +174,7 @@ public class FacultyControllerWebMvcTest {
         when(facultyService.getFacultyStudents(EXISTING_ID)).thenReturn(students);
 
         // When & Then
-        mockMvc.perform(get(BASE_URL + "/{id}" + STUDENTS_ENDPOINT, EXISTING_ID))
+        mockMvc.perform(get(FacultyConst.ENDPOINT + "/{id}" + FacultyConst.STUDENTS_ENDPOINT, EXISTING_ID))
                .andExpect(status().isOk())
                .andExpect(jsonPath("$").isArray())
                .andExpect(jsonPath("$.length()").value(1))
@@ -215,7 +192,7 @@ public class FacultyControllerWebMvcTest {
                 .thenThrow(new ResponseStatusException(HttpStatus.NOT_FOUND, "Faculty not Found"));
 
         // When & Then
-        mockMvc.perform(get(BASE_URL + "/{id}", NON_EXISTENT_ID))
+        mockMvc.perform(get(FacultyConst.ENDPOINT + "/{id}", NON_EXISTENT_ID))
                .andExpect(status().isNotFound())
                .andDo(print());
     }
@@ -227,10 +204,10 @@ public class FacultyControllerWebMvcTest {
         when(facultyService.updateFaculty(any(Faculty.class)))
                 .thenThrow(new ResponseStatusException(HttpStatus.NOT_FOUND, "Faculty not Found"));
 
-        String updateJson = createValidFacultyJson(NON_EXISTENT_FACULTY_NAME, NON_EXISTENT_COLOR, NON_EXISTENT_ID);
+        String updateJson = createValidFacultyJson(FacultyConst.NON_EXISTENT_WEB_NAME, FacultyConst.NON_EXISTENT_COLOR, NON_EXISTENT_ID);
 
         // When & Then
-        mockMvc.perform(put(BASE_URL)
+        mockMvc.perform(put(FacultyConst.ENDPOINT)
                        .content(updateJson)
                        .contentType(MediaType.APPLICATION_JSON))
                .andExpect(status().isNotFound())
@@ -246,7 +223,7 @@ public class FacultyControllerWebMvcTest {
                 .deleteFaculty(NON_EXISTENT_ID);
 
         // When & Then
-        mockMvc.perform(delete(BASE_URL + "/{id}", NON_EXISTENT_ID))
+        mockMvc.perform(delete(FacultyConst.ENDPOINT + "/{id}", NON_EXISTENT_ID))
                .andExpect(status().isNotFound())
                .andDo(print());
     }
@@ -255,10 +232,10 @@ public class FacultyControllerWebMvcTest {
     @DisplayName("Negative. Should Return empty Array when no Faculties match Color")
     void getFacultyByColor_nonExistentColor_shouldReturnEmptyArray() throws Exception {
         // Given
-        when(facultyService.getFacultiesByColor(NON_EXISTENT_COLOR)).thenReturn(Collections.emptyList());
+        when(facultyService.getFacultiesByColor(FacultyConst.NON_EXISTENT_COLOR)).thenReturn(Collections.emptyList());
 
         // When & Then
-        mockMvc.perform(get(BASE_URL + COLOR_ENDPOINT + "/{color}", NON_EXISTENT_COLOR))
+        mockMvc.perform(get(FacultyConst.ENDPOINT + FacultyConst.COLOR_ENDPOINT + "/{color}", FacultyConst.NON_EXISTENT_COLOR))
                .andExpect(status().isOk())
                .andExpect(jsonPath("$").isArray())
                .andExpect(jsonPath("$.length()").value(0))
@@ -269,11 +246,11 @@ public class FacultyControllerWebMvcTest {
     @DisplayName("Negative. Should Return empty Array when no Faculties match Search")
     void getFacultyByNameOrColor_nonExistentValue_shouldReturnEmptyArray() throws Exception {
         // Given
-        when(facultyService.getFacultiesByNameOrColor(NON_EXISTENT_COLOR)).thenReturn(Collections.emptyList());
+        when(facultyService.getFacultiesByNameOrColor(FacultyConst.NON_EXISTENT_COLOR)).thenReturn(Collections.emptyList());
 
         // When & Then
-        mockMvc.perform(get(BASE_URL + SEARCH_ENDPOINT)
-                       .param("nameOrColor", NON_EXISTENT_COLOR))
+        mockMvc.perform(get(FacultyConst.ENDPOINT + FacultyConst.SEARCH_ENDPOINT)
+                       .param("nameOrColor", FacultyConst.NON_EXISTENT_COLOR))
                .andExpect(status().isOk())
                .andExpect(jsonPath("$").isArray())
                .andExpect(jsonPath("$.length()").value(0))
@@ -288,7 +265,7 @@ public class FacultyControllerWebMvcTest {
                 .thenThrow(new ResponseStatusException(HttpStatus.NOT_FOUND, "Faculty not Found"));
 
         // When & Then
-        mockMvc.perform(get(BASE_URL + "/{Id}" + STUDENTS_ENDPOINT, NON_EXISTENT_ID))
+        mockMvc.perform(get(FacultyConst.ENDPOINT + "/{Id}" + FacultyConst.STUDENTS_ENDPOINT, NON_EXISTENT_ID))
                .andExpect(status().isNotFound())
                .andDo(print());
     }
@@ -304,7 +281,7 @@ public class FacultyControllerWebMvcTest {
         String emptyJson = createValidFacultyJson(EMPTY_STRING, EMPTY_STRING);
 
         // When & Then
-        mockMvc.perform(post(BASE_URL)
+        mockMvc.perform(post(FacultyConst.ENDPOINT)
                        .content(emptyJson)
                        .contentType(MediaType.APPLICATION_JSON))
                .andExpect(status().isOk())
@@ -320,7 +297,7 @@ public class FacultyControllerWebMvcTest {
         String malformedJson = createMalformedFacultyJson_missingBrace();
 
         // When & Then
-        mockMvc.perform(post(BASE_URL)
+        mockMvc.perform(post(FacultyConst.ENDPOINT)
                        .content(malformedJson)
                        .contentType(MediaType.APPLICATION_JSON))
                .andExpect(status().isBadRequest())
@@ -331,7 +308,7 @@ public class FacultyControllerWebMvcTest {
     @DisplayName("Negative. Should handle missing Search parameter")
     void getFacultiesByNameOrColor_missingParameter_shouldReturnBadRequest() throws Exception {
         // When & Then
-        mockMvc.perform(get(BASE_URL + SEARCH_ENDPOINT))
+        mockMvc.perform(get(FacultyConst.ENDPOINT + FacultyConst.SEARCH_ENDPOINT))
                .andExpect(status().isBadRequest())
                .andDo(print());
     }

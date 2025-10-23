@@ -24,33 +24,10 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static ru.hogwarts.school.testconfig.TestConstants.*;
 
 @WebMvcTest(StudentController.class)
 public class StudentControllerWebMvcTest {
-
-    // ========== CONSTANTS ==========
-
-    private static final String BASE_URL = "/student";
-    private static final String AGE_ENDPOINT = "/age";
-    private static final String AGE_BETWEEN = "/age-between";
-    private static final String FACULTY_ENDPOINT = "/faculty";
-
-    private static final String TEST_STUDENT_NAME = "Harry Potter";
-    private static final String UPDATED_STUDENT_NAME = "Harry Potter Updated";
-    private static final String NON_EXISTENT_STUDENT_NAME = "NonExistentStudent";
-
-    private static final int TEST_STUDENT_AGE = 17;
-    private static final int UPDATED_STUDENT_AGE = 18;
-    private static final int AGE_FILTER_STUDENT_AGE = 16;
-    private static final int MIN_AGE = 15;
-    private static final int MAX_AGE = 20;
-    private static final int INVALID_MAX_AGE = 10;
-    private static final int INVALID_MIN_AGE = 25;
-
-    private static final Long EXISTING_ID = 1L;
-    private static final Long NON_EXISTENT_ID = 999999L;
-    private static final int NON_EXISTENT_AGE = 999;
-    private static final String EMPTY_STRING = "";
 
     @Autowired
     private MockMvc mockMvc;
@@ -63,7 +40,7 @@ public class StudentControllerWebMvcTest {
 
     @BeforeEach
     void setUp() {
-        testStudent = new Student(TEST_STUDENT_NAME, TEST_STUDENT_AGE);
+        testStudent = new Student(StudentConst.TEST_NAME, StudentConst.TEST_AGE);
         testStudent.setId(EXISTING_ID);
 
         testFaculty = new Faculty("Gryffindor", "Red");
@@ -76,17 +53,17 @@ public class StudentControllerWebMvcTest {
     @DisplayName("Positive. Should Create Student successfully")
     void createStudent_validData_shouldReturnStudent() throws Exception {
         // Given
-        String studentJson = createValidStudentJson(TEST_STUDENT_NAME, TEST_STUDENT_AGE);
+        String studentJson = createValidStudentJson(StudentConst.TEST_NAME, StudentConst.TEST_AGE);
         when(studentService.createStudent(any(Student.class))).thenReturn(testStudent);
 
         // When & Then
-        mockMvc.perform(post(BASE_URL)
+        mockMvc.perform(post(StudentConst.ENDPOINT)
                        .content(studentJson)
                        .contentType(MediaType.APPLICATION_JSON))
                .andExpect(status().isOk())
                .andExpect(jsonPath("$.id").value(EXISTING_ID))
-               .andExpect(jsonPath("$.name").value(TEST_STUDENT_NAME))
-               .andExpect(jsonPath("$.age").value(TEST_STUDENT_AGE))
+               .andExpect(jsonPath("$.name").value(StudentConst.TEST_NAME))
+               .andExpect(jsonPath("$.age").value(StudentConst.TEST_AGE))
                .andDo(print());
     }
 
@@ -97,11 +74,11 @@ public class StudentControllerWebMvcTest {
         when(studentService.findStudent(EXISTING_ID)).thenReturn(testStudent);
 
         // When & Then
-        mockMvc.perform(get(BASE_URL + "/{id}", EXISTING_ID))
+        mockMvc.perform(get(StudentConst.ENDPOINT + "/{id}", EXISTING_ID))
                .andExpect(status().isOk())
                .andExpect(jsonPath("$.id").value(EXISTING_ID))
-               .andExpect(jsonPath("$.name").value(TEST_STUDENT_NAME))
-               .andExpect(jsonPath("$.age").value(TEST_STUDENT_AGE))
+               .andExpect(jsonPath("$.name").value(StudentConst.TEST_NAME))
+               .andExpect(jsonPath("$.age").value(StudentConst.TEST_AGE))
                .andDo(print());
     }
 
@@ -109,19 +86,19 @@ public class StudentControllerWebMvcTest {
     @DisplayName("Positive. Should Update Student successfully")
     void updateStudent_existingStudent_shouldReturnUpdatedStudent() throws Exception {
         // Given
-        Student updatedStudent = new Student(UPDATED_STUDENT_NAME, UPDATED_STUDENT_AGE);
+        Student updatedStudent = new Student(StudentConst.UPDATED_NAME, StudentConst.UPDATED_AGE);
         updatedStudent.setId(EXISTING_ID);
         when(studentService.updateStudent(any(Student.class))).thenReturn(updatedStudent);
 
-        String updateJson = createValidStudentJson(UPDATED_STUDENT_NAME, UPDATED_STUDENT_AGE, EXISTING_ID);
+        String updateJson = createValidStudentJson(StudentConst.UPDATED_NAME, StudentConst.UPDATED_AGE, EXISTING_ID);
 
         // When & Then
-        mockMvc.perform(put(BASE_URL)
+        mockMvc.perform(put(StudentConst.ENDPOINT)
                        .content(updateJson)
                        .contentType(MediaType.APPLICATION_JSON))
                .andExpect(status().isOk())
-               .andExpect(jsonPath("$.name").value(UPDATED_STUDENT_NAME))
-               .andExpect(jsonPath("$.age").value(UPDATED_STUDENT_AGE))
+               .andExpect(jsonPath("$.name").value(StudentConst.UPDATED_NAME))
+               .andExpect(jsonPath("$.age").value(StudentConst.UPDATED_AGE))
                .andDo(print());
     }
 
@@ -132,7 +109,7 @@ public class StudentControllerWebMvcTest {
         when(studentService.deleteStudent(EXISTING_ID)).thenReturn(testStudent);
 
         // When & Then
-        mockMvc.perform(delete(BASE_URL + "/{id}", EXISTING_ID))
+        mockMvc.perform(delete(StudentConst.ENDPOINT + "/{id}", EXISTING_ID))
                .andExpect(status().isOk())
                .andExpect(jsonPath("$.id").value(EXISTING_ID))
                .andDo(print());
@@ -146,13 +123,13 @@ public class StudentControllerWebMvcTest {
         when(studentService.getAllStudents()).thenReturn(students);
 
         // When & Then
-        mockMvc.perform(get(BASE_URL))
+        mockMvc.perform(get(StudentConst.ENDPOINT))
                .andExpect(status().isOk())
                .andExpect(jsonPath("$").isArray())
                .andExpect(jsonPath("$.length()").value(1))
                .andExpect(jsonPath("$[0].id").value(EXISTING_ID))
-               .andExpect(jsonPath("$[0].name").value(TEST_STUDENT_NAME))
-               .andExpect(jsonPath("$[0].age").value(TEST_STUDENT_AGE))
+               .andExpect(jsonPath("$[0].name").value(StudentConst.TEST_NAME))
+               .andExpect(jsonPath("$[0].age").value(StudentConst.TEST_AGE))
                .andDo(print());
     }
 
@@ -160,18 +137,18 @@ public class StudentControllerWebMvcTest {
     @DisplayName("Positive. Should filter students by Age")
     void getStudents_existingAge_shouldReturnFilteredStudents() throws Exception {
         // Given
-        Student ageFilterStudent = new Student("Age Filter Student", AGE_FILTER_STUDENT_AGE);
+        Student ageFilterStudent = new Student("Age Filter Student", StudentConst.AGE_FILTER_AGE);
         ageFilterStudent.setId(2L);
 
         List<Student> students = Collections.singletonList(ageFilterStudent);
-        when(studentService.getStudentsByAge(AGE_FILTER_STUDENT_AGE)).thenReturn(students);
+        when(studentService.getStudentsByAge(StudentConst.AGE_FILTER_AGE)).thenReturn(students);
 
         // When & Then
-        mockMvc.perform(get(BASE_URL + AGE_ENDPOINT + "/{age}", AGE_FILTER_STUDENT_AGE))
+        mockMvc.perform(get(StudentConst.ENDPOINT + StudentConst.AGE_ENDPOINT + "/{age}", StudentConst.AGE_FILTER_AGE))
                .andExpect(status().isOk())
                .andExpect(jsonPath("$").isArray())
                .andExpect(jsonPath("$.length()").value(1))
-               .andExpect(jsonPath("$[0].age").value(AGE_FILTER_STUDENT_AGE))
+               .andExpect(jsonPath("$[0].age").value(StudentConst.AGE_FILTER_AGE))
                .andExpect(jsonPath("$[0].name").value("Age Filter Student"))
                .andDo(print());
     }
@@ -186,12 +163,12 @@ public class StudentControllerWebMvcTest {
         student2.setId(3L);
 
         List<Student> students = Arrays.asList(student1, student2);
-        when(studentService.getStudentsByAgeBetween(MIN_AGE, MAX_AGE)).thenReturn(students);
+        when(studentService.getStudentsByAgeBetween(StudentConst.MIN_AGE, StudentConst.MAX_AGE)).thenReturn(students);
 
         // When & Then
-        mockMvc.perform(get(BASE_URL + AGE_BETWEEN)
-                       .param("minAge", String.valueOf(MIN_AGE))
-                       .param("maxAge", String.valueOf(MAX_AGE)))
+        mockMvc.perform(get(StudentConst.ENDPOINT + StudentConst.AGE_BETWEEN_ENDPOINT)
+                       .param("minAge", String.valueOf(StudentConst.MIN_AGE))
+                       .param("maxAge", String.valueOf(StudentConst.MAX_AGE)))
                .andExpect(status().isOk())
                .andExpect(jsonPath("$").isArray())
                .andExpect(jsonPath("$.length()").value(2))
@@ -211,7 +188,7 @@ public class StudentControllerWebMvcTest {
         );
 
         // When & Then
-        mockMvc.perform(get(BASE_URL + "/{id}", NON_EXISTENT_ID))
+        mockMvc.perform(get(StudentConst.ENDPOINT + "/{id}", NON_EXISTENT_ID))
                .andExpect(status().isNotFound())
                .andDo(print());
     }
@@ -224,10 +201,10 @@ public class StudentControllerWebMvcTest {
                 new ResponseStatusException(HttpStatus.NOT_FOUND, "Student not Found")
         );
 
-        String updateJson = createValidStudentJson(NON_EXISTENT_STUDENT_NAME, 20, NON_EXISTENT_ID);
+        String updateJson = createValidStudentJson(StudentConst.NON_EXISTENT_WEB_NAME, 20, NON_EXISTENT_ID);
 
         // When & Then
-        mockMvc.perform(put(BASE_URL)
+        mockMvc.perform(put(StudentConst.ENDPOINT)
                        .content(updateJson)
                        .contentType(MediaType.APPLICATION_JSON))
                .andExpect(status().isNotFound())
@@ -238,10 +215,10 @@ public class StudentControllerWebMvcTest {
     @DisplayName("Negative. Should return empty List when no students match Age")
     void getStudentsByAge_nonExistentAge_shouldReturnEmptyList() throws Exception {
         // Given
-        when(studentService.getStudentsByAge(NON_EXISTENT_AGE)).thenReturn(List.of());
+        when(studentService.getStudentsByAge(StudentConst.NON_EXISTENT_AGE)).thenReturn(List.of());
 
         // When & Then
-        mockMvc.perform(get(BASE_URL + AGE_ENDPOINT + "/{age}", NON_EXISTENT_AGE))
+        mockMvc.perform(get(StudentConst.ENDPOINT + StudentConst.AGE_ENDPOINT + "/{age}", StudentConst.NON_EXISTENT_AGE))
                .andExpect(status().isOk())
                .andExpect(jsonPath("$.length()").value(0))
                .andDo(print());
@@ -256,7 +233,7 @@ public class StudentControllerWebMvcTest {
         );
 
         // When & Then
-        mockMvc.perform(get(BASE_URL + "/{id}" + FACULTY_ENDPOINT, EXISTING_ID))
+        mockMvc.perform(get(StudentConst.ENDPOINT + "/{id}" + StudentConst.FACULTY_ENDPOINT, EXISTING_ID))
                .andExpect(status().isNotFound())
                .andDo(print());
     }
@@ -265,12 +242,12 @@ public class StudentControllerWebMvcTest {
     @DisplayName("Negative. Should return empty List when no students in Age Between range or min > max")
     void getStudentsByAgeBetween_noStudents_shouldReturnEmptyList() throws Exception {
         // Given
-        when(studentService.getStudentsByAgeBetween(INVALID_MIN_AGE, INVALID_MAX_AGE)).thenReturn(List.of());
+        when(studentService.getStudentsByAgeBetween(StudentConst.INVALID_MIN_AGE, StudentConst.INVALID_MAX_AGE)).thenReturn(List.of());
 
         // When & Then
-        mockMvc.perform(get(BASE_URL + AGE_BETWEEN)
-                       .param("minAge", String.valueOf(INVALID_MIN_AGE))
-                       .param("maxAge", String.valueOf(INVALID_MAX_AGE)))
+        mockMvc.perform(get(StudentConst.ENDPOINT + StudentConst.AGE_BETWEEN_ENDPOINT)
+                       .param("minAge", String.valueOf(StudentConst.INVALID_MIN_AGE))
+                       .param("maxAge", String.valueOf(StudentConst.INVALID_MAX_AGE)))
                .andExpect(status().isOk())
                .andExpect(jsonPath("$").isArray())
                .andExpect(jsonPath("$.length()").value(0))
@@ -284,14 +261,14 @@ public class StudentControllerWebMvcTest {
     @DisplayName("Negative. Should handle empty Name in Student creation")
     void createdStudent_emptyName_shouldHandle() throws Exception {
         // Given
-        String studentJson = createValidStudentJson(EMPTY_STRING, TEST_STUDENT_AGE);
+        String studentJson = createValidStudentJson(EMPTY_STRING, StudentConst.TEST_AGE);
 
-        Student studentWithEmptyName = new Student(EMPTY_STRING, TEST_STUDENT_AGE);
+        Student studentWithEmptyName = new Student(EMPTY_STRING, StudentConst.TEST_AGE);
         studentWithEmptyName.setId(EXISTING_ID);
         when(studentService.createStudent(any(Student.class))).thenReturn(studentWithEmptyName);
 
         // When & Then
-        mockMvc.perform(post(BASE_URL)
+        mockMvc.perform(post(StudentConst.ENDPOINT)
                        .content(studentJson)
                        .contentType(MediaType.APPLICATION_JSON))
                .andExpect(status().isOk())
