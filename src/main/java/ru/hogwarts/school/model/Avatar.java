@@ -1,6 +1,8 @@
 package ru.hogwarts.school.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import org.hibernate.annotations.LazyGroup;
 
 import java.util.Arrays;
 import java.util.Objects;
@@ -18,6 +20,9 @@ public class Avatar {
     private String mediaType;
 
     @Lob
+    @Basic(fetch = FetchType.LAZY)
+    @LazyGroup("lobs")
+    @JsonIgnore
     private byte[] data;
 
     @OneToOne
