@@ -3,8 +3,9 @@ package ru.hogwarts.school.testconfig;
 public class TestConstants {
 
     // ========== COMMON CONSTANTS ==========
-    public static final String BASE_URL = "http://localhost:";
     public static final String EMPTY_STRING = "";
+    public static final Long EXISTING_ID = 1L;
+    public static final String BASE_URL = "http://localhost:";
     public static final Long NON_EXISTENT_ID = 99999L;
 
     // ========== FACULTY TEST CONSTANTS ==========
@@ -16,6 +17,15 @@ public class TestConstants {
 
         public static final String TEST_NAME = "Gryffindor";
         public static final String TEST_COLOR = "Red";
+        public static final String GREEN_NAME = "Slytherin";
+        public static final String GREEN_COLOR = "Green";
+
+        public static final String NON_EXISTENT_COLOR = "NonExistentColor";
+        public static final String SEARCH_QUERY = "Gryffindor";
+
+        public static final String UPDATED_WEB_NAME = "Gryffindor Updated";
+        public static final String UPDATED_WEB_COLOR = "Blue";
+        public static final String NON_EXISTENT_WEB_NAME = "NonExistentFacultyName";
         public static final String UPDATED_NAME = "Updated Gryffindor";
         public static final String UPDATED_COLOR = "Scarlet";
         public static final String GREEN_NAME = "Slytherin";
@@ -44,6 +54,14 @@ public class TestConstants {
         public static final int AGE_FILTER_AGE = 16;
         public static final int MIN_AGE = 15;
         public static final int MAX_AGE = 20;
+        public static final int NON_EXISTENT_AGE = 999;
+
+        // WebMvcTest specific
+        public static final String NON_EXISTENT_WEB_NAME = "NonExistentStudent";
+        public static final int INVALID_MAX_AGE = 10;
+        public static final int INVALID_MIN_AGE = 25;
+    }
+}
         public static final int YOUNG_AGE = 10;
         public static final int NON_EXISTENT_AGE = 999;
     }
