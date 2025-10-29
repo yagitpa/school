@@ -54,7 +54,8 @@ public class AvatarService {
 
         Student student = studentService.findStudent(studentId);
 
-        Path fullSizeFilePath = Path.of(avatarsDir, student.getName() + "_" + student.getId() + "_full."
+        String normalizedStudentName = normalizeFileName(student.getName());
+        Path fullSizeFilePath = Path.of(avatarsDir, normalizedStudentName + "_" + student.getId() + "_full."
                 + fileExtension);
         file.transferTo(fullSizeFilePath);
 
@@ -145,5 +146,24 @@ public class AvatarService {
             return null;
         }
         return fileName.substring(fileName.lastIndexOf(".") + 1);
+    }
+
+    private String normalizeFileName(String fileName) {
+        if (fileName == null) {
+            return "unknown";
+        }
+
+        String normalized = fileName
+                .trim()
+                .toLowerCase()
+                .replaceAll("[\\\\/:*?\"<>|\\s]", "_")
+                .replaceAll("[^a-z0-9_.-]", "")
+                .replaceAll("_{2,}", "_");
+
+        if (normalized.isEmpty()) {
+            return "student_" + System.currentTimeMillis();
+        }
+
+        return normalized;
     }
 }
