@@ -8,12 +8,10 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.server.ResponseStatusException;
 import ru.hogwarts.school.model.Avatar;
 import ru.hogwarts.school.service.AvatarService;
 
 import java.io.IOException;
-import java.util.List;
 
 @RestController
 @RequestMapping("/avatar")
@@ -25,15 +23,16 @@ public class AvatarController {
     }
 
     @PostMapping(value = "/{studentId}/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public Long uploadAvatar(@PathVariable Long studentId,
-                             @RequestParam MultipartFile file) throws IOException {
-        return avatarService.uploadAvatar(studentId, file);
+    public ResponseEntity<String> uploadAvatar(@PathVariable Long studentId,
+                                               @RequestParam MultipartFile file) throws IOException {
+        avatarService.uploadAvatar(studentId, file);
+        return ResponseEntity.ok("Avatar uploaded successfully");
     }
 
-    @GetMapping("/{studentId}/from-db")
-    public ResponseEntity<byte[]> getAvatarFromDb(@PathVariable Long studentId) {
+    @GetMapping("/{studentId}/preview")
+    public ResponseEntity<byte[]> getAvatarPreview(@PathVariable Long studentId) {
         try {
-            Avatar avatar = avatarService.findAvatar(studentId);
+            Avatar avatar = avatarService.getAvatarFromDB(studentId);
 
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.parseMediaType(avatar.getMediaType()));
@@ -47,37 +46,26 @@ public class AvatarController {
         }
     }
 
-    @GetMapping("/{studentId}/from-file")
-    public ResponseEntity<Void> getAvatarFromFile(@PathVariable Long studentId,
-                                                  HttpServletResponse response) {
+    @GetMapping("/{studentId}/full")
+    public void getAvatarFull(@PathVariable Long studentId,
+                              HttpServletResponse response) {
         try {
             avatarService.getAvatarFromFile(studentId, response);
-            return ResponseEntity.ok().build();
         } catch (IOException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+            response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
         }
     }
 
-    @GetMapping("/all-pageable")
-    public ResponseEntity<Page<Avatar>> getAllAvatarsWithPagination(@RequestParam(defaultValue = "1") int page,
-                                                                    @RequestParam(defaultValue = "10") int size) {
+    @GetMapping("/all")
+    public ResponseEntity<Page<Avatar>> getAllAvatarsWithPagination(
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "10") int size) {
+
         try {
             Page<Avatar> avatarsPage = avatarService.getAllAvatarsWithPagination(page, size);
             return ResponseEntity.ok(avatarsPage);
-        } catch (ResponseStatusException e) {
-            throw e;
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
-    }
-
-    @GetMapping("/all-list")
-    public ResponseEntity<List<Avatar>> getAllAvatars() {
-        try {
-            List<Avatar> avatars = avatarService.getAllAvatars();
-            return ResponseEntity.ok(avatars);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
     }
 }
