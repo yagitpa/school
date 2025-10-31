@@ -28,13 +28,9 @@ public class TestConstants {
         public static final String NON_EXISTENT_WEB_NAME = "NonExistentFacultyName";
         public static final String UPDATED_NAME = "Updated Gryffindor";
         public static final String UPDATED_COLOR = "Scarlet";
-        public static final String GREEN_NAME = "Slytherin";
-        public static final String GREEN_COLOR = "Green";
         public static final String BLUE_COLOR = "Blue";
 
         public static final String NON_EXISTENT_NAME = "NonExistentFaculty";
-        public static final String NON_EXISTENT_COLOR = "NonExistentColor";
-        public static final String SEARCH_QUERY = "Gryffindor";
     }
 
     // ========== STUDENT TEST CONSTANTS ==========
@@ -54,15 +50,12 @@ public class TestConstants {
         public static final int AGE_FILTER_AGE = 16;
         public static final int MIN_AGE = 15;
         public static final int MAX_AGE = 20;
+        public static final int YOUNG_AGE = 10;
         public static final int NON_EXISTENT_AGE = 999;
 
         // WebMvcTest specific
         public static final String NON_EXISTENT_WEB_NAME = "NonExistentStudent";
         public static final int INVALID_MAX_AGE = 10;
         public static final int INVALID_MIN_AGE = 25;
-    }
-}
-        public static final int YOUNG_AGE = 10;
-        public static final int NON_EXISTENT_AGE = 999;
     }
 }

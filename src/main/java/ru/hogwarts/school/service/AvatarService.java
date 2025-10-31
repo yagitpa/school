@@ -1,8 +1,9 @@
 package ru.hogwarts.school.service;
 
-import jakarta.servlet.http.HttpServletResponse;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -10,6 +11,7 @@ import org.springframework.web.server.ResponseStatusException;
 import ru.hogwarts.school.model.Avatar;
 import ru.hogwarts.school.model.Student;
 import ru.hogwarts.school.repository.AvatarRepository;
+import ru.hogwarts.school.util.PaginationUtil;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -17,20 +19,17 @@ import java.awt.image.BufferedImage;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
-
-import static java.nio.file.StandardOpenOption.CREATE_NEW;
+import java.util.Optional;
 
 @Service
 public class AvatarService {
     private final AvatarRepository avatarRepository;
     private final StudentService studentService;
 
-    private static final String DEFAULT_CONTENT_TYPE = "application/octet-stream";
-    private static final int PREVIEW_WIDTH = 100;
-    private static final int BUFFER_SIZE = 1024;
-
-    @Value("${avatars.dir.path}")
+    @Value("${avatars.dir.path:avatars}")
     private String avatarsDir;
+
+    private static final int PREVIEW_WIDTH = 100;
 
     public AvatarService(AvatarRepository avatarRepository, StudentService studentService) {
         this.avatarRepository = avatarRepository;
@@ -38,91 +37,133 @@ public class AvatarService {
     }
 
     @Transactional
-    public Long uploadAvatar(Long studentId, MultipartFile file) throws IOException {
+    public void uploadAvatar(Long studentId, MultipartFile file) throws IOException {
+        if (file == null || file.isEmpty() || file.getOriginalFilename() == null) {
+            return;
+        }
+
+        String fileExtension = getExtension(file.getOriginalFilename());
+        if (fileExtension == null || fileExtension.isBlank()) {
+            return;
+        }
+
+        Path dirPath = Path.of(avatarsDir);
+        if (Files.notExists(dirPath)) {
+            Files.createDirectories(dirPath);
+        }
+
         Student student = studentService.findStudent(studentId);
 
-        Path filePath = Path.of(avatarsDir, studentId + "." + getExtension(file.getOriginalFilename()));
-        Files.createDirectories(filePath.getParent());
-        Files.deleteIfExists(filePath);
+        String normalizedStudentName = normalizeFileName(student.getName());
+        Path fullSizeFilePath = Path.of(avatarsDir, normalizedStudentName + "_" + student.getId() + "_full."
+                + fileExtension);
+        file.transferTo(fullSizeFilePath);
 
-        try (InputStream is = file.getInputStream();
-             OutputStream os = Files.newOutputStream(filePath, CREATE_NEW);
-             BufferedInputStream bis = new BufferedInputStream(is, BUFFER_SIZE);
-             BufferedOutputStream bos = new BufferedOutputStream(os, BUFFER_SIZE)) {
-            bis.transferTo(bos);
-        }
+        byte[] previewData = generateImagePreview(file);
 
-        Avatar avatar = findOrCreateAvatar(studentId);
-        avatar.setStudent(student);
-        avatar.setFilePath(filePath.toString());
+        Avatar avatar = findOrCreateAvatar(student);
+        avatar.setFilePath(fullSizeFilePath.toString());
         avatar.setFileSize(file.getSize());
         avatar.setMediaType(file.getContentType());
-        avatar.setData(generateImagePreview(filePath));
+        avatar.setData(previewData);
+        avatar.setStudent(student);
 
-        Avatar savedAvatar = avatarRepository.save(avatar);
-        return savedAvatar.getId();
-    }
-
-    @Transactional
-    private Avatar findOrCreateAvatar(Long studentId) {
-        return avatarRepository.findByStudentId(studentId)
-                .orElse(new Avatar());
-    }
-
-    private byte[] generateImagePreview(Path filePath) throws IOException {
-        try (InputStream is = Files.newInputStream(filePath);
-             BufferedInputStream bis = new BufferedInputStream(is, BUFFER_SIZE);
-             ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
-
-            BufferedImage image = ImageIO.read(bis);
-            if (image == null) {
-                throw new IOException("Could not read image");
-            }
-
-            int height = image.getHeight() / (image.getWidth() / PREVIEW_WIDTH);
-            BufferedImage preview = new BufferedImage(PREVIEW_WIDTH, height, image.getType());
-            Graphics2D graphics = preview.createGraphics();
-            graphics.drawImage(image, 0, 0, PREVIEW_WIDTH, height, null);
-            graphics.dispose();
-
-            ImageIO.write(preview, getExtension(filePath.getFileName().toString()), baos);
-            return baos.toByteArray();
-        }
-    }
-
-    private String getExtension(String fileName) {
-        return fileName.substring(fileName.lastIndexOf(".") + 1);
+        avatarRepository.save(avatar);
     }
 
     @Transactional
     public Avatar findAvatar(Long studentId) {
-        return avatarRepository.findByStudentId(studentId)
-                .orElseThrow(() -> new ResponseStatusException(
-                        HttpStatus.NOT_FOUND,
-                        "Avatar not found for student with ID " + studentId
-                ));
+        Student student = studentService.findStudent(studentId);
+        return avatarRepository.findByStudent(student)
+                               .orElseThrow(() -> new ResponseStatusException(
+                                       HttpStatus.NOT_FOUND,
+                                       "Avatar not found for student with ID " + studentId
+                               ));
     }
 
     @Transactional
-    public void getAvatarFromFile(Long studentId, HttpServletResponse response) throws IOException {
+    public void getAvatarFromFile(Long studentId, jakarta.servlet.http.HttpServletResponse response) throws IOException {
         Avatar avatar = findAvatar(studentId);
-        File file = new File(avatar.getFilePath());
+        String filePath = avatar.getFilePath();
 
-        if (!file.exists()) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Avatar file not found");
+        try (BufferedInputStream bufferedInputStream = new BufferedInputStream(new FileInputStream(filePath))) {
+            response.setContentType(avatar.getMediaType());
+            response.setContentLength((int) avatar.getFileSize());
+            bufferedInputStream.transferTo(response.getOutputStream());
+            response.flushBuffer();
+        }
+    }
+
+    @Transactional
+    public Avatar getAvatarFromDB(Long studentId) {
+        return findAvatar(studentId);
+    }
+
+    @Transactional
+    public Page<Avatar> getAllAvatarsWithPagination(int page, int size) {
+        Pageable pageable = PaginationUtil.createPageRequest(page, size);
+        return avatarRepository.findAll(pageable);
+    }
+
+    // ========== HELPER METHODS ==========
+
+    private byte[] generateImagePreview(MultipartFile file) throws IOException {
+        try (InputStream is = file.getInputStream()) {
+            BufferedImage originalImage = ImageIO.read(is);
+
+            if (originalImage == null) {
+                throw new IOException("Could not read image");
+            }
+
+            int originalWidth = originalImage.getWidth();
+            int originalHeight = originalImage.getHeight();
+            int previewHeight = (int) ((double) originalHeight / originalWidth * PREVIEW_WIDTH);
+
+            BufferedImage previewImage = new BufferedImage(PREVIEW_WIDTH, previewHeight, originalImage.getType());
+            Graphics2D graphics = previewImage.createGraphics();
+            graphics.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+            graphics.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
+            graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+            graphics.drawImage(originalImage, 0, 0, PREVIEW_WIDTH, previewHeight, null);
+            graphics.dispose();
+
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            String formatName = getExtension(file.getOriginalFilename());
+            assert formatName != null;
+            ImageIO.write(previewImage, formatName, baos);
+
+            return baos.toByteArray();
+        }
+    }
+
+    private Avatar findOrCreateAvatar(Student student) {
+        Optional<Avatar> existingAvatar = avatarRepository.findByStudent(student);
+        return existingAvatar.orElse(new Avatar());
+    }
+
+    private String getExtension(String fileName) {
+        if (fileName == null || fileName.lastIndexOf(".") == -1) {
+            return null;
+        }
+        return fileName.substring(fileName.lastIndexOf(".") + 1);
+    }
+
+    private String normalizeFileName(String fileName) {
+        if (fileName == null) {
+            return "unknown";
         }
 
-        String contentType = Files.probeContentType(file.toPath());
-        if (contentType == null) {
-            contentType = DEFAULT_CONTENT_TYPE;
+        String normalized = fileName
+                .trim()
+                .toLowerCase()
+                .replaceAll("[\\\\/:*?\"<>|\\s]", "_")
+                .replaceAll("[^a-z0-9_.-]", "")
+                .replaceAll("_{2,}", "_");
+
+        if (normalized.isEmpty()) {
+            return "student_" + System.currentTimeMillis();
         }
 
-        response.setContentType(contentType);
-        response.setContentLength((int) file.length());
-
-        try (InputStream is = Files.newInputStream(file.toPath());
-             OutputStream os = response.getOutputStream()) {
-            is.transferTo(os);
-        }
+        return normalized;
     }
 }

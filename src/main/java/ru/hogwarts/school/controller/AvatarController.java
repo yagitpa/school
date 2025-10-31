@@ -1,6 +1,7 @@
 package ru.hogwarts.school.controller;
 
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -22,15 +23,16 @@ public class AvatarController {
     }
 
     @PostMapping(value = "/{studentId}/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public Long uploadAvatar(@PathVariable Long studentId,
-                             @RequestParam MultipartFile file) throws IOException {
-        return avatarService.uploadAvatar(studentId, file);
+    public ResponseEntity<String> uploadAvatar(@PathVariable Long studentId,
+                                               @RequestParam MultipartFile file) throws IOException {
+        avatarService.uploadAvatar(studentId, file);
+        return ResponseEntity.ok("Avatar uploaded successfully");
     }
 
-    @GetMapping("/{studentId}/from-db")
-    public ResponseEntity<byte[]> getAvatarFromDb(@PathVariable Long studentId) {
+    @GetMapping("/{studentId}/preview")
+    public ResponseEntity<byte[]> getAvatarPreview(@PathVariable Long studentId) {
         try {
-            Avatar avatar = avatarService.findAvatar(studentId);
+            Avatar avatar = avatarService.getAvatarFromDB(studentId);
 
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.parseMediaType(avatar.getMediaType()));
@@ -44,14 +46,26 @@ public class AvatarController {
         }
     }
 
-    @GetMapping("/{studentId}/from-file")
-    public ResponseEntity<Void> getAvatarFromFile(@PathVariable Long studentId,
-                                                  HttpServletResponse response) {
+    @GetMapping("/{studentId}/full")
+    public void getAvatarFull(@PathVariable Long studentId,
+                              HttpServletResponse response) {
         try {
             avatarService.getAvatarFromFile(studentId, response);
-            return ResponseEntity.ok().build();
         } catch (IOException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+            response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
+        }
+    }
+
+    @GetMapping("/all")
+    public ResponseEntity<Page<Avatar>> getAllAvatarsWithPagination(
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "10") int size) {
+
+        try {
+            Page<Avatar> avatarsPage = avatarService.getAllAvatarsWithPagination(page, size);
+            return ResponseEntity.ok(avatarsPage);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
     }
 }

@@ -25,10 +25,10 @@ public class StudentService {
 
     public Student findStudent(long id) {
         return studentRepository.findById(id)
-                                .orElseThrow(() -> new ResponseStatusException(
-                                        HttpStatus.NOT_FOUND,
-                                        "There is no student with ID " + id
-                                ));
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND,
+                        "There is no student with ID " + id
+                ));
     }
 
     @Transactional
@@ -44,8 +44,11 @@ public class StudentService {
 
     @Transactional
     public Student deleteStudent(long id) {
-        Student student = studentRepository.findById(id).orElseThrow(() -> new ResponseStatusException(
-                HttpStatus.NOT_FOUND, "There is no student with ID " + id));
+        Student student = studentRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND,
+                        "There is no student with ID " + id
+                ));
         studentRepository.deleteById(id);
         return student;
     }
@@ -69,5 +72,17 @@ public class StudentService {
 
     public List<Student> getStudentsByFaculty(Long facultyId) {
         return studentRepository.findByFacultyId(facultyId);
+    }
+
+    public Integer getTotalCountOfStudents() {
+        return studentRepository.getTotalCountOfStudents();
+    }
+
+    public Double getAverageAgeOfStudents() {
+        return studentRepository.getAverageAgeOfStudents();
+    }
+
+    public List<Student> getLastFiveStudents() {
+        return studentRepository.getLastFiveStudents();
     }
 }

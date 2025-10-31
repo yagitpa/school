@@ -1,6 +1,8 @@
 package ru.hogwarts.school.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import org.hibernate.annotations.LazyGroup;
 
 import java.util.Arrays;
 import java.util.Objects;
@@ -13,11 +15,17 @@ public class Avatar {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name = "file_path")
     private String filePath;
+
+    @Column(name = "file_size")
     private long fileSize;
+
+    @Column(name = "media_type")
     private String mediaType;
 
     @Lob
+    @Column(name = "data")
     private byte[] data;
 
     @OneToOne
