@@ -8,8 +8,8 @@ CREATE TABLE cars (
 CREATE TABLE people (
     id BIGSERIAL PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
-    age INTEGER NOT NULL CHEK (age >= 0),
-    has_diver_license BOOLEAN NOT NULL DEFAULT false
+    age INTEGER NOT NULL CHECK (age >= 0),
+    has_driver_license BOOLEAN NOT NULL DEFAULT false
 );
 
 CREATE TABLE cars_and_people (
@@ -32,7 +32,7 @@ INSERT INTO people (name, age, has_driver_license) VALUES
     ('Ivan Ivanov', 30, true),
     ('Alisa Yandex', 0, false);
 
-INSERT INTO cars_and_people (person_id, car_id) VALUE
+INSERT INTO cars_and_people (person_id, car_id) VALUES
     (1, 1),
     (1, 2),
     (2, 2),
