@@ -12,7 +12,6 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import ru.hogwarts.school.dto.FacultyDto;
 import ru.hogwarts.school.dto.StudentDto;
-import ru.hogwarts.school.model.Faculty;
 import ru.hogwarts.school.service.AvatarService;
 
 import static org.junit.jupiter.api.Assertions.*;

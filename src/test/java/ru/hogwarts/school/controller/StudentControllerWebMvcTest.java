@@ -10,8 +10,9 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.server.ResponseStatusException;
+import ru.hogwarts.school.dto.FacultyDto;
 import ru.hogwarts.school.dto.StudentDto;
-import ru.hogwarts.school.model.Faculty;
+import ru.hogwarts.school.mapper.FacultyMapper;
 import ru.hogwarts.school.service.StudentService;
 
 import java.util.Arrays;
@@ -35,8 +36,11 @@ public class StudentControllerWebMvcTest {
     @MockitoBean
     private StudentService studentService;
 
+    @MockitoBean
+    private FacultyMapper facultyMapper;
+
     private StudentDto testStudentDto;
-    private Faculty testFaculty;
+    private FacultyDto testFacultyDto;
 
     @BeforeEach
     void setUp() {
@@ -46,8 +50,11 @@ public class StudentControllerWebMvcTest {
         testStudentDto.setAge(StudentConst.TEST_AGE);
         testStudentDto.setFacultyId(null);
 
-        testFaculty = new Faculty("Gryffindor", "Red");
-        testFaculty.setId(1L);
+        testFacultyDto = new FacultyDto();
+        testFacultyDto.setId(1L);
+        testFacultyDto.setName("Gryffindor");
+        testFacultyDto.setColor("Red");
+        testFacultyDto.setStudentIds(Collections.emptyList());
     }
 
     // ========== POSITIVE TESTS ==========
@@ -238,13 +245,14 @@ public class StudentControllerWebMvcTest {
     @DisplayName("Positive. Should return student faculty")
     void getStudentFaculty_withFaculty_shouldReturnFaculty() throws Exception {
         // Given
-        when(studentService.getStudentFaculty(EXISTING_ID)).thenReturn(testFaculty);
+        when(studentService.getStudentFacultyDto(EXISTING_ID)).thenReturn(testFacultyDto);
 
         // When & Then
         mockMvc.perform(get(StudentConst.ENDPOINT + "/{id}" + StudentConst.FACULTY_ENDPOINT, EXISTING_ID))
                .andExpect(status().isOk())
                .andExpect(jsonPath("$.name").value("Gryffindor"))
                .andExpect(jsonPath("$.color").value("Red"))
+               .andExpect(jsonPath("$.studentIds").isArray())
                .andDo(print());
     }
 
@@ -299,7 +307,7 @@ public class StudentControllerWebMvcTest {
     @DisplayName("Negative. Should return 404 when Student has no Faculty")
     void getStudentFaculty_noFaculty_shouldReturn404() throws Exception {
         // Given
-        when(studentService.getStudentFaculty(EXISTING_ID)).thenThrow(
+        when(studentService.getStudentFacultyDto(EXISTING_ID)).thenThrow(
                 new ResponseStatusException(HttpStatus.NOT_FOUND, "Faculty not Found")
         );
 

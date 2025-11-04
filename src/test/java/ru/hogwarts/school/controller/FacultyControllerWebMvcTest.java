@@ -11,8 +11,9 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.server.ResponseStatusException;
 import ru.hogwarts.school.dto.FacultyDto;
-import ru.hogwarts.school.model.Student;
+import ru.hogwarts.school.dto.StudentDto;
 import ru.hogwarts.school.service.FacultyService;
+import ru.hogwarts.school.service.UniversityManagementService;
 
 import java.util.Collections;
 import java.util.List;
@@ -36,7 +37,10 @@ public class FacultyControllerWebMvcTest {
     private FacultyService facultyService;
 
     private FacultyDto testFacultyDto;
-    private Student testStudent;
+    private StudentDto testStudentDto;
+
+    @MockitoBean
+    private UniversityManagementService universityManagementService;
 
     @BeforeEach
     void setUp() {
@@ -46,8 +50,10 @@ public class FacultyControllerWebMvcTest {
         testFacultyDto.setColor(FacultyConst.TEST_COLOR);
         testFacultyDto.setStudentIds(Collections.emptyList());
 
-        testStudent = new Student("Test Student", 17);
-        testStudent.setId(1L);
+        testStudentDto = new StudentDto();
+        testStudentDto.setId(1L);
+        testStudentDto.setName("Test Student");
+        testStudentDto.setAge(17);
     }
 
     // ========== POSITIVE TESTS ==========
@@ -183,7 +189,7 @@ public class FacultyControllerWebMvcTest {
     @DisplayName("Positive. Should return faculty students")
     void getFacultyStudents_existingFaculty_shouldReturnStudentsList() throws Exception {
         // Given
-        List<Student> students = Collections.singletonList(testStudent);
+        List<StudentDto> students = Collections.singletonList(testStudentDto);
         when(facultyService.getFacultyStudents(EXISTING_ID)).thenReturn(students);
 
         // When & Then

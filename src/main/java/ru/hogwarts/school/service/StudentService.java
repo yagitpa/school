@@ -1,9 +1,9 @@
 package ru.hogwarts.school.service;
 
-import jakarta.transaction.Transactional;
-import org.springframework.context.annotation.Lazy;
+import org.hibernate.Hibernate;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 import ru.hogwarts.school.dto.FacultyDto;
 import ru.hogwarts.school.dto.StudentDto;
@@ -19,17 +19,14 @@ import java.util.List;
 public class StudentService {
     private final StudentRepository studentRepository;
     private final StudentMapper studentMapper;
-    private final FacultyService facultyService;
+    private final UniversityManagementService universityManagementService;
 
-    private final FacultyMapper facultyMapper;
 
     public StudentService(StudentRepository studentRepository, StudentMapper studentMapper,
-                          @Lazy FacultyService facultyService,
-                          FacultyMapper facultyMapper) {
+                          UniversityManagementService universityManagementService) {
         this.studentRepository = studentRepository;
         this.studentMapper = studentMapper;
-        this.facultyService = facultyService;
-        this.facultyMapper = facultyMapper;
+        this.universityManagementService = universityManagementService;
     }
 
     @Transactional
@@ -37,7 +34,7 @@ public class StudentService {
         Student student = studentMapper.toEntity(studentDto);
 
         if (studentDto.getFacultyId() != null) {
-            Faculty faculty = facultyService.findFacultyEntity(studentDto.getFacultyId());
+            Faculty faculty = universityManagementService.findFacultyEntity(studentDto.getFacultyId());
             student.setFaculty(faculty);
         }
         
@@ -65,7 +62,7 @@ public class StudentService {
         Student student = studentMapper.toEntity(studentDto);
 
         if (studentDto.getFacultyId() != null) {
-            Faculty faculty = facultyService.findFacultyEntity(studentDto.getFacultyId());
+            Faculty faculty = universityManagementService.findFacultyEntity(studentDto.getFacultyId());
             student.setFaculty(faculty);
         } else {
             student.setFaculty(null);
@@ -100,21 +97,6 @@ public class StudentService {
         return studentMapper.toDtoList(students);
     }
 
-    public Faculty getStudentFaculty(Long studentId) {
-        Student student = findStudentEntity(studentId);
-        Faculty faculty = student.getFaculty();
-        if (faculty == null) {
-            throw new ResponseStatusException(
-                    HttpStatus.NOT_FOUND, "Student with ID " + studentId + " has no faculty"
-            );
-        }
-        return faculty;
-    }
-
-    public List<Student> getStudentsByFaculty(Long facultyId) {
-        return studentRepository.findByFacultyId(facultyId);
-    }
-
     public Integer getTotalCountOfStudents() {
         return studentRepository.getTotalCountOfStudents();
     }
@@ -136,27 +118,8 @@ public class StudentService {
                                 ));
     }
 
-    @Transactional
-    public void updateStudentEntity(Student student) {
-        if (!studentRepository.existsById(student.getId())) {
-            throw new ResponseStatusException(
-                    HttpStatus.NOT_FOUND,
-                    "There is no student with ID " + student.getId()
-            );
-        }
-        studentRepository.save(student);
-    }
-
-    @Transactional
+    @Transactional(readOnly = true)
     public FacultyDto getStudentFacultyDto(long studentId) {
-        Student student = findStudentEntity(studentId);
-        Faculty faculty = student.getFaculty();
-
-        if (faculty == null) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND,
-                    "Student with ID " + studentId + " has no Faculty");
-        }
-
-        return facultyMapper.toDto(faculty);
+        return universityManagementService.getStudentFacultyDto(studentId);
     }
 }

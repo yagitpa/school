@@ -1,12 +1,13 @@
 package ru.hogwarts.school.service;
 
 import jakarta.transaction.Transactional;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import ru.hogwarts.school.dto.FacultyDto;
+import ru.hogwarts.school.dto.StudentDto;
 import ru.hogwarts.school.mapper.FacultyMapper;
+import ru.hogwarts.school.mapper.StudentMapper;
 import ru.hogwarts.school.model.Faculty;
 import ru.hogwarts.school.model.Student;
 import ru.hogwarts.school.repository.FacultyRepository;
@@ -16,14 +17,19 @@ import java.util.List;
 @Service
 public class FacultyService {
     private final FacultyRepository facultyRepository;
-    private final StudentService studentService;
     private final FacultyMapper facultyMapper;
 
-    public FacultyService(FacultyRepository facultyRepository, @Lazy StudentService studentService,
-                          FacultyMapper facultyMapper) {
+    private final UniversityManagementService universityManagementService;
+
+    private final StudentMapper studentMapper;
+
+    public FacultyService(FacultyRepository facultyRepository, FacultyMapper facultyMapper,
+                          UniversityManagementService universityManagementService,
+                          StudentMapper studentMapper) {
         this.facultyRepository = facultyRepository;
-        this.studentService = studentService;
         this.facultyMapper = facultyMapper;
+        this.universityManagementService = universityManagementService;
+        this.studentMapper = studentMapper;
     }
 
     @Transactional
@@ -56,17 +62,7 @@ public class FacultyService {
 
     @Transactional
     public void deleteFaculty(Long facultyId) {
-        Faculty faculty = facultyRepository.findById(facultyId)
-                                           .orElseThrow(() -> new ResponseStatusException(
-                                                   HttpStatus.NOT_FOUND,
-                                                   "There is no faculty with ID " + facultyId
-                                           ));
-        List<Student> facultyStudents = studentService.getStudentsByFaculty(facultyId);
-        for (Student student : facultyStudents) {
-            student.setFaculty(null);
-            studentService.updateStudentEntity(student);
-        }
-        facultyRepository.deleteById(facultyId);
+        universityManagementService.deleteFacultyWithStudents(facultyId);
     }
 
     public List<FacultyDto> getFacultiesByColor(String color) {
@@ -84,14 +80,15 @@ public class FacultyService {
         return facultyMapper.toDtoList(faculties);
     }
 
-    public List<Student> getFacultyStudents(Long facultyId) {
+    public List<StudentDto> getFacultyStudents(Long facultyId) {
         if (!facultyRepository.existsById(facultyId)) {
             throw new ResponseStatusException(
                     HttpStatus.NOT_FOUND,
                     "There is no faculty with ID " + facultyId
             );
         }
-        return studentService.getStudentsByFaculty(facultyId);
+        List<Student> students = universityManagementService.getStudentsByFaculty(facultyId);
+        return studentMapper.toDtoList(students);
     }
 
     public Faculty findFacultyEntity(long id) {
