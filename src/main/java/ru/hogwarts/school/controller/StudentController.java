@@ -1,8 +1,10 @@
 package ru.hogwarts.school.controller;
 
 import org.springframework.web.bind.annotation.*;
+import ru.hogwarts.school.dto.FacultyDto;
+import ru.hogwarts.school.mapper.FacultyMapper;
 import ru.hogwarts.school.model.Faculty;
-import ru.hogwarts.school.model.Student;
+import ru.hogwarts.school.dto.StudentDto;
 import ru.hogwarts.school.service.StudentService;
 
 import java.util.List;
@@ -12,42 +14,46 @@ import java.util.List;
 public class StudentController {
     private final StudentService studentService;
 
-    public StudentController(StudentService studentService) {
+    private final FacultyMapper facultyMapper;
+
+    public StudentController(StudentService studentService,
+                             FacultyMapper facultyMapper) {
         this.studentService = studentService;
+        this.facultyMapper = facultyMapper;
     }
 
     @PostMapping
-    public Student createStudent(@RequestBody Student student) {
-        return studentService.createStudent(student);
+    public StudentDto createStudent(@RequestBody StudentDto studentDto) {
+        return studentService.createStudent(studentDto);
     }
 
     @GetMapping("/{id}")
-    public Student findStudent(@PathVariable long id) {
+    public StudentDto findStudent(@PathVariable long id) {
         return studentService.findStudent(id);
     }
 
     @PutMapping
-    public Student updateStudent(@RequestBody Student student) {
-        return studentService.updateStudent(student);
+    public StudentDto updateStudent(@RequestBody StudentDto studentDto) {
+        return studentService.updateStudent(studentDto);
     }
 
     @DeleteMapping("/{id}")
-    public Student deleteStudent(@PathVariable long id) {
+    public StudentDto deleteStudent(@PathVariable long id) {
         return studentService.deleteStudent(id);
     }
 
     @GetMapping
-    public List<Student> getAllStudents() {
+    public List<StudentDto> getAllStudents() {
         return studentService.getAllStudents();
     }
 
     @GetMapping("/age/{age}")
-    public List<Student> getStudentByAge(@PathVariable int age) {
+    public List<StudentDto> getStudentByAge(@PathVariable int age) {
         return studentService.getStudentsByAge(age);
     }
 
     @GetMapping("/age-between")
-    public List<Student> getStudentsByAgeBetween(
+    public List<StudentDto> getStudentsByAgeBetween(
             @RequestParam int minAge,
             @RequestParam int maxAge
     ) {
@@ -55,8 +61,8 @@ public class StudentController {
     }
 
     @GetMapping("{id}/faculty")
-    public Faculty getStudentFaculty(@PathVariable long id) {
-        return studentService.getStudentFaculty(id);
+    public FacultyDto getStudentFaculty(@PathVariable long id) {
+        return studentService.getStudentFacultyDto(id);
     }
 
     @GetMapping("/count")
@@ -70,7 +76,7 @@ public class StudentController {
     }
 
     @GetMapping("/last-five")
-    public List<Student> getLastFiveStudents() {
+    public List<StudentDto> getLastFiveStudents() {
         return studentService.getLastFiveStudents();
     }
 }

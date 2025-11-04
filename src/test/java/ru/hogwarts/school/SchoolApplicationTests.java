@@ -1,6 +1,5 @@
 package ru.hogwarts.school;
 
-import jakarta.persistence.Lob;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;

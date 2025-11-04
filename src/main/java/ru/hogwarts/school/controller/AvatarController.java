@@ -8,7 +8,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import ru.hogwarts.school.model.Avatar;
+import ru.hogwarts.school.dto.AvatarDto;
 import ru.hogwarts.school.service.AvatarService;
 
 import java.io.IOException;
@@ -32,7 +32,7 @@ public class AvatarController {
     @GetMapping("/{studentId}/preview")
     public ResponseEntity<byte[]> getAvatarPreview(@PathVariable Long studentId) {
         try {
-            Avatar avatar = avatarService.getAvatarFromDB(studentId);
+            AvatarDto avatar = avatarService.getAvatarFromDB(studentId);
 
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.parseMediaType(avatar.getMediaType()));
@@ -57,12 +57,12 @@ public class AvatarController {
     }
 
     @GetMapping("/all")
-    public ResponseEntity<Page<Avatar>> getAllAvatarsWithPagination(
+    public ResponseEntity<Page<AvatarDto>> getAllAvatarsWithPagination(
             @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "10") int size) {
 
         try {
-            Page<Avatar> avatarsPage = avatarService.getAllAvatarsWithPagination(page, size);
+            Page<AvatarDto> avatarsPage = avatarService.getAllAvatarsWithPagination(page, size);
             return ResponseEntity.ok(avatarsPage);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();

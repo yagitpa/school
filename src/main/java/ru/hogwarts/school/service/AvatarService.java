@@ -10,6 +10,8 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 import ru.hogwarts.school.model.Avatar;
 import ru.hogwarts.school.model.Student;
+import ru.hogwarts.school.dto.AvatarDto;
+import ru.hogwarts.school.mapper.AvatarMapper;
 import ru.hogwarts.school.repository.AvatarRepository;
 import ru.hogwarts.school.util.PaginationUtil;
 
@@ -25,15 +27,17 @@ import java.util.Optional;
 public class AvatarService {
     private final AvatarRepository avatarRepository;
     private final StudentService studentService;
+    private final AvatarMapper avatarMapper;
 
     @Value("${avatars.dir.path:avatars}")
     private String avatarsDir;
 
     private static final int PREVIEW_WIDTH = 100;
 
-    public AvatarService(AvatarRepository avatarRepository, StudentService studentService) {
+    public AvatarService(AvatarRepository avatarRepository, StudentService studentService, AvatarMapper avatarMapper) {
         this.avatarRepository = avatarRepository;
         this.studentService = studentService;
+        this.avatarMapper = avatarMapper;
     }
 
     @Transactional
@@ -52,7 +56,7 @@ public class AvatarService {
             Files.createDirectories(dirPath);
         }
 
-        Student student = studentService.findStudent(studentId);
+        Student student = studentService.findStudentEntity(studentId);
 
         String normalizedStudentName = normalizeFileName(student.getName());
         Path fullSizeFilePath = Path.of(avatarsDir, normalizedStudentName + "_" + student.getId() + "_full."
@@ -72,37 +76,39 @@ public class AvatarService {
     }
 
     @Transactional
-    public Avatar findAvatar(Long studentId) {
-        Student student = studentService.findStudent(studentId);
-        return avatarRepository.findByStudent(student)
-                               .orElseThrow(() -> new ResponseStatusException(
-                                       HttpStatus.NOT_FOUND,
-                                       "Avatar not found for student with ID " + studentId
-                               ));
+    public AvatarDto findAvatar(Long studentId) {
+        Student student = studentService.findStudentEntity(studentId);
+        Avatar avatar = avatarRepository.findByStudent(student)
+                                        .orElseThrow(() -> new ResponseStatusException(
+                                                HttpStatus.NOT_FOUND,
+                                                "Avatar not found for student with ID " + studentId
+                                        ));
+        return avatarMapper.toDto(avatar);
     }
 
     @Transactional
     public void getAvatarFromFile(Long studentId, jakarta.servlet.http.HttpServletResponse response) throws IOException {
-        Avatar avatar = findAvatar(studentId);
-        String filePath = avatar.getFilePath();
+        AvatarDto avatarDTO = findAvatar(studentId);
+        String filePath = avatarDTO.getFilePath();
 
         try (BufferedInputStream bufferedInputStream = new BufferedInputStream(new FileInputStream(filePath))) {
-            response.setContentType(avatar.getMediaType());
-            response.setContentLength((int) avatar.getFileSize());
+            response.setContentType(avatarDTO.getMediaType());
+            response.setContentLength((int) avatarDTO.getFileSize());
             bufferedInputStream.transferTo(response.getOutputStream());
             response.flushBuffer();
         }
     }
 
     @Transactional
-    public Avatar getAvatarFromDB(Long studentId) {
+    public AvatarDto getAvatarFromDB(Long studentId) {
         return findAvatar(studentId);
     }
 
     @Transactional
-    public Page<Avatar> getAllAvatarsWithPagination(int page, int size) {
+    public Page<AvatarDto> getAllAvatarsWithPagination(int page, int size) {
         Pageable pageable = PaginationUtil.createPageRequest(page, size);
-        return avatarRepository.findAll(pageable);
+        Page<Avatar> avatarsPage = avatarRepository.findAll(pageable);
+        return avatarsPage.map(avatarMapper::toDto);
     }
 
     // ========== HELPER METHODS ==========
@@ -150,7 +156,7 @@ public class AvatarService {
 
     private String normalizeFileName(String fileName) {
         if (fileName == null) {
-            return "unknown";
+            return "unknown_name";
         }
 
         String normalized = fileName
