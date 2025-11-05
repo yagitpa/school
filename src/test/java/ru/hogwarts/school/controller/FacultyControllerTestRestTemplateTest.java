@@ -11,7 +11,7 @@ import org.springframework.http.*;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import ru.hogwarts.school.dto.FacultyDto;
-import ru.hogwarts.school.model.Student;
+import ru.hogwarts.school.dto.StudentDto;
 import ru.hogwarts.school.service.AvatarService;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -43,7 +43,7 @@ class FacultyControllerTestRestTemplateTest {
     @DisplayName("Positive. Should create faculty successfully with valid data")
     void createFaculty_validData_shouldReturnCreated() {
         // Given
-        String facultyJson = createFacultyJson(FacultyConst.TEST_NAME, FacultyConst.TEST_COLOR);
+        String facultyJson = createFacultyCreateJson(FacultyConst.TEST_NAME, FacultyConst.TEST_COLOR);
         HttpEntity<String> request = createHttpEntity(facultyJson);
 
         // When
@@ -52,7 +52,7 @@ class FacultyControllerTestRestTemplateTest {
         );
 
         // Then
-        assertEquals(HttpStatus.OK, postResponse.getStatusCode());
+        assertEquals(HttpStatus.CREATED, postResponse.getStatusCode());
         assertFacultyResponse(postResponse.getBody(), FacultyConst.TEST_NAME, FacultyConst.TEST_COLOR);
     }
 
@@ -64,7 +64,7 @@ class FacultyControllerTestRestTemplateTest {
 
         // When
         ResponseEntity<FacultyDto> getResponse = testRestTemplate.getForEntity(
-                testUrl + "/{id}", FacultyDto.class, createdFaculty.getId()
+                testUrl + "/{id}", FacultyDto.class, createdFaculty.id()
         );
 
         // Then
@@ -77,12 +77,12 @@ class FacultyControllerTestRestTemplateTest {
     void updateFaculty_existingFaculty_shouldReturnUpdatedFaculty() {
         // Given
         FacultyDto createdFaculty = createFacultyInDatabase(FacultyConst.TEST_NAME, FacultyConst.TEST_COLOR);
-        String updateJson = createFacultyJson(FacultyConst.UPDATED_NAME, FacultyConst.UPDATED_COLOR, createdFaculty.getId());
+        String updateJson = createFacultyUpdateJson(createdFaculty.id(), FacultyConst.UPDATED_NAME, FacultyConst.UPDATED_COLOR);
         HttpEntity<String> request = createHttpEntity(updateJson);
 
         // When
         ResponseEntity<FacultyDto> putResponse = testRestTemplate.exchange(
-                testUrl, HttpMethod.PUT, request, FacultyDto.class
+                testUrl + "/{id}", HttpMethod.PUT, request, FacultyDto.class, createdFaculty.id()
         );
 
         // Then
@@ -92,22 +92,22 @@ class FacultyControllerTestRestTemplateTest {
 
     @Test
     @DisplayName("Positive. Should delete faculty successfully")
-    void deleteFaculty_existingFaculty_shouldReturnOk() {
+    void deleteFaculty_existingFaculty_shouldReturnNoContent() {
         // Given
         FacultyDto createdFaculty = createFacultyInDatabase("Faculty to Delete", FacultyConst.BLUE_COLOR);
 
         // When
         ResponseEntity<Void> deleteResponse = testRestTemplate.exchange(
                 testUrl + "/{id}", HttpMethod.DELETE, HttpEntity.EMPTY, Void.class,
-                createdFaculty.getId()
+                createdFaculty.id()
         );
 
         // Then
-        assertEquals(HttpStatus.OK, deleteResponse.getStatusCode());
+        assertEquals(HttpStatus.NO_CONTENT, deleteResponse.getStatusCode());
 
         // Verify faculty is actually deleted
         ResponseEntity<FacultyDto> getResponse = testRestTemplate.getForEntity(
-                testUrl + "/{id}", FacultyDto.class, createdFaculty.getId()
+                testUrl + "/{id}", FacultyDto.class, createdFaculty.id()
         );
         assertEquals(HttpStatus.NOT_FOUND, getResponse.getStatusCode());
     }
@@ -162,16 +162,39 @@ class FacultyControllerTestRestTemplateTest {
     @DisplayName("Positive. Should return faculty students")
     void getFacultyStudents_existingFaculty_shouldReturnStudentsArray() {
         // Given
-        FacultyDto createdFaculty = createFacultyInDatabase("Faculty With Students", "Yellow");
+        FacultyDto createdFaculty = createFacultyInDatabase("Faculty With Students", "#F00");
 
         // When
-        ResponseEntity<Student[]> getResponse = testRestTemplate.getForEntity(
-                testUrl + "/{id}" + FacultyConst.STUDENTS_ENDPOINT, Student[].class, createdFaculty.getId()
+        ResponseEntity<StudentDto[]> getResponse = testRestTemplate.getForEntity(
+                testUrl + "/{id}" + FacultyConst.STUDENTS_ENDPOINT, StudentDto[].class, createdFaculty.id()
         );
 
         // Then
         assertEquals(HttpStatus.OK, getResponse.getStatusCode());
         assertNotNull(getResponse.getBody());
+    }
+
+    @Test
+    @DisplayName("Positive. Should create faculty with student IDs list")
+    void createFaculty_withStudentIds_shouldReturnFacultyWithStudentIds() {
+        // Given
+        String facultyJson = """
+                {
+                    "name": "Faculty with Students",
+                    "color": "#800080"
+                }""";
+        HttpEntity<String> request = createHttpEntity(facultyJson);
+
+        // When
+        ResponseEntity<FacultyDto> postResponse = testRestTemplate.exchange(
+                testUrl, HttpMethod.POST, request, FacultyDto.class
+        );
+
+        // Then
+        assertEquals(HttpStatus.CREATED, postResponse.getStatusCode());
+        assertNotNull(postResponse.getBody());
+        assertEquals("Faculty with Students", postResponse.getBody().name());
+        assertEquals("#800080", postResponse.getBody().color());
     }
 
     // ========== NEGATIVE TESTS ==========
@@ -192,12 +215,12 @@ class FacultyControllerTestRestTemplateTest {
     @DisplayName("Negative. Should return 404 when updating non-existent faculty")
     void updateFaculty_nonExistentId_shouldReturn404() {
         // Given
-        String facultyJson = createFacultyJson(FacultyConst.NON_EXISTENT_NAME, FacultyConst.NON_EXISTENT_COLOR, NON_EXISTENT_ID);
+        String facultyJson = createFacultyUpdateJson(NON_EXISTENT_ID, FacultyConst.NON_EXISTENT_NAME, FacultyConst.NON_EXISTENT_COLOR);
         HttpEntity<String> request = createHttpEntity(facultyJson);
 
         // When
         ResponseEntity<FacultyDto> putResponse = testRestTemplate.exchange(
-                testUrl, HttpMethod.PUT, request, FacultyDto.class
+                testUrl + "/{id}", HttpMethod.PUT, request, FacultyDto.class, NON_EXISTENT_ID
         );
 
         // Then
@@ -263,10 +286,10 @@ class FacultyControllerTestRestTemplateTest {
     }
 
     @Test
-    @DisplayName("Negative. Should handle empty faculty data")
+    @DisplayName("Negative. Should handle validation error for empty faculty data")
     void createFaculty_emptyData_shouldReturnBadRequest() {
         // Given
-        String emptyFacultyJson = createFacultyJson(EMPTY_STRING, EMPTY_STRING);
+        String emptyFacultyJson = createFacultyCreateJson(EMPTY_STRING, EMPTY_STRING);
         HttpEntity<String> request = createHttpEntity(emptyFacultyJson);
 
         // When
@@ -275,48 +298,15 @@ class FacultyControllerTestRestTemplateTest {
         );
 
         // Then
-        // Может возвращать либо BAD_REQUEST, либо OK в зависимости от валидации
-        assertTrue(postResponse.getStatusCode() == HttpStatus.BAD_REQUEST ||
-                postResponse.getStatusCode() == HttpStatus.OK);
+        assertEquals(HttpStatus.BAD_REQUEST, postResponse.getStatusCode());
     }
 
     @Test
-    @DisplayName("Negative. Should handle malformed JSON")
-    void createFaculty_malformedJson_shouldReturnBadRequest() {
+    @DisplayName("Negative. Should handle validation error for invalid color format")
+    void createFaculty_invalidColor_shouldReturnBadRequest() {
         // Given
-        String malformedJson = """
-                {
-                    "id": 0,
-                    "name": "Test",
-                    "color": "Red"
-                """; // Не хватает закрывающей скобки
-        HttpEntity<String> request = createHttpEntity(malformedJson);
-
-        // When
-        try {
-            ResponseEntity<FacultyDto> postResponse = testRestTemplate.exchange(
-                    testUrl, HttpMethod.POST, request, FacultyDto.class
-            );
-            // Spring обычно возвращает 400 для невалидного JSON
-            assertSame(HttpStatus.BAD_REQUEST, postResponse.getStatusCode());
-        } catch (Exception e) {
-            // Ожидаем исключение для невалидного JSON
-            assertTrue(e.getMessage().contains("400") ||
-                    e.getMessage().contains("Bad Request"));
-        }
-    }
-
-    @Test
-    @DisplayName("Positive. Should create faculty with student IDs list")
-    void createFaculty_withStudentIds_shouldReturnFacultyWithStudentIds() {
-        // Given
-        String facultyJson = """
-                {
-                    "name": "Faculty with Students",
-                    "color": "Purple",
-                    "studentIds": [1, 2, 3]
-                }""";
-        HttpEntity<String> request = createHttpEntity(facultyJson);
+        String invalidFacultyJson = createFacultyCreateJson("Test Faculty", "invalid-color");
+        HttpEntity<String> request = createHttpEntity(invalidFacultyJson);
 
         // When
         ResponseEntity<FacultyDto> postResponse = testRestTemplate.exchange(
@@ -324,11 +314,29 @@ class FacultyControllerTestRestTemplateTest {
         );
 
         // Then
-        assertEquals(HttpStatus.OK, postResponse.getStatusCode());
+        assertEquals(HttpStatus.BAD_REQUEST, postResponse.getStatusCode());
+    }
+
+    @Test
+    @DisplayName("Negative. Should handle malformed JSON")
+    void createFaculty_malformedJson_shouldReturnBadRequest() {
+        // Given
+        String malformedJson = """
+            {
+                "name": "Test Faculty",
+                "color": "#FF5733"
+            """;
+        HttpEntity<String> request = createHttpEntity(malformedJson);
+
+        // When
+        ResponseEntity<String> postResponse = testRestTemplate.exchange(
+                testUrl, HttpMethod.POST, request, String.class
+        );
+
+        // Then
+        assertEquals(HttpStatus.BAD_REQUEST, postResponse.getStatusCode());
         assertNotNull(postResponse.getBody());
-        assertEquals("Faculty with Students", postResponse.getBody().getName());
-        assertEquals("Purple", postResponse.getBody().getColor());
-        // StudentIds могут быть null или пустым списком в ответе, так как это входные данные
+        assertTrue(postResponse.getBody().contains("Invalid JSON format"));
     }
 
     // ========== HELPER METHODS ==========
@@ -339,7 +347,7 @@ class FacultyControllerTestRestTemplateTest {
         return new HttpEntity<>(jsonBody, headers);
     }
 
-    private String createFacultyJson(String name, String color) {
+    private String createFacultyCreateJson(String name, String color) {
         return String.format("""
                 {
                     "name": "%s",
@@ -347,17 +355,16 @@ class FacultyControllerTestRestTemplateTest {
                 }""", name, color);
     }
 
-    private String createFacultyJson(String name, String color, Long id) {
+    private String createFacultyUpdateJson(Long id, String name, String color) {
         return String.format("""
                 {
-                    "id": %d,
                     "name": "%s",
                     "color": "%s"
-                }""", id, name, color);
+                }""", name, color);
     }
 
     private FacultyDto createFacultyInDatabase(String name, String color) {
-        String facultyJson = createFacultyJson(name, color);
+        String facultyJson = createFacultyCreateJson(name, color);
         HttpEntity<String> request = createHttpEntity(facultyJson);
 
         ResponseEntity<FacultyDto> postResponse = testRestTemplate.exchange(
@@ -369,17 +376,16 @@ class FacultyControllerTestRestTemplateTest {
 
     private void assertFacultyResponse(FacultyDto faculty, String expectedName, String expectedColor) {
         assertNotNull(faculty, "Faculty should not be null");
-        assertNotNull(faculty.getId(), "Faculty ID should not be null");
-        assertEquals(expectedName, faculty.getName(), "Faculty name should match");
-        assertEquals(expectedColor, faculty.getColor(), "Faculty color should match");
-        // studentIds может быть null - это нормально
+        assertNotNull(faculty.id(), "Faculty ID should not be null");
+        assertEquals(expectedName, faculty.name(), "Faculty name should match");
+        assertEquals(expectedColor, faculty.color(), "Faculty color should match");
     }
 
     private void assertAllFacultiesHaveColor(FacultyDto[] faculties, String expectedColor) {
         assertNotNull(faculties);
         if (faculties.length > 0) {
             for (FacultyDto faculty : faculties) {
-                assertEquals(expectedColor, faculty.getColor(),
+                assertEquals(expectedColor, faculty.color(),
                         "All faculties should have the expected color");
             }
         }

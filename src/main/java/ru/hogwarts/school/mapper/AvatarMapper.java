@@ -2,18 +2,25 @@ package ru.hogwarts.school.mapper;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import ru.hogwarts.school.dto.AvatarDto;
+import ru.hogwarts.school.dto.AvatarDataDto;
+import ru.hogwarts.school.dto.AvatarInfoDto;
 import ru.hogwarts.school.model.Avatar;
 
 import java.util.List;
 
 @Mapper(componentModel = "spring")
 public interface AvatarMapper {
+
     @Mapping(target = "student", ignore = true)
-    Avatar toEntity(AvatarDto avatarDto);
+    @Mapping(target = "data", ignore = true)
+    Avatar toEntity(AvatarInfoDto avatarInfoDto);
 
-    @Mapping(source = "student.id", target = "studentId")
-    AvatarDto toDto(Avatar avatar);
+    @Mapping(target = "studentId", source = "student.id")
+    AvatarInfoDto toInfoDto(Avatar avatar);
 
-    List<AvatarDto> toDtoList(List<Avatar> avatars);
+    @Mapping(target = "data", source = "data")
+    @Mapping(target = "mediaType", source = "mediaType")
+    AvatarDataDto toDataDto(Avatar avatar);
+
+    List<AvatarInfoDto> toInfoDtoList(List<Avatar> avatars);
 }

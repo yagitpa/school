@@ -1,13 +1,13 @@
 package ru.hogwarts.school.service;
 
-import org.hibernate.Hibernate;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 import ru.hogwarts.school.dto.FacultyDto;
+import ru.hogwarts.school.dto.StudentCreateDto;
 import ru.hogwarts.school.dto.StudentDto;
-import ru.hogwarts.school.mapper.FacultyMapper;
+import ru.hogwarts.school.dto.StudentUpdateDto;
 import ru.hogwarts.school.mapper.StudentMapper;
 import ru.hogwarts.school.model.Faculty;
 import ru.hogwarts.school.model.Student;
@@ -30,14 +30,14 @@ public class StudentService {
     }
 
     @Transactional
-    public StudentDto createStudent(StudentDto studentDto) {
-        Student student = studentMapper.toEntity(studentDto);
+    public StudentDto createStudent(StudentCreateDto studentCreateDto) {
+        Student student = studentMapper.toEntity(studentCreateDto);
 
-        if (studentDto.getFacultyId() != null) {
-            Faculty faculty = universityManagementService.findFacultyEntity(studentDto.getFacultyId());
+        if (studentCreateDto.facultyId() != null) {
+            Faculty faculty = universityManagementService.findFacultyEntity(studentCreateDto.facultyId());
             student.setFaculty(faculty);
         }
-        
+
         Student savedStudent = studentRepository.save(student);
         return studentMapper.toDto(savedStudent);
     }
@@ -51,24 +51,20 @@ public class StudentService {
     }
 
     @Transactional
-    public StudentDto updateStudent(StudentDto studentDto) {
-        if (!studentRepository.existsById(studentDto.getId())) {
-            throw new ResponseStatusException(
-                    HttpStatus.NOT_FOUND,
-                    "There is no student with ID " + studentDto.getId()
-            );
-        }
+    public StudentDto updateStudent(Long id, StudentUpdateDto studentUpdateDto) {
+        Student existingStudent = findStudentEntity(id);
 
-        Student student = studentMapper.toEntity(studentDto);
+        existingStudent.setName(studentUpdateDto.name());
+        existingStudent.setAge(studentUpdateDto.age());
 
-        if (studentDto.getFacultyId() != null) {
-            Faculty faculty = universityManagementService.findFacultyEntity(studentDto.getFacultyId());
-            student.setFaculty(faculty);
+        if (studentUpdateDto.facultyId() != null) {
+            Faculty faculty = universityManagementService.findFacultyEntity(studentUpdateDto.facultyId());
+            existingStudent.setFaculty(faculty);
         } else {
-            student.setFaculty(null);
+            existingStudent.setFaculty(null);
         }
 
-        Student updatedStudent = studentRepository.save(student);
+        Student updatedStudent = studentRepository.save(existingStudent);
         return studentMapper.toDto(updatedStudent);
     }
 
@@ -111,11 +107,10 @@ public class StudentService {
     }
 
     public Student findStudentEntity(long id) {
-        return studentRepository.findById(id)
-                                .orElseThrow(() -> new ResponseStatusException(
-                                        HttpStatus.NOT_FOUND,
-                                        "There is no student with ID " + id
-                                ));
+        return studentRepository.findById(id).orElseThrow(
+                () -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+                        "There is no student with ID " + id
+                ));
     }
 
     @Transactional(readOnly = true)

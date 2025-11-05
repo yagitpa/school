@@ -5,9 +5,7 @@ import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
-public record StudentDto(
-        Long id,
-
+public record StudentCreateDto(
         @NotBlank(message = "Student name is mandatory")
         @Size(min = 3, max = 50, message = "Name must be between 3 and 50 characters")
         String name,
@@ -18,8 +16,7 @@ public record StudentDto(
 
         Long facultyId
 ) {
-
-    public StudentDto {
+    public StudentCreateDto {
         if (name != null) {
             name = name.trim();
         }

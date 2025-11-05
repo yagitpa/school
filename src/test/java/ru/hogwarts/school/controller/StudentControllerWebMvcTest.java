@@ -11,8 +11,9 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.server.ResponseStatusException;
 import ru.hogwarts.school.dto.FacultyDto;
+import ru.hogwarts.school.dto.StudentCreateDto;
 import ru.hogwarts.school.dto.StudentDto;
-import ru.hogwarts.school.mapper.FacultyMapper;
+import ru.hogwarts.school.dto.StudentUpdateDto;
 import ru.hogwarts.school.service.StudentService;
 
 import java.util.Arrays;
@@ -20,6 +21,7 @@ import java.util.Collections;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -36,25 +38,13 @@ public class StudentControllerWebMvcTest {
     @MockitoBean
     private StudentService studentService;
 
-    @MockitoBean
-    private FacultyMapper facultyMapper;
-
     private StudentDto testStudentDto;
     private FacultyDto testFacultyDto;
 
     @BeforeEach
     void setUp() {
-        testStudentDto = new StudentDto();
-        testStudentDto.setId(EXISTING_ID);
-        testStudentDto.setName(StudentConst.TEST_NAME);
-        testStudentDto.setAge(StudentConst.TEST_AGE);
-        testStudentDto.setFacultyId(null);
-
-        testFacultyDto = new FacultyDto();
-        testFacultyDto.setId(1L);
-        testFacultyDto.setName("Gryffindor");
-        testFacultyDto.setColor("Red");
-        testFacultyDto.setStudentIds(Collections.emptyList());
+        testStudentDto = new StudentDto(EXISTING_ID, StudentConst.TEST_NAME, StudentConst.TEST_AGE, null);
+        testFacultyDto = new FacultyDto(1L, "Gryffindor", "#FF0000", Collections.emptyList());
     }
 
     // ========== POSITIVE TESTS ==========
@@ -63,14 +53,14 @@ public class StudentControllerWebMvcTest {
     @DisplayName("Positive. Should Create Student successfully")
     void createStudent_validData_shouldReturnStudent() throws Exception {
         // Given
-        String studentJson = createValidStudentJson(StudentConst.TEST_NAME, StudentConst.TEST_AGE);
-        when(studentService.createStudent(any(StudentDto.class))).thenReturn(testStudentDto);
+        String studentJson = createValidStudentCreateJson(StudentConst.TEST_NAME, StudentConst.TEST_AGE);
+        when(studentService.createStudent(any(StudentCreateDto.class))).thenReturn(testStudentDto);
 
         // When & Then
         mockMvc.perform(post(StudentConst.ENDPOINT)
                        .content(studentJson)
                        .contentType(MediaType.APPLICATION_JSON))
-               .andExpect(status().isOk())
+               .andExpect(status().isCreated())
                .andExpect(jsonPath("$.id").value(EXISTING_ID))
                .andExpect(jsonPath("$.name").value(StudentConst.TEST_NAME))
                .andExpect(jsonPath("$.age").value(StudentConst.TEST_AGE))
@@ -82,30 +72,25 @@ public class StudentControllerWebMvcTest {
     @DisplayName("Positive. Should Create Student with faculty ID")
     void createStudent_withFacultyId_shouldReturnStudent() throws Exception {
         // Given
-        StudentDto studentWithFacultyDto = new StudentDto();
-        studentWithFacultyDto.setId(EXISTING_ID);
-        studentWithFacultyDto.setName(StudentConst.TEST_NAME);
-        studentWithFacultyDto.setAge(StudentConst.TEST_AGE);
-        studentWithFacultyDto.setFacultyId(1L);
+        StudentDto studentWithFacultyDto = new StudentDto(EXISTING_ID, StudentConst.TEST_NAME, StudentConst.TEST_AGE, StudentConst.EXISTING_FACULTY_ID);
+        String studentJson = String.format("""
+            {
+                "name": "%s",
+                "age": %d,
+                "facultyId": %d
+            }""", StudentConst.TEST_NAME, StudentConst.TEST_AGE, StudentConst.EXISTING_FACULTY_ID);
 
-        String studentJson = """
-                {
-                    "name": "Harry Potter",
-                    "age": 17,
-                    "facultyId": 1
-                }""";
-
-        when(studentService.createStudent(any(StudentDto.class))).thenReturn(studentWithFacultyDto);
+        when(studentService.createStudent(any(StudentCreateDto.class))).thenReturn(studentWithFacultyDto);
 
         // When & Then
         mockMvc.perform(post(StudentConst.ENDPOINT)
                        .content(studentJson)
                        .contentType(MediaType.APPLICATION_JSON))
-               .andExpect(status().isOk())
+               .andExpect(status().isCreated())
                .andExpect(jsonPath("$.id").value(EXISTING_ID))
                .andExpect(jsonPath("$.name").value(StudentConst.TEST_NAME))
                .andExpect(jsonPath("$.age").value(StudentConst.TEST_AGE))
-               .andExpect(jsonPath("$.facultyId").value(1L))
+               .andExpect(jsonPath("$.facultyId").value(StudentConst.EXISTING_FACULTY_ID))
                .andDo(print());
     }
 
@@ -129,18 +114,13 @@ public class StudentControllerWebMvcTest {
     @DisplayName("Positive. Should Update Student successfully")
     void updateStudent_existingStudent_shouldReturnUpdatedStudent() throws Exception {
         // Given
-        StudentDto updatedStudentDto = new StudentDto();
-        updatedStudentDto.setId(EXISTING_ID);
-        updatedStudentDto.setName(StudentConst.UPDATED_NAME);
-        updatedStudentDto.setAge(StudentConst.UPDATED_AGE);
-        updatedStudentDto.setFacultyId(1L);
+        StudentDto updatedStudentDto = new StudentDto(EXISTING_ID, StudentConst.UPDATED_NAME, StudentConst.UPDATED_AGE, 1L);
+        when(studentService.updateStudent(anyLong(), any(StudentUpdateDto.class))).thenReturn(updatedStudentDto);
 
-        when(studentService.updateStudent(any(StudentDto.class))).thenReturn(updatedStudentDto);
-
-        String updateJson = createValidStudentJson(StudentConst.UPDATED_NAME, StudentConst.UPDATED_AGE, EXISTING_ID);
+        String updateJson = createValidStudentUpdateJson(StudentConst.UPDATED_NAME, StudentConst.UPDATED_AGE);
 
         // When & Then
-        mockMvc.perform(put(StudentConst.ENDPOINT)
+        mockMvc.perform(put(StudentConst.ENDPOINT + "/{id}", EXISTING_ID)
                        .content(updateJson)
                        .contentType(MediaType.APPLICATION_JSON))
                .andExpect(status().isOk())
@@ -188,12 +168,7 @@ public class StudentControllerWebMvcTest {
     @DisplayName("Positive. Should filter students by Age")
     void getStudents_existingAge_shouldReturnFilteredStudents() throws Exception {
         // Given
-        StudentDto ageFilterStudentDto = new StudentDto();
-        ageFilterStudentDto.setId(2L);
-        ageFilterStudentDto.setName("Age Filter Student");
-        ageFilterStudentDto.setAge(StudentConst.AGE_FILTER_AGE);
-        ageFilterStudentDto.setFacultyId(null);
-
+        StudentDto ageFilterStudentDto = new StudentDto(2L, "Age Filter Student", StudentConst.AGE_FILTER_AGE, null);
         List<StudentDto> students = Collections.singletonList(ageFilterStudentDto);
         when(studentService.getStudentsByAge(StudentConst.AGE_FILTER_AGE)).thenReturn(students);
 
@@ -212,18 +187,8 @@ public class StudentControllerWebMvcTest {
     @DisplayName("Positive. Should return students by Age Between range")
     void getStudentsByAgeBetween_validRange_shouldReturnFilteredStudents() throws Exception {
         // Given
-        StudentDto student1Dto = new StudentDto();
-        student1Dto.setId(2L);
-        student1Dto.setName("Student 15 years old");
-        student1Dto.setAge(15);
-        student1Dto.setFacultyId(1L);
-
-        StudentDto student2Dto = new StudentDto();
-        student2Dto.setId(3L);
-        student2Dto.setName("Student 18 years old");
-        student2Dto.setAge(18);
-        student2Dto.setFacultyId(null);
-
+        StudentDto student1Dto = new StudentDto(2L, "Student 15 years old", 15, 1L);
+        StudentDto student2Dto = new StudentDto(3L, "Student 18 years old", 18, null);
         List<StudentDto> students = Arrays.asList(student1Dto, student2Dto);
         when(studentService.getStudentsByAgeBetween(StudentConst.MIN_AGE, StudentConst.MAX_AGE)).thenReturn(students);
 
@@ -251,7 +216,7 @@ public class StudentControllerWebMvcTest {
         mockMvc.perform(get(StudentConst.ENDPOINT + "/{id}" + StudentConst.FACULTY_ENDPOINT, EXISTING_ID))
                .andExpect(status().isOk())
                .andExpect(jsonPath("$.name").value("Gryffindor"))
-               .andExpect(jsonPath("$.color").value("Red"))
+               .andExpect(jsonPath("$.color").value("#FF0000"))
                .andExpect(jsonPath("$.studentIds").isArray())
                .andDo(print());
     }
@@ -276,14 +241,14 @@ public class StudentControllerWebMvcTest {
     @DisplayName("Negative. Should return 404 when updating non-existent Student")
     void updateStudent_nonExistentId_shouldReturn404() throws Exception {
         // Given
-        when(studentService.updateStudent(any(StudentDto.class))).thenThrow(
+        when(studentService.updateStudent(anyLong(), any(StudentUpdateDto.class))).thenThrow(
                 new ResponseStatusException(HttpStatus.NOT_FOUND, "Student not Found")
         );
 
-        String updateJson = createValidStudentJson(StudentConst.NON_EXISTENT_WEB_NAME, 20, NON_EXISTENT_ID);
+        String updateJson = createValidStudentUpdateJson(StudentConst.NON_EXISTENT_NAME, 20);
 
         // When & Then
-        mockMvc.perform(put(StudentConst.ENDPOINT)
+        mockMvc.perform(put(StudentConst.ENDPOINT + "/{id}", NON_EXISTENT_ID)
                        .content(updateJson)
                        .contentType(MediaType.APPLICATION_JSON))
                .andExpect(status().isNotFound())
@@ -334,61 +299,60 @@ public class StudentControllerWebMvcTest {
     }
 
     @Test
-    @DisplayName("Negative. Should handle empty Name in Student creation")
-    void createdStudent_emptyName_shouldHandle() throws Exception {
+    @DisplayName("Negative. Should return 400 for empty Name in Student creation")
+    void createdStudent_emptyName_shouldReturnBadRequest() throws Exception {
         // Given
-        String studentJson = createValidStudentJson(EMPTY_STRING, StudentConst.TEST_AGE);
-
-        StudentDto studentWithEmptyNameDto = new StudentDto();
-        studentWithEmptyNameDto.setId(EXISTING_ID);
-        studentWithEmptyNameDto.setName(EMPTY_STRING);
-        studentWithEmptyNameDto.setAge(StudentConst.TEST_AGE);
-        studentWithEmptyNameDto.setFacultyId(null);
-
-        when(studentService.createStudent(any(StudentDto.class))).thenReturn(studentWithEmptyNameDto);
+        String studentJson = createValidStudentCreateJson(EMPTY_STRING, StudentConst.TEST_AGE);
 
         // When & Then
         mockMvc.perform(post(StudentConst.ENDPOINT)
                        .content(studentJson)
                        .contentType(MediaType.APPLICATION_JSON))
-               .andExpect(status().isOk())
-               .andExpect(jsonPath("$.name").value(EMPTY_STRING))
-               .andExpect(jsonPath("$.facultyId").isEmpty())
+               .andExpect(status().isBadRequest())
                .andDo(print());
     }
 
     @Test
-    @DisplayName("Negative. Should handle non-existent faculty ID")
-    void createStudent_nonExistentFacultyId_shouldHandle() throws Exception {
+    @DisplayName("Negative. Should return 400 for invalid age in Student creation")
+    void createStudent_invalidAge_shouldReturnBadRequest() throws Exception {
         // Given
-        String studentJson = """
-                {
-                    "name": "Student with Invalid Faculty",
-                    "age": 17,
-                    "facultyId": 999
-                }""";
-
-        StudentDto studentDto = new StudentDto();
-        studentDto.setId(EXISTING_ID);
-        studentDto.setName("Student with Invalid Faculty");
-        studentDto.setAge(17);
-        studentDto.setFacultyId(999L);
-
-        when(studentService.createStudent(any(StudentDto.class))).thenReturn(studentDto);
+        String studentJson = createValidStudentCreateJson("Test Student", Validation.TOO_YOUNG_AGE);
 
         // When & Then
         mockMvc.perform(post(StudentConst.ENDPOINT)
                        .content(studentJson)
                        .contentType(MediaType.APPLICATION_JSON))
-               .andExpect(status().isOk())
+               .andExpect(status().isBadRequest())
+               .andDo(print());
+    }
+
+    @Test
+    @DisplayName("Negative. Should handle non-existent faculty ID gracefully")
+    void createStudent_nonExistentFacultyId_shouldHandle() throws Exception {
+        // Given
+        String studentJson = String.format("""
+            {
+                "name": "Student with Invalid Faculty",
+                "age": %d,
+                "facultyId": %d
+            }""", StudentConst.TEST_AGE, StudentConst.NON_EXISTENT_FACULTY_ID);
+
+        StudentDto studentDto = new StudentDto(EXISTING_ID, "Student with Invalid Faculty", StudentConst.TEST_AGE, StudentConst.NON_EXISTENT_FACULTY_ID);
+        when(studentService.createStudent(any(StudentCreateDto.class))).thenReturn(studentDto);
+
+        // When & Then
+        mockMvc.perform(post(StudentConst.ENDPOINT)
+                       .content(studentJson)
+                       .contentType(MediaType.APPLICATION_JSON))
+               .andExpect(status().isCreated())
                .andExpect(jsonPath("$.name").value("Student with Invalid Faculty"))
-               .andExpect(jsonPath("$.facultyId").value(999L))
+               .andExpect(jsonPath("$.facultyId").value(StudentConst.NON_EXISTENT_FACULTY_ID))
                .andDo(print());
     }
 
     // ========== HELPER METHODS ==========
 
-    private String createValidStudentJson(String name, int age) {
+    private String createValidStudentCreateJson(String name, int age) {
         return String.format("""
                 {
                     "name": "%s",
@@ -396,12 +360,11 @@ public class StudentControllerWebMvcTest {
                 }""", name, age);
     }
 
-    private String createValidStudentJson(String name, int age, Long id) {
+    private String createValidStudentUpdateJson(String name, int age) {
         return String.format("""
                 {
-                    "id": %d,
                     "name": "%s",
                     "age": %d
-                }""", id, name, age);
+                }""", name, age);
     }
 }

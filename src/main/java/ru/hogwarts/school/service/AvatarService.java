@@ -1,5 +1,6 @@
 package ru.hogwarts.school.service;
 
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -8,10 +9,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
+import ru.hogwarts.school.dto.AvatarDataDto;
+import ru.hogwarts.school.dto.AvatarInfoDto;
+import ru.hogwarts.school.mapper.AvatarMapper;
 import ru.hogwarts.school.model.Avatar;
 import ru.hogwarts.school.model.Student;
-import ru.hogwarts.school.dto.AvatarDto;
-import ru.hogwarts.school.mapper.AvatarMapper;
 import ru.hogwarts.school.repository.AvatarRepository;
 import ru.hogwarts.school.util.PaginationUtil;
 
@@ -25,14 +27,13 @@ import java.util.Optional;
 
 @Service
 public class AvatarService {
+    private static final int PREVIEW_WIDTH = 100;
     private final AvatarRepository avatarRepository;
     private final StudentService studentService;
     private final AvatarMapper avatarMapper;
 
     @Value("${avatars.dir.path:avatars}")
     private String avatarsDir;
-
-    private static final int PREVIEW_WIDTH = 100;
 
     public AvatarService(AvatarRepository avatarRepository, StudentService studentService, AvatarMapper avatarMapper) {
         this.avatarRepository = avatarRepository;
@@ -59,8 +60,8 @@ public class AvatarService {
         Student student = studentService.findStudentEntity(studentId);
 
         String normalizedStudentName = normalizeFileName(student.getName());
-        Path fullSizeFilePath = Path.of(avatarsDir, normalizedStudentName + "_" + student.getId() + "_full."
-                + fileExtension);
+        Path fullSizeFilePath = Path.of(avatarsDir,
+                student.getId() + "_" + normalizedStudentName + "_full." + fileExtension);
         file.transferTo(fullSizeFilePath);
 
         byte[] previewData = generateImagePreview(file);
@@ -76,39 +77,43 @@ public class AvatarService {
     }
 
     @Transactional
-    public AvatarDto findAvatar(Long studentId) {
+    public AvatarInfoDto findAvatarInfo(Long studentId) {
         Student student = studentService.findStudentEntity(studentId);
-        Avatar avatar = avatarRepository.findByStudent(student)
-                                        .orElseThrow(() -> new ResponseStatusException(
-                                                HttpStatus.NOT_FOUND,
-                                                "Avatar not found for student with ID " + studentId
-                                        ));
-        return avatarMapper.toDto(avatar);
+        Avatar avatar = avatarRepository.findByStudent(student).orElseThrow(
+                () -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+                        "Avatar not found for student with ID " + studentId
+                ));
+        return avatarMapper.toInfoDto(avatar);
     }
 
     @Transactional
-    public void getAvatarFromFile(Long studentId, jakarta.servlet.http.HttpServletResponse response) throws IOException {
-        AvatarDto avatarDTO = findAvatar(studentId);
-        String filePath = avatarDTO.getFilePath();
+    public AvatarDataDto findAvatarData(Long studentId) {
+        Student student = studentService.findStudentEntity(studentId);
+        Avatar avatar = avatarRepository.findByStudent(student).orElseThrow(
+                () -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+                        "Avatar not found for student with ID " + studentId
+                ));
+        return avatarMapper.toDataDto(avatar);
+    }
+
+    @Transactional
+    public void getAvatarFromFile(Long studentId, HttpServletResponse response) throws IOException {
+        AvatarInfoDto avatarInfo = findAvatarInfo(studentId);
+        String filePath = avatarInfo.filePath();
 
         try (BufferedInputStream bufferedInputStream = new BufferedInputStream(new FileInputStream(filePath))) {
-            response.setContentType(avatarDTO.getMediaType());
-            response.setContentLength((int) avatarDTO.getFileSize());
+            response.setContentType(avatarInfo.mediaType());
+            response.setContentLength((int) avatarInfo.fileSize());
             bufferedInputStream.transferTo(response.getOutputStream());
             response.flushBuffer();
         }
     }
 
     @Transactional
-    public AvatarDto getAvatarFromDB(Long studentId) {
-        return findAvatar(studentId);
-    }
-
-    @Transactional
-    public Page<AvatarDto> getAllAvatarsWithPagination(int page, int size) {
+    public Page<AvatarInfoDto> getAllAvatarsWithPagination(int page, int size) {
         Pageable pageable = PaginationUtil.createPageRequest(page, size);
         Page<Avatar> avatarsPage = avatarRepository.findAll(pageable);
-        return avatarsPage.map(avatarMapper::toDto);
+        return avatarsPage.map(avatarMapper::toInfoDto);
     }
 
     // ========== HELPER METHODS ==========

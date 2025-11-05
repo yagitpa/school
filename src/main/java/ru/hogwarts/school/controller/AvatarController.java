@@ -8,7 +8,8 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import ru.hogwarts.school.dto.AvatarDto;
+import ru.hogwarts.school.dto.AvatarDataDto;
+import ru.hogwarts.school.dto.AvatarInfoDto;
 import ru.hogwarts.school.service.AvatarService;
 
 import java.io.IOException;
@@ -29,17 +30,23 @@ public class AvatarController {
         return ResponseEntity.ok("Avatar uploaded successfully");
     }
 
-    @GetMapping("/{studentId}/preview")
-    public ResponseEntity<byte[]> getAvatarPreview(@PathVariable Long studentId) {
+    @GetMapping("/{studentId}/preview-info")
+    public ResponseEntity<AvatarInfoDto> getAvatarPreviewInfo(@PathVariable Long studentId) {
+        AvatarInfoDto avatarInfo = avatarService.findAvatarInfo(studentId);
+        return ResponseEntity.ok(avatarInfo);
+    }
+
+    @GetMapping("/{studentId}/preview-data")
+    public ResponseEntity<byte[]> getAvatarPreviewData(@PathVariable Long studentId) {
         try {
-            AvatarDto avatar = avatarService.getAvatarFromDB(studentId);
+            AvatarDataDto avatarData = avatarService.findAvatarData(studentId);
 
             HttpHeaders headers = new HttpHeaders();
-            headers.setContentType(MediaType.parseMediaType(avatar.getMediaType()));
-            headers.setContentLength(avatar.getData().length);
+            headers.setContentType(MediaType.parseMediaType(avatarData.mediaType()));
+            headers.setContentLength(avatarData.data().length);
             headers.set("Content-Disposition", "inline; filename=preview.jpg");
 
-            return new ResponseEntity<>(avatar.getData(), headers, HttpStatus.OK);
+            return new ResponseEntity<>(avatarData.data(), headers, HttpStatus.OK);
 
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
@@ -57,12 +64,12 @@ public class AvatarController {
     }
 
     @GetMapping("/all")
-    public ResponseEntity<Page<AvatarDto>> getAllAvatarsWithPagination(
+    public ResponseEntity<Page<AvatarInfoDto>> getAllAvatarsWithPagination(
             @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "10") int size) {
 
         try {
-            Page<AvatarDto> avatarsPage = avatarService.getAllAvatarsWithPagination(page, size);
+            Page<AvatarInfoDto> avatarsPage = avatarService.getAllAvatarsWithPagination(page, size);
             return ResponseEntity.ok(avatarsPage);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
