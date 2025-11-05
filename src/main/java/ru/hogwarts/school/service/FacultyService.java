@@ -1,13 +1,12 @@
 package ru.hogwarts.school.service;
 
 import jakarta.transaction.Transactional;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 import ru.hogwarts.school.dto.FacultyCreateDto;
 import ru.hogwarts.school.dto.FacultyDto;
 import ru.hogwarts.school.dto.FacultyUpdateDto;
 import ru.hogwarts.school.dto.StudentDto;
+import ru.hogwarts.school.exception.FacultyNotFoundException;
 import ru.hogwarts.school.mapper.FacultyMapper;
 import ru.hogwarts.school.mapper.StudentMapper;
 import ru.hogwarts.school.model.Faculty;
@@ -41,8 +40,7 @@ public class FacultyService {
 
     public FacultyDto findFaculty(long id) {
         Faculty faculty = facultyRepository.findById(id).orElseThrow(
-                () -> new ResponseStatusException(HttpStatus.NOT_FOUND,
-                        "There is no faculty with ID " + id)
+                () -> new FacultyNotFoundException(id)
         );
         return facultyMapper.toDto(faculty);
     }
@@ -80,9 +78,7 @@ public class FacultyService {
 
     public List<StudentDto> getFacultyStudents(Long facultyId) {
         if (!facultyRepository.existsById(facultyId)) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND,
-                    "There is no faculty with ID " + facultyId
-            );
+            throw new FacultyNotFoundException(facultyId);
         }
 
         List<Student> students = universityManagementService.getStudentsByFaculty(facultyId);
@@ -91,8 +87,7 @@ public class FacultyService {
 
     public Faculty findFacultyEntity(long id) {
         return facultyRepository.findById(id).orElseThrow(
-                () -> new ResponseStatusException(HttpStatus.NOT_FOUND,
-                        "There is no faculty with ID " + id
-                ));
+                () -> new FacultyNotFoundException(id)
+        );
     }
 }

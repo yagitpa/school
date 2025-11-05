@@ -1,10 +1,10 @@
 package ru.hogwarts.school.service;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.server.ResponseStatusException;
 import ru.hogwarts.school.dto.FacultyDto;
+import ru.hogwarts.school.exception.FacultyNotFoundException;
+import ru.hogwarts.school.exception.StudentNotFoundException;
 import ru.hogwarts.school.mapper.FacultyMapper;
 import ru.hogwarts.school.model.Faculty;
 import ru.hogwarts.school.model.Student;
@@ -28,8 +28,7 @@ public class UniversityManagementService {
 
     public void deleteFacultyWithStudents(Long facultyId) {
         Faculty faculty = facultyRepository.findById(facultyId).orElseThrow(
-                () -> new ResponseStatusException(HttpStatus.NOT_FOUND,
-                        "There is no Faculty with ID " + facultyId)
+                () -> new FacultyNotFoundException(facultyId)
         );
 
         List<Student> facultyStudents = studentRepository.findByFacultyId(facultyId);
@@ -43,8 +42,7 @@ public class UniversityManagementService {
 
     public Faculty findFacultyEntity(Long facultyId) {
         return facultyRepository.findById(facultyId).orElseThrow(
-                () -> new ResponseStatusException(HttpStatus.NOT_FOUND,
-                        "There is no Faculty with ID " + facultyId)
+                () -> new FacultyNotFoundException(facultyId)
         );
     }
 
@@ -55,16 +53,13 @@ public class UniversityManagementService {
     @Transactional(readOnly = true)
     public FacultyDto getStudentFacultyDto(Long studentId) {
         Student student = studentRepository.findWithFacultyById(studentId)
-                                           .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
-                                                   "There is no Student with ID " + studentId));
+                                           .orElseThrow(() -> new StudentNotFoundException(studentId));
 
         Faculty faculty = student.getFaculty();
         if (faculty == null) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND,
-                    "Student with ID " + studentId + " has no Faculty");
+            throw FacultyNotFoundException.forStudentWithoutFaculty(studentId);
         }
 
         return facultyMapper.toDto(faculty);
     }
-
 }

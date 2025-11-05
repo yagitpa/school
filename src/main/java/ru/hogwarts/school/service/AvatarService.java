@@ -5,12 +5,14 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.server.ResponseStatusException;
 import ru.hogwarts.school.dto.AvatarDataDto;
 import ru.hogwarts.school.dto.AvatarInfoDto;
+import ru.hogwarts.school.exception.AvatarNotFoundException;
+import ru.hogwarts.school.exception.FileProcessingException;
+import ru.hogwarts.school.exception.ImageProcessingException;
+import ru.hogwarts.school.exception.InvalidFileException;
 import ru.hogwarts.school.mapper.AvatarMapper;
 import ru.hogwarts.school.model.Avatar;
 import ru.hogwarts.school.model.Student;
@@ -27,6 +29,7 @@ import java.util.Optional;
 
 @Service
 public class AvatarService {
+
     private static final int PREVIEW_WIDTH = 100;
     private final AvatarRepository avatarRepository;
     private final StudentService studentService;
@@ -44,12 +47,12 @@ public class AvatarService {
     @Transactional
     public void uploadAvatar(Long studentId, MultipartFile file) throws IOException {
         if (file == null || file.isEmpty() || file.getOriginalFilename() == null) {
-            return;
+            throw InvalidFileException.emptyFile();
         }
 
         String fileExtension = getExtension(file.getOriginalFilename());
         if (fileExtension == null || fileExtension.isBlank()) {
-            return;
+            throw InvalidFileException.missingExtension();
         }
 
         Path dirPath = Path.of(avatarsDir);
@@ -62,9 +65,19 @@ public class AvatarService {
         String normalizedStudentName = normalizeFileName(student.getName());
         Path fullSizeFilePath = Path.of(avatarsDir,
                 student.getId() + "_" + normalizedStudentName + "_full." + fileExtension);
-        file.transferTo(fullSizeFilePath);
 
-        byte[] previewData = generateImagePreview(file);
+        try {
+            file.transferTo(fullSizeFilePath);
+        } catch (IOException e) {
+            throw new FileProcessingException("file transfer", e);
+        }
+
+        byte[] previewData;
+        try {
+            previewData = generateImagePreview(file);
+        } catch (IOException e) {
+            throw new ImageProcessingException("preview generation", e);
+        }
 
         Avatar avatar = findOrCreateAvatar(student);
         avatar.setFilePath(fullSizeFilePath.toString());
@@ -80,9 +93,8 @@ public class AvatarService {
     public AvatarInfoDto findAvatarInfo(Long studentId) {
         Student student = studentService.findStudentEntity(studentId);
         Avatar avatar = avatarRepository.findByStudent(student).orElseThrow(
-                () -> new ResponseStatusException(HttpStatus.NOT_FOUND,
-                        "Avatar not found for student with ID " + studentId
-                ));
+                () -> new AvatarNotFoundException(studentId)
+        );
         return avatarMapper.toInfoDto(avatar);
     }
 
@@ -90,9 +102,8 @@ public class AvatarService {
     public AvatarDataDto findAvatarData(Long studentId) {
         Student student = studentService.findStudentEntity(studentId);
         Avatar avatar = avatarRepository.findByStudent(student).orElseThrow(
-                () -> new ResponseStatusException(HttpStatus.NOT_FOUND,
-                        "Avatar not found for student with ID " + studentId
-                ));
+                () -> new AvatarNotFoundException(studentId)
+        );
         return avatarMapper.toDataDto(avatar);
     }
 
@@ -106,6 +117,8 @@ public class AvatarService {
             response.setContentLength((int) avatarInfo.fileSize());
             bufferedInputStream.transferTo(response.getOutputStream());
             response.flushBuffer();
+        } catch (IOException e) {
+            throw new FileProcessingException("avatar file streaming", e);
         }
     }
 
@@ -123,7 +136,7 @@ public class AvatarService {
             BufferedImage originalImage = ImageIO.read(is);
 
             if (originalImage == null) {
-                throw new IOException("Could not read image");
+                throw ImageProcessingException.forImageReading();
             }
 
             int originalWidth = originalImage.getWidth();

@@ -38,19 +38,14 @@ public class AvatarController {
 
     @GetMapping("/{studentId}/preview-data")
     public ResponseEntity<byte[]> getAvatarPreviewData(@PathVariable Long studentId) {
-        try {
-            AvatarDataDto avatarData = avatarService.findAvatarData(studentId);
+        AvatarDataDto avatarData = avatarService.findAvatarData(studentId);
 
-            HttpHeaders headers = new HttpHeaders();
-            headers.setContentType(MediaType.parseMediaType(avatarData.mediaType()));
-            headers.setContentLength(avatarData.data().length);
-            headers.set("Content-Disposition", "inline; filename=preview.jpg");
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.parseMediaType(avatarData.mediaType()));
+        headers.setContentLength(avatarData.data().length);
+        headers.set("Content-Disposition", "inline; filename=preview.jpg");
 
-            return new ResponseEntity<>(avatarData.data(), headers, HttpStatus.OK);
-
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
+        return new ResponseEntity<>(avatarData.data(), headers, HttpStatus.OK);
     }
 
     @GetMapping("/{studentId}/full")
@@ -68,11 +63,7 @@ public class AvatarController {
             @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "10") int size) {
 
-        try {
-            Page<AvatarInfoDto> avatarsPage = avatarService.getAllAvatarsWithPagination(page, size);
-            return ResponseEntity.ok(avatarsPage);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        }
+        Page<AvatarInfoDto> avatarsPage = avatarService.getAllAvatarsWithPagination(page, size);
+        return ResponseEntity.ok(avatarsPage);
     }
 }

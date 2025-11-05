@@ -1,13 +1,12 @@
 package ru.hogwarts.school.service;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.server.ResponseStatusException;
 import ru.hogwarts.school.dto.FacultyDto;
 import ru.hogwarts.school.dto.StudentCreateDto;
 import ru.hogwarts.school.dto.StudentDto;
 import ru.hogwarts.school.dto.StudentUpdateDto;
+import ru.hogwarts.school.exception.StudentNotFoundException;
 import ru.hogwarts.school.mapper.StudentMapper;
 import ru.hogwarts.school.model.Faculty;
 import ru.hogwarts.school.model.Student;
@@ -20,7 +19,6 @@ public class StudentService {
     private final StudentRepository studentRepository;
     private final StudentMapper studentMapper;
     private final UniversityManagementService universityManagementService;
-
 
     public StudentService(StudentRepository studentRepository, StudentMapper studentMapper,
                           UniversityManagementService universityManagementService) {
@@ -44,9 +42,8 @@ public class StudentService {
 
     public StudentDto findStudent(long id) {
         Student student = studentRepository.findById(id).orElseThrow(
-                () -> new ResponseStatusException(HttpStatus.NOT_FOUND,
-                        "There is no student with ID " + id
-                ));
+                () -> new StudentNotFoundException(id)
+        );
         return studentMapper.toDto(student);
     }
 
@@ -71,9 +68,8 @@ public class StudentService {
     @Transactional
     public StudentDto deleteStudent(long id) {
         Student student = studentRepository.findById(id).orElseThrow(
-                () -> new ResponseStatusException(HttpStatus.NOT_FOUND,
-                        "There is no student with ID " + id
-                ));
+                () -> new StudentNotFoundException(id)
+        );
         studentRepository.deleteById(id);
         return studentMapper.toDto(student);
     }
@@ -108,9 +104,8 @@ public class StudentService {
 
     public Student findStudentEntity(long id) {
         return studentRepository.findById(id).orElseThrow(
-                () -> new ResponseStatusException(HttpStatus.NOT_FOUND,
-                        "There is no student with ID " + id
-                ));
+                () -> new StudentNotFoundException(id)
+        );
     }
 
     @Transactional(readOnly = true)
