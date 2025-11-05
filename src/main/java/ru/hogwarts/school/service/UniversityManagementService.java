@@ -1,6 +1,5 @@
 package ru.hogwarts.school.service;
 
-import org.hibernate.Hibernate;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -55,18 +54,15 @@ public class UniversityManagementService {
 
     @Transactional(readOnly = true)
     public FacultyDto getStudentFacultyDto(Long studentId) {
-        Student student = studentRepository.findById(studentId).orElseThrow(
-                () -> new ResponseStatusException(HttpStatus.NOT_FOUND,
-                        "There is no Student with ID " + studentId)
-        );
+        Student student = studentRepository.findWithFacultyById(studentId)
+                                           .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+                                                   "There is no Student with ID " + studentId));
 
         Faculty faculty = student.getFaculty();
         if (faculty == null) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND,
                     "Student with ID " + studentId + " has no Faculty");
         }
-        Hibernate.initialize(faculty);
-        faculty.getName();
 
         return facultyMapper.toDto(faculty);
     }
