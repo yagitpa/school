@@ -1,9 +1,13 @@
 package ru.hogwarts.school.service;
 
-import jakarta.transaction.Transactional;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
+import org.springframework.transaction.annotation.Transactional;
+import ru.hogwarts.school.dto.FacultyDto;
+import ru.hogwarts.school.dto.StudentCreateDto;
+import ru.hogwarts.school.dto.StudentDto;
+import ru.hogwarts.school.dto.StudentUpdateDto;
+import ru.hogwarts.school.exception.StudentNotFoundException;
+import ru.hogwarts.school.mapper.StudentMapper;
 import ru.hogwarts.school.model.Faculty;
 import ru.hogwarts.school.model.Student;
 import ru.hogwarts.school.repository.StudentRepository;
@@ -13,65 +17,76 @@ import java.util.List;
 @Service
 public class StudentService {
     private final StudentRepository studentRepository;
+    private final StudentMapper studentMapper;
+    private final UniversityManagementService universityManagementService;
 
-    public StudentService(StudentRepository studentRepository) {
+    public StudentService(StudentRepository studentRepository, StudentMapper studentMapper,
+                          UniversityManagementService universityManagementService) {
         this.studentRepository = studentRepository;
+        this.studentMapper = studentMapper;
+        this.universityManagementService = universityManagementService;
     }
 
     @Transactional
-    public Student createStudent(Student student) {
-        return studentRepository.save(student);
-    }
+    public StudentDto createStudent(StudentCreateDto studentCreateDto) {
+        Student student = studentMapper.toEntity(studentCreateDto);
 
-    public Student findStudent(long id) {
-        return studentRepository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(
-                        HttpStatus.NOT_FOUND,
-                        "There is no student with ID " + id
-                ));
-    }
-
-    @Transactional
-    public Student updateStudent(Student student) {
-        if (!studentRepository.existsById(student.getId())) {
-            throw new ResponseStatusException(
-                    HttpStatus.NOT_FOUND,
-                    "There is no student with ID " + student.getId()
-            );
+        if (studentCreateDto.facultyId() != null) {
+            Faculty faculty = universityManagementService.findFacultyEntity(studentCreateDto.facultyId());
+            student.setFaculty(faculty);
         }
-        return studentRepository.save(student);
+
+        Student savedStudent = studentRepository.save(student);
+        return studentMapper.toDto(savedStudent);
+    }
+
+    public StudentDto findStudent(long id) {
+        Student student = studentRepository.findById(id).orElseThrow(
+                () -> new StudentNotFoundException(id)
+        );
+        return studentMapper.toDto(student);
     }
 
     @Transactional
-    public Student deleteStudent(long id) {
-        Student student = studentRepository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(
-                        HttpStatus.NOT_FOUND,
-                        "There is no student with ID " + id
-                ));
+    public StudentDto updateStudent(Long id, StudentUpdateDto studentUpdateDto) {
+        Student existingStudent = findStudentEntity(id);
+
+        existingStudent.setName(studentUpdateDto.name());
+        existingStudent.setAge(studentUpdateDto.age());
+
+        if (studentUpdateDto.facultyId() != null) {
+            Faculty faculty = universityManagementService.findFacultyEntity(studentUpdateDto.facultyId());
+            existingStudent.setFaculty(faculty);
+        } else {
+            existingStudent.setFaculty(null);
+        }
+
+        Student updatedStudent = studentRepository.save(existingStudent);
+        return studentMapper.toDto(updatedStudent);
+    }
+
+    @Transactional
+    public StudentDto deleteStudent(long id) {
+        Student student = studentRepository.findById(id).orElseThrow(
+                () -> new StudentNotFoundException(id)
+        );
         studentRepository.deleteById(id);
-        return student;
+        return studentMapper.toDto(student);
     }
 
-    public List<Student> getStudentsByAge(int age) {
-        return studentRepository.findByAge(age);
+    public List<StudentDto> getStudentsByAge(int age) {
+        List<Student> students = studentRepository.findByAge(age);
+        return studentMapper.toDtoList(students);
     }
 
-    public List<Student> getAllStudents() {
-        return studentRepository.findAll();
+    public List<StudentDto> getAllStudents() {
+        List<Student> students = studentRepository.findAll();
+        return studentMapper.toDtoList(students);
     }
 
-    public List<Student> getStudentsByAgeBetween(int minAge, int maxAge) {
-        return studentRepository.findByAgeBetween(minAge, maxAge);
-    }
-
-    public Faculty getStudentFaculty(Long studentId) {
-        Student student = findStudent(studentId);
-        return student.getFaculty();
-    }
-
-    public List<Student> getStudentsByFaculty(Long facultyId) {
-        return studentRepository.findByFacultyId(facultyId);
+    public List<StudentDto> getStudentsByAgeBetween(int minAge, int maxAge) {
+        List<Student> students = studentRepository.findByAgeBetween(minAge, maxAge);
+        return studentMapper.toDtoList(students);
     }
 
     public Integer getTotalCountOfStudents() {
@@ -82,7 +97,19 @@ public class StudentService {
         return studentRepository.getAverageAgeOfStudents();
     }
 
-    public List<Student> getLastFiveStudents() {
-        return studentRepository.getLastFiveStudents();
+    public List<StudentDto> getLastFiveStudents() {
+        List<Student> students = studentRepository.getLastFiveStudents();
+        return studentMapper.toDtoList(students);
+    }
+
+    public Student findStudentEntity(long id) {
+        return studentRepository.findById(id).orElseThrow(
+                () -> new StudentNotFoundException(id)
+        );
+    }
+
+    @Transactional(readOnly = true)
+    public FacultyDto getStudentFacultyDto(long studentId) {
+        return universityManagementService.getStudentFacultyDto(studentId);
     }
 }

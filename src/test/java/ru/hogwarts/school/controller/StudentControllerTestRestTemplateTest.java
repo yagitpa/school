@@ -10,8 +10,8 @@ import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.*;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
-import ru.hogwarts.school.model.Faculty;
-import ru.hogwarts.school.model.Student;
+import ru.hogwarts.school.dto.FacultyDto;
+import ru.hogwarts.school.dto.StudentDto;
 import ru.hogwarts.school.service.AvatarService;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -21,16 +21,13 @@ import static ru.hogwarts.school.testconfig.TestConstants.*;
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 public class StudentControllerTestRestTemplateTest {
 
-    @Autowired
-    private TestRestTemplate testRestTemplate;
-
-    @LocalServerPort
-    private int port;
-
-    private String testUrl;
-
     @MockitoBean
     AvatarService avatarService;
+    @Autowired
+    private TestRestTemplate testRestTemplate;
+    @LocalServerPort
+    private int port;
+    private String testUrl;
 
     @BeforeEach
     void setUp() {
@@ -41,19 +38,18 @@ public class StudentControllerTestRestTemplateTest {
 
     @Test
     @DisplayName("Positive. Should create Student successfully with valid data")
-    void createStudent_validData_shouldReturnOk() {
+    void createStudent_validData_shouldReturnCreated() {
         // Given
-        String studentJson = createValidStudentJson(StudentConst.TEST_NAME, StudentConst.TEST_AGE);
+        String studentJson = createValidStudentCreateJson(StudentConst.TEST_NAME, StudentConst.TEST_AGE);
         HttpEntity<String> request = createHttpEntity(studentJson);
 
         // When
-        ResponseEntity<Student> postResponse = testRestTemplate.exchange(
-                testUrl, HttpMethod.POST, request, Student.class
+        ResponseEntity<StudentDto> postResponse = testRestTemplate.exchange(
+                testUrl, HttpMethod.POST, request, StudentDto.class
         );
 
         // Then
-        assertTrue(postResponse.getStatusCode()
-                               .is2xxSuccessful(), "Expected 2xx but got " + postResponse.getStatusCode());
+        assertEquals(HttpStatus.CREATED, postResponse.getStatusCode());
         assertStudentResponse(postResponse.getBody(), StudentConst.TEST_NAME, StudentConst.TEST_AGE);
     }
 
@@ -61,12 +57,12 @@ public class StudentControllerTestRestTemplateTest {
     @DisplayName("Positive. Should Find Student by ID")
     void findStudent_existingId_ShouldReturnStudent() {
         // Given
-        Student createdStudent = createStudentInDatabase(StudentConst.TEST_NAME, StudentConst.TEST_AGE);
+        StudentDto createdStudent = createStudentInDatabase(StudentConst.TEST_NAME, StudentConst.TEST_AGE);
         assertNotNull(createdStudent, "Student should be created successfully");
 
         // When
-        ResponseEntity<Student> getResponse = testRestTemplate.getForEntity(
-                testUrl + "/{id}", Student.class, createdStudent.getId()
+        ResponseEntity<StudentDto> getResponse = testRestTemplate.getForEntity(
+                testUrl + "/{id}", StudentDto.class, createdStudent.id()
         );
 
         // Then
@@ -78,14 +74,13 @@ public class StudentControllerTestRestTemplateTest {
     @DisplayName("Positive. Should Update Student successfully")
     void updateStudent_existingStudent_shouldReturnUpdatedStudent() {
         // Given
-        Student createdStudent = createStudentInDatabase(StudentConst.TEST_NAME, StudentConst.TEST_AGE);
-        String updateJson = createValidStudentJson(StudentConst.UPDATED_NAME, StudentConst.UPDATED_AGE,
-                createdStudent.getId());
+        StudentDto createdStudent = createStudentInDatabase(StudentConst.TEST_NAME, StudentConst.TEST_AGE);
+        String updateJson = createValidStudentUpdateJson(StudentConst.UPDATED_NAME, StudentConst.UPDATED_AGE);
         HttpEntity<String> request = createHttpEntity(updateJson);
 
         // When
-        ResponseEntity<Student> putResponse = testRestTemplate.exchange(
-                testUrl, HttpMethod.PUT, request, Student.class
+        ResponseEntity<StudentDto> putResponse = testRestTemplate.exchange(
+                testUrl + "/{id}", HttpMethod.PUT, request, StudentDto.class, createdStudent.id()
         );
 
         // Then
@@ -97,19 +92,19 @@ public class StudentControllerTestRestTemplateTest {
     @DisplayName("Positive. Should Delete Student successfully")
     void deleteStudent_existingStudent_shouldReturnOk() {
         // Given
-        Student createdStudent = createStudentInDatabase("Student to Delete", 19);
+        StudentDto createdStudent = createStudentInDatabase("Student to Delete", 19);
 
         //When
-        ResponseEntity<Student> deleteResponse = testRestTemplate.exchange(
-                testUrl + "/{id}", HttpMethod.DELETE, HttpEntity.EMPTY, Student.class, createdStudent.getId()
+        ResponseEntity<StudentDto> deleteResponse = testRestTemplate.exchange(
+                testUrl + "/{id}", HttpMethod.DELETE, HttpEntity.EMPTY, StudentDto.class, createdStudent.id()
         );
 
         // Then
         assertEquals(HttpStatus.OK, deleteResponse.getStatusCode());
 
         // Verify
-        ResponseEntity<Student> getResponse = testRestTemplate.getForEntity(
-                testUrl + "/{id}", Student.class, createdStudent.getId()
+        ResponseEntity<StudentDto> getResponse = testRestTemplate.getForEntity(
+                testUrl + "/{id}", StudentDto.class, createdStudent.id()
         );
         assertEquals(HttpStatus.NOT_FOUND, getResponse.getStatusCode());
     }
@@ -118,8 +113,8 @@ public class StudentControllerTestRestTemplateTest {
     @DisplayName("Positive. Should return all students")
     void getAllStudents_shouldReturnStudentsArray() {
         // When
-        ResponseEntity<Student[]> getResponse = testRestTemplate.getForEntity(
-                testUrl, Student[].class
+        ResponseEntity<StudentDto[]> getResponse = testRestTemplate.getForEntity(
+                testUrl, StudentDto[].class
         );
 
         // Then
@@ -134,8 +129,8 @@ public class StudentControllerTestRestTemplateTest {
         createStudentInDatabase("Age Filter Test", StudentConst.AGE_FILTER_AGE);
 
         // When
-        ResponseEntity<Student[]> getResponse = testRestTemplate.getForEntity(
-                testUrl + StudentConst.AGE_ENDPOINT + "/{age}", Student[].class, StudentConst.AGE_FILTER_AGE
+        ResponseEntity<StudentDto[]> getResponse = testRestTemplate.getForEntity(
+                testUrl + StudentConst.AGE_ENDPOINT + "/{age}", StudentDto[].class, StudentConst.AGE_FILTER_AGE
         );
 
         // Then
@@ -151,9 +146,9 @@ public class StudentControllerTestRestTemplateTest {
         createStudentInDatabase("Range Test Student", 18);
 
         // When
-        ResponseEntity<Student[]> getResponse = testRestTemplate.getForEntity(
+        ResponseEntity<StudentDto[]> getResponse = testRestTemplate.getForEntity(
                 testUrl + StudentConst.AGE_BETWEEN_ENDPOINT + "?minAge={minAge}&maxAge={maxAge}",
-                Student[].class, StudentConst.MIN_AGE, StudentConst.MAX_AGE
+                StudentDto[].class, StudentConst.MIN_AGE, StudentConst.MAX_AGE
         );
 
         // Then
@@ -163,26 +158,28 @@ public class StudentControllerTestRestTemplateTest {
     }
 
     @Test
-    @DisplayName("Positive. Should return student faculty when exist")
-    void getStudentFaculty_withFaculty_shouldReturnFaculty() {
+    @DisplayName("Positive. Should create student with faculty ID")
+    void createStudent_withFacultyId_shouldReturnStudentWithFacultyId() {
         // Given
-        Faculty faculty = createFacultyInDatabase("Gryffindor", "Red");
-        Student student = createStudentInDatabase(StudentConst.WITH_FACULTY_NAME, StudentConst.TEST_AGE);
-
-        assignFacultyToStudent(student.getId(), faculty.getId());
+        FacultyDto faculty = createFacultyInDatabase("Ravenclaw", "#0000FF");
+        String studentJson = String.format("""
+                {
+                    "name": "Student with Faculty",
+                    "age": 17,
+                    "facultyId": %d
+                }""", faculty.id());
+        HttpEntity<String> request = createHttpEntity(studentJson);
 
         // When
-        // Без DTO не обойтись - циклические ссылки, поэтому String
-        ResponseEntity<String> getResponse = testRestTemplate.getForEntity(
-                testUrl + "/{id}" + StudentConst.FACULTY_ENDPOINT, String.class, student.getId()
+        ResponseEntity<StudentDto> postResponse = testRestTemplate.exchange(
+                testUrl, HttpMethod.POST, request, StudentDto.class
         );
 
         // Then
-        if (getResponse.getStatusCode() == HttpStatus.OK) {
-            System.out.println("Faculty response: " + getResponse.getBody());
-        } else {
-            assertEquals(HttpStatus.NOT_FOUND, getResponse.getStatusCode());
-        }
+        assertEquals(HttpStatus.CREATED, postResponse.getStatusCode());
+        assertNotNull(postResponse.getBody());
+        assertEquals("Student with Faculty", postResponse.getBody().name());
+        assertEquals(17, postResponse.getBody().age());
     }
 
     // ========== NEGATIVE TESTS ==========
@@ -191,8 +188,8 @@ public class StudentControllerTestRestTemplateTest {
     @DisplayName("Negative. Should return 404 when Student not found")
     void findStudent_nonExistingId_shouldReturn404() {
         // When
-        ResponseEntity<Student> getResponse = testRestTemplate.getForEntity(
-                testUrl + "/{id}", Student.class, NON_EXISTENT_ID
+        ResponseEntity<StudentDto> getResponse = testRestTemplate.getForEntity(
+                testUrl + "/{id}", StudentDto.class, NON_EXISTENT_ID
         );
 
         // Then
@@ -203,26 +200,24 @@ public class StudentControllerTestRestTemplateTest {
     @DisplayName("Negative. Should return 404 when updating non-existent Student")
     void updateStudent_nonExistingId_shouldReturn404() {
         // Given
-        String studentJson = createValidStudentJson(StudentConst.NON_EXISTENT_NAME, StudentConst.TEST_AGE, NON_EXISTENT_ID);
+        String studentJson = createValidStudentUpdateJson(StudentConst.NON_EXISTENT_NAME, StudentConst.TEST_AGE);
         HttpEntity<String> request = createHttpEntity(studentJson);
 
-        // When & Then
-        try {
-            ResponseEntity<Student> putResponse = testRestTemplate.exchange(
-                    testUrl, HttpMethod.PUT, request, Student.class
-            );
-            assertEquals(HttpStatus.NOT_FOUND, putResponse.getStatusCode());
-        } catch (Exception e) {
-            assertTrue(e.getMessage().contains("404"));
-        }
+        // When
+        ResponseEntity<StudentDto> putResponse = testRestTemplate.exchange(
+                testUrl + "/{id}", HttpMethod.PUT, request, StudentDto.class, NON_EXISTENT_ID
+        );
+
+        // Then
+        assertEquals(HttpStatus.NOT_FOUND, putResponse.getStatusCode());
     }
 
     @Test
     @DisplayName("Negative. Should return 404 when Delete non-existing Student")
     void deleteStudent_nonExistingId_shouldReturn404() {
         // When
-        ResponseEntity<Student> deleteResponse = testRestTemplate.exchange(
-                testUrl + "/{id}", HttpMethod.DELETE, HttpEntity.EMPTY, Student.class, NON_EXISTENT_ID
+        ResponseEntity<StudentDto> deleteResponse = testRestTemplate.exchange(
+                testUrl + "/{id}", HttpMethod.DELETE, HttpEntity.EMPTY, StudentDto.class, NON_EXISTENT_ID
         );
 
         // Then
@@ -233,8 +228,8 @@ public class StudentControllerTestRestTemplateTest {
     @DisplayName("Negative. Should return empty array when no Students match Age")
     void getStudentByAge_nonExistentAge_shouldReturnEmptyArray() {
         // When
-        ResponseEntity<Student[]> getResponse = testRestTemplate.getForEntity(
-                testUrl + StudentConst.AGE_ENDPOINT + "/{age}", Student[].class, StudentConst.NON_EXISTENT_AGE
+        ResponseEntity<StudentDto[]> getResponse = testRestTemplate.getForEntity(
+                testUrl + StudentConst.AGE_ENDPOINT + "/{age}", StudentDto[].class, StudentConst.NON_EXISTENT_AGE
         );
 
         // Then
@@ -247,9 +242,9 @@ public class StudentControllerTestRestTemplateTest {
     @DisplayName("Negative. Should return empty Array when no students in age range")
     void getStudentsByAgeBetween_noStudents_shouldReturnEmptyArray() {
         // When
-        ResponseEntity<Student[]> getResponse = testRestTemplate.getForEntity(
+        ResponseEntity<StudentDto[]> getResponse = testRestTemplate.getForEntity(
                 testUrl + StudentConst.AGE_BETWEEN_ENDPOINT + "?minAge={minAge}&maxAge={maxAge}",
-                Student[].class, StudentConst.YOUNG_AGE, StudentConst.YOUNG_AGE + 2
+                StudentDto[].class, StudentConst.INVALID_MIN_AGE, StudentConst.INVALID_MIN_AGE + 2
         );
 
         // Then
@@ -259,34 +254,57 @@ public class StudentControllerTestRestTemplateTest {
     }
 
     @Test
-    @DisplayName("Negative. Should handle invalid Student Data - empty Name")
-    @Deprecated(forRemoval = true)
+    @DisplayName("Negative. Should handle validation error for empty Name")
     void createStudent_emptyName_shouldReturnBadRequest() {
-
         // Given
-        String invalidJson = createValidStudentJson(EMPTY_STRING, StudentConst.TEST_AGE);
+        String invalidJson = createValidStudentCreateJson(EMPTY_STRING, StudentConst.TEST_AGE);
         HttpEntity<String> request = createHttpEntity(invalidJson);
 
         // When
-        ResponseEntity<Student> postResponse = testRestTemplate.exchange(
-                testUrl, HttpMethod.POST, request, Student.class
+        ResponseEntity<StudentDto> postResponse = testRestTemplate.exchange(
+                testUrl, HttpMethod.POST, request, StudentDto.class
         );
 
         // Then
-        if (postResponse.getStatusCode() == HttpStatus.BAD_REQUEST) {
-            System.out.println("Empty Name not accepted, validation is enabled");
-        } else if (postResponse.getStatusCode().is2xxSuccessful()) {
-            System.out.println("Empty Name accepted, validation is disabled");
+        assertEquals(HttpStatus.BAD_REQUEST, postResponse.getStatusCode());
+    }
 
-            assertNotNull(postResponse.getBody());
-            assertEquals(EMPTY_STRING, postResponse.getBody().getName());
+    @Test
+    @DisplayName("Negative. Should handle validation error for invalid age")
+    void createStudent_invalidAge_shouldReturnBadRequest() {
+        // Given
+        String invalidJson = createValidStudentCreateJson("Test Student", Validation.TOO_YOUNG_AGE);
+        HttpEntity<String> request = createHttpEntity(invalidJson);
 
-            if (postResponse.getBody().getId() != null) {
-                testRestTemplate.delete(testUrl + "/" + postResponse.getBody().getId());
-            }
-        } else {
-            fail("Status code: " + postResponse.getStatusCode());
-        }
+        // When
+        ResponseEntity<StudentDto> postResponse = testRestTemplate.exchange(
+                testUrl, HttpMethod.POST, request, StudentDto.class
+        );
+
+        // Then
+        assertEquals(HttpStatus.BAD_REQUEST, postResponse.getStatusCode());
+    }
+
+    @Test
+    @DisplayName("Negative. Should handle non-existent faculty ID gracefully")
+    void createStudent_nonExistentFacultyId_shouldHandleGracefully() {
+        // Given
+        String studentJson = String.format("""
+            {
+                "name": "Student with Invalid Faculty",
+                "age": %d,
+                "facultyId": %d
+            }""", StudentConst.TEST_AGE, StudentConst.NON_EXISTENT_FACULTY_ID);
+        HttpEntity<String> request = createHttpEntity(studentJson);
+
+        // When
+        ResponseEntity<StudentDto> postResponse = testRestTemplate.exchange(
+                testUrl, HttpMethod.POST, request, StudentDto.class
+        );
+
+        // Then
+        assertTrue(postResponse.getStatusCode().is2xxSuccessful() ||
+                postResponse.getStatusCode().is4xxClientError());
     }
 
     // ========== HELPER METHODS ==========
@@ -297,7 +315,7 @@ public class StudentControllerTestRestTemplateTest {
         return new HttpEntity<>(jsonBody, headers);
     }
 
-    private String createValidStudentJson(String name, int age) {
+    private String createValidStudentCreateJson(String name, int age) {
         return String.format("""
                 {
                     "name": "%s",
@@ -305,21 +323,20 @@ public class StudentControllerTestRestTemplateTest {
                 }""", name, age);
     }
 
-    private String createValidStudentJson(String name, int age, Long id) {
+    private String createValidStudentUpdateJson(String name, int age) {
         return String.format("""
                 {
-                    "id": %d,
                     "name": "%s",
                     "age": %d
-                }""", id, name, age);
+                }""", name, age);
     }
 
-    private Student createStudentInDatabase(String name, int age) {
-        String studentJson = createValidStudentJson(name, age);
+    private StudentDto createStudentInDatabase(String name, int age) {
+        String studentJson = createValidStudentCreateJson(name, age);
         HttpEntity<String> request = createHttpEntity(studentJson);
 
-        ResponseEntity<Student> postResponse = testRestTemplate.exchange(
-                testUrl, HttpMethod.POST, request, Student.class
+        ResponseEntity<StudentDto> postResponse = testRestTemplate.exchange(
+                testUrl, HttpMethod.POST, request, StudentDto.class
         );
 
         if (postResponse.getStatusCode().is2xxSuccessful()) {
@@ -330,7 +347,7 @@ public class StudentControllerTestRestTemplateTest {
         }
     }
 
-    private Faculty createFacultyInDatabase(String name, String color) {
+    private FacultyDto createFacultyInDatabase(String name, String color) {
         String facultyJson = String.format("""
                 {
                     "name": "%s",
@@ -339,8 +356,8 @@ public class StudentControllerTestRestTemplateTest {
 
         HttpEntity<String> request = createHttpEntity(facultyJson);
 
-        ResponseEntity<Faculty> postResponse = testRestTemplate.exchange(
-                BASE_URL + port + "/faculty", HttpMethod.POST, request, Faculty.class
+        ResponseEntity<FacultyDto> postResponse = testRestTemplate.exchange(
+                BASE_URL + port + "/faculty", HttpMethod.POST, request, FacultyDto.class
         );
 
         if (postResponse.getStatusCode().is2xxSuccessful()) {
@@ -351,33 +368,29 @@ public class StudentControllerTestRestTemplateTest {
         }
     }
 
-    private void assignFacultyToStudent(Long studentId, Long facultyId) {
-        System.out.println("Would assign faculty " + facultyId + " to student " + studentId);
-    }
-
-    private void assertStudentResponse(Student student, String expectedName, int expectedAge) {
+    private void assertStudentResponse(StudentDto student, String expectedName, int expectedAge) {
         assertNotNull(student, "Student should not be null");
-        assertNotNull(student.getId(), "Student ID should not be null");
-        assertEquals(expectedName, student.getName(), "Student name should match");
-        assertEquals(expectedAge, student.getAge(), "Student age should match");
+        assertNotNull(student.id(), "Student ID should not be null");
+        assertEquals(expectedName, student.name(), "Student name should match");
+        assertEquals(expectedAge, student.age(), "Student age should match");
     }
 
-    private void assertAllStudentsHaveAge(Student[] students, int expectedAge) {
+    private void assertAllStudentsHaveAge(StudentDto[] students, int expectedAge) {
         assertNotNull(students);
         if (students.length > 0) {
-            for (Student student : students) {
-                assertEquals(expectedAge, student.getAge(),
+            for (StudentDto student : students) {
+                assertEquals(expectedAge, student.age(),
                         "All students should have the expected age");
             }
         }
     }
 
-    private void assertAllStudentsInAgeRange(Student[] students, int minAge, int maxAge) {
+    private void assertAllStudentsInAgeRange(StudentDto[] students, int minAge, int maxAge) {
         assertNotNull(students);
         if (students.length > 0) {
-            for (Student student : students) {
-                assertTrue(student.getAge() >= minAge && student.getAge() <= maxAge,
-                        "Student age " + student.getAge() + " should be between " + minAge + " and " + maxAge);
+            for (StudentDto student : students) {
+                assertTrue(student.age() >= minAge && student.age() <= maxAge,
+                        "Student age " + student.age() + " should be between " + minAge + " and " + maxAge);
             }
         }
     }
