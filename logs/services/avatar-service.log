@@ -1,0 +1,12 @@
+2025-11-06 23:06:59.036 [http-nio-8081-exec-5] INFO  r.h.school.service.AvatarService - Was invoked method for FIND Avatar info for Student with ID: 11
+2025-11-06 23:06:59.040 [http-nio-8081-exec-5] DEBUG r.h.school.service.AvatarService - Looking for Avatar for Student with ID: 11
+2025-11-06 23:06:59.064 [http-nio-8081-exec-5] DEBUG r.h.school.service.AvatarService - Avatar info found for Student with ID: 11
+2025-11-06 23:07:09.884 [http-nio-8081-exec-8] INFO  r.h.school.service.AvatarService - Was invoked method for FIND Avatar data for Student with ID: 11
+2025-11-06 23:07:09.887 [http-nio-8081-exec-8] DEBUG r.h.school.service.AvatarService - Looking dor Avatar data for Student with ID: 11
+2025-11-06 23:07:09.891 [http-nio-8081-exec-8] DEBUG r.h.school.service.AvatarService - Avatar data found for Student with ID: 11
+2025-11-06 23:07:16.677 [http-nio-8081-exec-9] INFO  r.h.school.service.AvatarService - Was invoked method for GET Avatar from file for Student with ID: 11
+2025-11-06 23:07:16.677 [http-nio-8081-exec-9] INFO  r.h.school.service.AvatarService - Was invoked method for FIND Avatar info for Student with ID: 11
+2025-11-06 23:07:16.680 [http-nio-8081-exec-9] DEBUG r.h.school.service.AvatarService - Looking for Avatar for Student with ID: 11
+2025-11-06 23:07:16.683 [http-nio-8081-exec-9] DEBUG r.h.school.service.AvatarService - Avatar info found for Student with ID: 11
+2025-11-06 23:07:16.683 [http-nio-8081-exec-9] DEBUG r.h.school.service.AvatarService - Streaming Avatar file from path: .\avatars\11_hermione_full.png for Student with ID: 11
+2025-11-06 23:07:16.688 [http-nio-8081-exec-9] DEBUG r.h.school.service.AvatarService - Avatar file successfully streamed for Student with ID: 11

@@ -1,0 +1,6 @@
+2025-11-06 23:03:41.378 [http-nio-8081-exec-9] INFO  r.h.school.service.FacultyService - Was invoked method for GET ALL faculties
+2025-11-06 23:03:41.403 [http-nio-8081-exec-9] DEBUG r.h.school.service.FacultyService - Found 2 total faculties
+2025-11-06 23:05:59.017 [http-nio-8081-exec-7] INFO  r.h.school.service.FacultyService - Was invoked method for GET faculties by Name or Color: Gr
+2025-11-06 23:05:59.028 [http-nio-8081-exec-7] DEBUG r.h.school.service.FacultyService - Found 0 total faculties matching by Name or Color: Gr
+2025-11-06 23:06:20.879 [http-nio-8081-exec-6] INFO  r.h.school.service.FacultyService - Was invoked method for GET faculties by Name or Color: #deeFDC
+2025-11-06 23:06:20.883 [http-nio-8081-exec-6] DEBUG r.h.school.service.FacultyService - Found 1 total faculties matching by Name or Color: #deeFDC

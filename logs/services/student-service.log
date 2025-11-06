@@ -1,0 +1,57 @@
+2025-11-06 23:00:21.720 [http-nio-8081-exec-3] INFO  r.h.school.service.StudentService - Was invoked method for FIND Student by ID: 8
+2025-11-06 23:00:21.798 [http-nio-8081-exec-3] ERROR r.h.school.service.StudentService - Student with ID: 8 not found when ask FIND Student
+2025-11-06 23:00:37.084 [http-nio-8081-exec-1] INFO  r.h.school.service.StudentService - Was invoked method for GET ALL students
+2025-11-06 23:00:37.199 [http-nio-8081-exec-1] DEBUG r.h.school.service.StudentService - Found 3 total students
+2025-11-06 23:00:48.907 [http-nio-8081-exec-4] INFO  r.h.school.service.StudentService - Was invoked method for FIND Student by ID: 10
+2025-11-06 23:00:48.911 [http-nio-8081-exec-4] DEBUG r.h.school.service.StudentService - Student found: Harry Potter (ID: 10, age: 17
+2025-11-06 23:02:11.528 [http-nio-8081-exec-7] INFO  r.h.school.service.StudentService - Was invoked method for UPDATE Student with ID: 10
+2025-11-06 23:02:11.529 [http-nio-8081-exec-7] DEBUG r.h.school.service.StudentService - Update Student data - name: Vasiliy, age: 20, faculty ID: 0
+2025-11-06 23:02:11.529 [http-nio-8081-exec-7] DEBUG r.h.school.service.StudentService - Was invoked method for FIND student entity by ID: 10
+2025-11-06 23:02:11.532 [http-nio-8081-exec-7] DEBUG r.h.school.service.StudentService - Student entity found: Harry Potter (ID: 10, age: 17)
+2025-11-06 23:02:11.533 [http-nio-8081-exec-7] DEBUG r.h.school.service.StudentService - Found existing Student: Harry Potter (ID: 10, age: 17
+2025-11-06 23:02:11.533 [http-nio-8081-exec-7] DEBUG r.h.school.service.StudentService - Student basic fields updated
+2025-11-06 23:02:11.533 [http-nio-8081-exec-7] DEBUG r.h.school.service.StudentService - Updating Faculty for Student, new faculty ID: 0
+2025-11-06 23:02:46.062 [http-nio-8081-exec-5] INFO  r.h.school.service.StudentService - Was invoked method for UPDATE Student with ID: 10
+2025-11-06 23:02:46.062 [http-nio-8081-exec-5] DEBUG r.h.school.service.StudentService - Update Student data - name: Vasiliy, age: 20, faculty ID: null
+2025-11-06 23:02:46.062 [http-nio-8081-exec-5] DEBUG r.h.school.service.StudentService - Was invoked method for FIND student entity by ID: 10
+2025-11-06 23:02:46.065 [http-nio-8081-exec-5] DEBUG r.h.school.service.StudentService - Student entity found: Harry Potter (ID: 10, age: 17)
+2025-11-06 23:02:46.065 [http-nio-8081-exec-5] DEBUG r.h.school.service.StudentService - Found existing Student: Harry Potter (ID: 10, age: 17
+2025-11-06 23:02:46.065 [http-nio-8081-exec-5] DEBUG r.h.school.service.StudentService - Student basic fields updated
+2025-11-06 23:02:46.065 [http-nio-8081-exec-5] DEBUG r.h.school.service.StudentService - Removing Faculty from Student
+2025-11-06 23:02:46.078 [http-nio-8081-exec-5] DEBUG r.h.school.service.StudentService - Student saved to database
+2025-11-06 23:02:46.078 [http-nio-8081-exec-5] INFO  r.h.school.service.StudentService - Student successfully updated with ID: 10
+2025-11-06 23:03:29.508 [http-nio-8081-exec-8] INFO  r.h.school.service.StudentService - Was invoked method for CREATE Student with Name: Garry
+2025-11-06 23:03:29.508 [http-nio-8081-exec-8] DEBUG r.h.school.service.StudentService - Mapped StudentCreateDto to Student entity: Garry
+2025-11-06 23:03:29.508 [http-nio-8081-exec-8] DEBUG r.h.school.service.StudentService - No Faculty specidied for Student with ID: null
+2025-11-06 23:03:29.531 [http-nio-8081-exec-8] DEBUG r.h.school.service.StudentService - Student saved to database with ID: 13
+2025-11-06 23:03:29.531 [http-nio-8081-exec-8] INFO  r.h.school.service.StudentService - Student successfully created with ID: 13 and Name: Garry
+2025-11-06 23:04:01.450 [http-nio-8081-exec-2] INFO  r.h.school.service.StudentService - Was invoked method for UPDATE Student with ID: 13
+2025-11-06 23:04:01.450 [http-nio-8081-exec-2] DEBUG r.h.school.service.StudentService - Update Student data - name: Vasiliy, age: 20, faculty ID: 34
+2025-11-06 23:04:01.450 [http-nio-8081-exec-2] DEBUG r.h.school.service.StudentService - Was invoked method for FIND student entity by ID: 13
+2025-11-06 23:04:01.452 [http-nio-8081-exec-2] DEBUG r.h.school.service.StudentService - Student entity found: Garry (ID: 13, age: 30)
+2025-11-06 23:04:01.452 [http-nio-8081-exec-2] DEBUG r.h.school.service.StudentService - Found existing Student: Garry (ID: 13, age: 30
+2025-11-06 23:04:01.452 [http-nio-8081-exec-2] DEBUG r.h.school.service.StudentService - Student basic fields updated
+2025-11-06 23:04:01.452 [http-nio-8081-exec-2] DEBUG r.h.school.service.StudentService - Updating Faculty for Student, new faculty ID: 34
+2025-11-06 23:04:01.455 [http-nio-8081-exec-2] DEBUG r.h.school.service.StudentService - Student saved to database
+2025-11-06 23:04:01.455 [http-nio-8081-exec-2] INFO  r.h.school.service.StudentService - Student successfully updated with ID: 13
+2025-11-06 23:04:40.496 [http-nio-8081-exec-3] INFO  r.h.school.service.StudentService - Was invoked method for UPDATE Student with ID: 13
+2025-11-06 23:04:40.496 [http-nio-8081-exec-3] DEBUG r.h.school.service.StudentService - Update Student data - name: Vasiliy1, age: 20, faculty ID: 34
+2025-11-06 23:04:40.496 [http-nio-8081-exec-3] DEBUG r.h.school.service.StudentService - Was invoked method for FIND student entity by ID: 13
+2025-11-06 23:04:40.499 [http-nio-8081-exec-3] DEBUG r.h.school.service.StudentService - Student entity found: Garry (ID: 13, age: 30)
+2025-11-06 23:04:40.499 [http-nio-8081-exec-3] DEBUG r.h.school.service.StudentService - Found existing Student: Garry (ID: 13, age: 30
+2025-11-06 23:04:40.499 [http-nio-8081-exec-3] DEBUG r.h.school.service.StudentService - Student basic fields updated
+2025-11-06 23:04:40.499 [http-nio-8081-exec-3] DEBUG r.h.school.service.StudentService - Updating Faculty for Student, new faculty ID: 34
+2025-11-06 23:04:40.502 [http-nio-8081-exec-3] DEBUG r.h.school.service.StudentService - Student saved to database
+2025-11-06 23:04:40.503 [http-nio-8081-exec-3] INFO  r.h.school.service.StudentService - Student successfully updated with ID: 13
+2025-11-06 23:05:03.582 [http-nio-8081-exec-1] INFO  r.h.school.service.StudentService - Was invoked method for GET last five students
+2025-11-06 23:05:03.629 [http-nio-8081-exec-1] DEBUG r.h.school.service.StudentService - Found 4 last students
+2025-11-06 23:05:26.092 [http-nio-8081-exec-4] INFO  r.h.school.service.StudentService - Was invoked method for get students by age: 18
+2025-11-06 23:05:26.115 [http-nio-8081-exec-4] DEBUG r.h.school.service.StudentService - Found 0 students with age: 18
+2025-11-06 23:05:32.687 [http-nio-8081-exec-10] INFO  r.h.school.service.StudentService - Was invoked method for get students by age: 17
+2025-11-06 23:05:32.692 [http-nio-8081-exec-10] DEBUG r.h.school.service.StudentService - Found 1 students with age: 17
+2025-11-06 23:06:59.036 [http-nio-8081-exec-5] DEBUG r.h.school.service.StudentService - Was invoked method for FIND student entity by ID: 11
+2025-11-06 23:06:59.040 [http-nio-8081-exec-5] DEBUG r.h.school.service.StudentService - Student entity found: Hermione (ID: 11, age: 17)
+2025-11-06 23:07:09.885 [http-nio-8081-exec-8] DEBUG r.h.school.service.StudentService - Was invoked method for FIND student entity by ID: 11
+2025-11-06 23:07:09.887 [http-nio-8081-exec-8] DEBUG r.h.school.service.StudentService - Student entity found: Hermione (ID: 11, age: 17)
+2025-11-06 23:07:16.677 [http-nio-8081-exec-9] DEBUG r.h.school.service.StudentService - Was invoked method for FIND student entity by ID: 11
+2025-11-06 23:07:16.680 [http-nio-8081-exec-9] DEBUG r.h.school.service.StudentService - Student entity found: Hermione (ID: 11, age: 17)
