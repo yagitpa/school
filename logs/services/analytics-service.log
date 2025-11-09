@@ -1,0 +1,22 @@
+2025-11-10 00:27:36.752 [http-nio-9090-exec-10] INFO  r.h.school.service.AnalyticsService - Was invoked method for CALCULATE original sum from 1 to 1000000
+2025-11-10 00:27:36.786 [http-nio-9090-exec-10] INFO  r.h.school.service.AnalyticsService - Original sum calculation completed in 34 ms. Result = 1784293664
+2025-11-10 00:28:06.026 [http-nio-9090-exec-2] INFO  r.h.school.service.AnalyticsService - Was invoked method for CALCULATE optimized sum from 1 to 1000000
+2025-11-10 00:28:06.063 [http-nio-9090-exec-2] INFO  r.h.school.service.AnalyticsService - Optimized sum calculation comleted in 37 ms. Result = 1784293664
+2025-11-10 00:28:39.447 [http-nio-9090-exec-4] INFO  r.h.school.service.AnalyticsService - Was invoked method for CALCULATE optimized sum from 1 to 1000000
+2025-11-10 00:28:39.448 [http-nio-9090-exec-4] INFO  r.h.school.service.AnalyticsService - Optimized sum calculation comleted in 1 ms. Result = 1784293664
+2025-11-10 00:28:51.077 [http-nio-9090-exec-9] INFO  r.h.school.service.AnalyticsService - Was invoked method for CALCULATE optimized sum from 1 to 1000000
+2025-11-10 00:28:51.078 [http-nio-9090-exec-9] INFO  r.h.school.service.AnalyticsService - Optimized sum calculation comleted in 1 ms. Result = 1784293664
+2025-11-10 00:29:10.567 [http-nio-9090-exec-7] INFO  r.h.school.service.AnalyticsService - Was invoked method for CALCULATE original sum from 1 to 1000000
+2025-11-10 00:29:10.596 [http-nio-9090-exec-7] INFO  r.h.school.service.AnalyticsService - Original sum calculation completed in 29 ms. Result = 1784293664
+2025-11-10 00:29:17.295 [http-nio-9090-exec-8] INFO  r.h.school.service.AnalyticsService - Was invoked method for CALCULATE optimized sum from 1 to 1000000
+2025-11-10 00:29:17.296 [http-nio-9090-exec-8] INFO  r.h.school.service.AnalyticsService - Optimized sum calculation comleted in 1 ms. Result = 1784293664
+2025-11-10 00:29:31.528 [http-nio-9090-exec-10] INFO  r.h.school.service.AnalyticsService - Was invoked method for GET student names starting with 'A'
+2025-11-10 00:29:31.528 [http-nio-9090-exec-10] DEBUG r.h.school.service.AnalyticsService - Normalized starting letter: A
+2025-11-10 00:29:31.668 [http-nio-9090-exec-10] DEBUG r.h.school.service.AnalyticsService - Found 0 student names starting with 'A'
+2025-11-10 00:29:40.608 [http-nio-9090-exec-2] INFO  r.h.school.service.AnalyticsService - Was invoked method for GET student names starting with 'H'
+2025-11-10 00:29:40.608 [http-nio-9090-exec-2] DEBUG r.h.school.service.AnalyticsService - Normalized starting letter: H
+2025-11-10 00:29:40.619 [http-nio-9090-exec-2] DEBUG r.h.school.service.AnalyticsService - Found 1 student names starting with 'H'
+2025-11-10 00:29:56.397 [http-nio-9090-exec-5] INFO  r.h.school.service.AnalyticsService - Was invoked method for GET longest faculty name
+2025-11-10 00:29:56.428 [http-nio-9090-exec-5] DEBUG r.h.school.service.AnalyticsService - Longest faculty name: Gryffindor (10 characters)
+2025-11-10 00:30:17.552 [http-nio-9090-exec-6] INFO  r.h.school.service.AnalyticsService - Was invoked method to GET average Age of students
+2025-11-10 00:30:17.564 [http-nio-9090-exec-6] DEBUG r.h.school.service.AnalyticsService - Calculated average Age: 19.25

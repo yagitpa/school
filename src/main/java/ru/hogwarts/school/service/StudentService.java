@@ -91,7 +91,6 @@ public class StudentService {
             Faculty faculty = universityManagementService.findFacultyEntity(studentUpdateDto.facultyId());
             existingStudent.setFaculty(faculty);
         } else {
-            logger.debug("Removing Faculty from Student");
             existingStudent.setFaculty(null);
         }
 

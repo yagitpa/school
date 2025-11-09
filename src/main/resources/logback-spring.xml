@@ -79,6 +79,30 @@
         </encoder>
     </appender>
 
+    <!-- Appender для AnalyticsService -->
+    <appender name="ANALYTICS_SERVICE_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_PATH}/services/analytics-service.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_PATH}/archive/services/analytics-service.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <maxHistory>${MAX_HISTORY}</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <pattern>${LOG_PATTERN}</pattern>
+        </encoder>
+    </appender>
+
+    <!-- Appender для AnalyticsController -->
+    <appender name="ANALYTICS_CONTROLLER_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_PATH}/controllers/analytics-controller.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_PATH}/archive/controllers/analytics-controller.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <maxHistory>${MAX_HISTORY}</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <pattern>${LOG_PATTERN}</pattern>
+        </encoder>
+    </appender>
+
     <!-- Appender для ошибок -->
     <appender name="ERROR_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>${LOG_PATH}/errors.log</file>
@@ -134,6 +158,20 @@
     <!-- Логирование для InfoController -->
     <logger name="ru.hogwarts.school.controller.InfoController" level="DEBUG" additivity="false">
         <appender-ref ref="INFO_CONTROLLER_FILE"/>
+        <appender-ref ref="ERROR_FILE"/>
+        <appender-ref ref="CONSOLE"/>
+    </logger>
+
+    <!-- Логирование для AnalyticsService -->
+    <logger name="ru.hogwarts.school.service.AnalyticsService" level="DEBUG" additivity="false">
+        <appender-ref ref="ANALYTICS_SERVICE_FILE"/>
+        <appender-ref ref="ERROR_FILE"/>
+        <appender-ref ref="CONSOLE"/>
+    </logger>
+
+    <!-- Логирование для AnalyticsController -->
+    <logger name="ru.hogwarts.school.controller.AnalyticsController" level="DEBUG" additivity="false">
+        <appender-ref ref="ANALYTICS_CONTROLLER_FILE"/>
         <appender-ref ref="ERROR_FILE"/>
         <appender-ref ref="CONSOLE"/>
     </logger>
