@@ -1,0 +1,8 @@
+2025-11-06 22:54:12.472 [http-nio-8081-exec-3] INFO  r.h.school.controller.InfoController - Was invoked method for get server port
+2025-11-06 22:54:12.472 [http-nio-8081-exec-3] DEBUG r.h.school.controller.InfoController - Current server port: 8081, active profile: [dev]
+2025-11-06 22:55:12.090 [http-nio-8082-exec-9] INFO  r.h.school.controller.InfoController - Was invoked method for get server port
+2025-11-06 22:55:12.090 [http-nio-8082-exec-9] DEBUG r.h.school.controller.InfoController - Current server port: 8082, active profile: [prod]
+2025-11-06 22:56:57.944 [http-nio-8081-exec-7] INFO  r.h.school.controller.InfoController - Was invoked method for get server port
+2025-11-06 22:56:57.944 [http-nio-8081-exec-7] DEBUG r.h.school.controller.InfoController - Current server port: 8081, active profile: [dev]
+2025-11-06 23:07:22.649 [http-nio-8081-exec-2] INFO  r.h.school.controller.InfoController - Was invoked method for get server port
+2025-11-06 23:07:22.650 [http-nio-8081-exec-2] DEBUG r.h.school.controller.InfoController - Current server port: 8081, active profile: [dev]

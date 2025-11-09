@@ -1,0 +1,4 @@
+2025-11-06 23:00:21.798 [http-nio-8081-exec-3] ERROR r.h.school.service.StudentService - Student with ID: 8 not found when ask FIND Student
+2025-11-06 23:02:11.543 [http-nio-8081-exec-7] ERROR r.h.s.s.UniversityManagementService - Faculty entity not found with ID: 0
+2025-11-06 23:04:01.474 [http-nio-8081-exec-2] ERROR o.h.e.jdbc.spi.SqlExceptionHelper - ОШИБКА: повторяющееся значение ключа нарушает ограничение уникальности "student_name_unique"
+  Подробности: Ключ "(name)=(Vasiliy)" уже существует.

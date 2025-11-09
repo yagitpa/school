@@ -1,0 +1,33 @@
+2025-11-06 22:58:46.139 [main] INFO  r.hogwarts.school.SchoolApplication - Starting SchoolApplication using Java 17.0.16 with PID 12680 (C:\Users\username\YandexDisk\skypro\school\target\classes started by username in C:\Users\username\YandexDisk\skypro\school)
+2025-11-06 22:58:46.141 [main] DEBUG r.hogwarts.school.SchoolApplication - Running with Spring Boot v3.5.6, Spring v6.2.11
+2025-11-06 22:58:46.142 [main] INFO  r.hogwarts.school.SchoolApplication - The following 1 profile is active: "dev"
+2025-11-06 22:58:47.754 [main] INFO  o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8081"]
+2025-11-06 22:58:47.757 [main] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+2025-11-06 22:58:47.757 [main] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.46]
+2025-11-06 22:58:47.836 [main] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2025-11-06 22:58:48.008 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2025-11-06 22:58:48.246 [main] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@1bd8afc8
+2025-11-06 22:58:48.249 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2025-11-06 22:58:48.409 [main] INFO  liquibase.database - Set default schema name to public
+2025-11-06 22:58:48.712 [main] INFO  liquibase.changelog - Reading from public.databasechangelog
+2025-11-06 22:58:48.759 [main] INFO  liquibase.ui - Database is up to date, no changesets to execute
+2025-11-06 22:58:48.761 [main] INFO  liquibase.changelog - Reading from public.databasechangelog
+2025-11-06 22:58:48.771 [main] INFO  liquibase.util - UPDATE SUMMARY
+2025-11-06 22:58:48.771 [main] INFO  liquibase.util - Run:                          0
+2025-11-06 22:58:48.771 [main] INFO  liquibase.util - Previously run:               2
+2025-11-06 22:58:48.771 [main] INFO  liquibase.util - Filtered out:                 0
+2025-11-06 22:58:48.772 [main] INFO  liquibase.util - -------------------------------
+2025-11-06 22:58:48.772 [main] INFO  liquibase.util - Total change sets:            2
+2025-11-06 22:58:48.772 [main] INFO  liquibase.util - Update summary generated
+2025-11-06 22:58:48.774 [main] INFO  liquibase.command - Command execution complete
+2025-11-06 22:58:50.461 [main] WARN  org.hibernate.orm.deprecation - HHH90000021: Encountered deprecated setting [hibernate.temp.use_jdbc_metadata_defaults], use [hibernate.boot.allow_jdbc_metadata_access] instead
+2025-11-06 22:58:50.479 [main] WARN  org.hibernate.orm.deprecation - HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2025-11-06 22:58:52.716 [main] WARN  o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-11-06 22:58:53.145 [main] INFO  o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8081"]
+2025-11-06 22:58:53.183 [main] INFO  r.hogwarts.school.SchoolApplication - Started SchoolApplication in 7.718 seconds (process running for 8.12)
+2025-11-06 23:00:21.677 [http-nio-8081-exec-3] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2025-11-06 23:04:01.473 [http-nio-8081-exec-2] WARN  o.h.e.jdbc.spi.SqlExceptionHelper - SQL Error: 0, SQLState: 23505
+2025-11-06 23:04:01.474 [http-nio-8081-exec-2] ERROR o.h.e.jdbc.spi.SqlExceptionHelper - ОШИБКА: повторяющееся значение ключа нарушает ограничение уникальности "student_name_unique"
+  Подробности: Ключ "(name)=(Vasiliy)" уже существует.
+2025-11-06 23:07:28.738 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+2025-11-06 23:07:28.741 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
