@@ -48,7 +48,7 @@ public class AnalyticsController {
     }
 
     @GetMapping("/compute/optimized-sum")
-    public Integer calculateOptimizedSum() {
+    public Long calculateOptimizedSum() {
         logger.info("Was invoked GET endpoint for optimized sum calculation");
         return analyticsService.calculateOptimizedSum();
     }

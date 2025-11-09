@@ -11,6 +11,7 @@ import ru.hogwarts.school.repository.StudentRepository;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.IntStream;
+import java.util.stream.LongStream;
 import java.util.stream.Stream;
 
 @Service
@@ -88,13 +89,13 @@ public class AnalyticsService {
         return sum;
     }
 
-    public Integer calculateOptimizedSum() {
+    public Long calculateOptimizedSum() {
         logger.info("Was invoked method for CALCULATE optimized sum from 1 to {}", LIMIT);
 
         long startTime = System.currentTimeMillis();
-        int sum = IntStream.rangeClosed(1, LIMIT)
-                           .parallel()
-                           .sum();
+        long sum = LongStream.rangeClosed(1, LIMIT)
+                                    .parallel()
+                                    .sum();
 
         long endTime = System.currentTimeMillis();
         long duration = endTime - startTime;

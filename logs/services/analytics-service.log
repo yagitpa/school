@@ -20,3 +20,11 @@
 2025-11-10 00:29:56.428 [http-nio-9090-exec-5] DEBUG r.h.school.service.AnalyticsService - Longest faculty name: Gryffindor (10 characters)
 2025-11-10 00:30:17.552 [http-nio-9090-exec-6] INFO  r.h.school.service.AnalyticsService - Was invoked method to GET average Age of students
 2025-11-10 00:30:17.564 [http-nio-9090-exec-6] DEBUG r.h.school.service.AnalyticsService - Calculated average Age: 19.25
+2025-11-10 01:06:00.818 [http-nio-9090-exec-5] INFO  r.h.school.service.AnalyticsService - Was invoked method for CALCULATE original sum from 1 to 1000000
+2025-11-10 01:06:00.905 [http-nio-9090-exec-5] INFO  r.h.school.service.AnalyticsService - Original sum calculation completed in 85 ms. Result = 1784293664
+2025-11-10 01:06:15.255 [http-nio-9090-exec-7] INFO  r.h.school.service.AnalyticsService - Was invoked method for CALCULATE optimized sum from 1 to 1000000
+2025-11-10 01:06:15.289 [http-nio-9090-exec-7] INFO  r.h.school.service.AnalyticsService - Optimized sum calculation comleted in 33 ms. Result = 500000500000
+2025-11-10 01:06:32.123 [http-nio-9090-exec-8] INFO  r.h.school.service.AnalyticsService - Was invoked method for CALCULATE optimized sum from 1 to 1000000
+2025-11-10 01:06:32.123 [http-nio-9090-exec-8] INFO  r.h.school.service.AnalyticsService - Optimized sum calculation comleted in 0 ms. Result = 500000500000
+2025-11-10 01:06:39.465 [http-nio-9090-exec-6] INFO  r.h.school.service.AnalyticsService - Was invoked method for CALCULATE original sum from 1 to 1000000
+2025-11-10 01:06:39.492 [http-nio-9090-exec-6] INFO  r.h.school.service.AnalyticsService - Original sum calculation completed in 27 ms. Result = 1784293664
