@@ -10,7 +10,6 @@ import ru.hogwarts.school.repository.StudentRepository;
 
 import java.util.Comparator;
 import java.util.List;
-import java.util.stream.IntStream;
 import java.util.stream.LongStream;
 import java.util.stream.Stream;
 
@@ -101,6 +100,20 @@ public class AnalyticsService {
         long duration = endTime - startTime;
 
         logger.info("Optimized sum calculation comleted in {} ms. Result = {}", duration, sum);
+        return sum;
+    }
+
+    public Long calculateMathSum() {
+        logger.info("Was invoked method for CALCULATE mathematical sum from 1 to {}", LIMIT);
+
+        long startTime = System.currentTimeMillis();
+
+        long sum = (long) LIMIT * (1L + LIMIT) / 2L;
+
+        long endTime = System.currentTimeMillis();
+        long duration = endTime - startTime;
+
+        logger.info("Mathematical sum calculation completed in {} ms. Result = {}", duration, sum);
         return sum;
     }
 }

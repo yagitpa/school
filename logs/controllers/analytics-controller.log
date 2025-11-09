@@ -12,3 +12,4 @@
 2025-11-10 01:06:15.255 [http-nio-9090-exec-7] INFO  r.h.s.controller.AnalyticsController - Was invoked GET endpoint for optimized sum calculation
 2025-11-10 01:06:32.123 [http-nio-9090-exec-8] INFO  r.h.s.controller.AnalyticsController - Was invoked GET endpoint for optimized sum calculation
 2025-11-10 01:06:39.465 [http-nio-9090-exec-6] INFO  r.h.s.controller.AnalyticsController - Was invoked GET endpoint for original sum calculation
+2025-11-10 02:07:42.962 [http-nio-9090-exec-7] INFO  r.h.s.controller.AnalyticsController - Was invoked GET endpoint for mathematical sum calculation

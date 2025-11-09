@@ -52,4 +52,10 @@ public class AnalyticsController {
         logger.info("Was invoked GET endpoint for optimized sum calculation");
         return analyticsService.calculateOptimizedSum();
     }
+
+    @GetMapping("/compute/math-sum")
+    public Long calculateMathSum() {
+        logger.info("Was invoked GET endpoint for mathematical sum calculation");
+        return analyticsService.calculateMathSum();
+    }
 }

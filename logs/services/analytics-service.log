@@ -28,3 +28,5 @@
 2025-11-10 01:06:32.123 [http-nio-9090-exec-8] INFO  r.h.school.service.AnalyticsService - Optimized sum calculation comleted in 0 ms. Result = 500000500000
 2025-11-10 01:06:39.465 [http-nio-9090-exec-6] INFO  r.h.school.service.AnalyticsService - Was invoked method for CALCULATE original sum from 1 to 1000000
 2025-11-10 01:06:39.492 [http-nio-9090-exec-6] INFO  r.h.school.service.AnalyticsService - Original sum calculation completed in 27 ms. Result = 1784293664
+2025-11-10 02:07:42.977 [http-nio-9090-exec-7] INFO  r.h.school.service.AnalyticsService - Was invoked method for CALCULATE mathematical sum from 1 to 1000000
+2025-11-10 02:07:42.977 [http-nio-9090-exec-7] INFO  r.h.school.service.AnalyticsService - Mathematical sum calculation completed in 0 ms. Result = 500000500000
