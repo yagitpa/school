@@ -12,3 +12,100 @@
 2025-11-13 02:31:18.878 [http-nio-9090-exec-6] DEBUG r.h.school.service.StudentService - Found 6 student names
 2025-11-13 02:32:53.900 [http-nio-9090-exec-5] INFO  r.h.school.service.StudentService - Was invoked method for GET all student names
 2025-11-13 02:32:53.912 [http-nio-9090-exec-5] DEBUG r.h.school.service.StudentService - Found 6 student names
+2025-11-13 03:43:41.198 [http-nio-auto-1-exec-1] INFO  r.h.school.service.StudentService - Was invoked method for GET all student names
+2025-11-13 03:43:41.340 [http-nio-auto-1-exec-1] DEBUG r.h.school.service.StudentService - Found 0 student names
+2025-11-13 03:43:56.844 [http-nio-auto-1-exec-1] INFO  r.h.school.service.StudentService - Was invoked method for GET all student names
+2025-11-13 03:43:56.962 [http-nio-auto-1-exec-1] DEBUG r.h.school.service.StudentService - Found 0 student names
+2025-11-13 03:44:13.168 [http-nio-auto-1-exec-1] INFO  r.h.school.service.StudentService - Was invoked method for CREATE Student with Name: Harry Potter
+2025-11-13 03:44:13.168 [http-nio-auto-1-exec-1] DEBUG r.h.school.service.StudentService - Mapped StudentCreateDto to Student entity: Harry Potter
+2025-11-13 03:44:13.168 [http-nio-auto-1-exec-1] DEBUG r.h.school.service.StudentService - No Faculty specidied for Student with ID: null
+2025-11-13 03:44:13.277 [http-nio-auto-1-exec-1] DEBUG r.h.school.service.StudentService - Student saved to database with ID: 1
+2025-11-13 03:44:13.278 [http-nio-auto-1-exec-1] INFO  r.h.school.service.StudentService - Student successfully created with ID: 1 and Name: Harry Potter
+2025-11-13 03:44:13.349 [http-nio-auto-1-exec-2] INFO  r.h.school.service.StudentService - Was invoked method for CREATE Student with Name: Hermione Granger
+2025-11-13 03:44:13.349 [http-nio-auto-1-exec-2] DEBUG r.h.school.service.StudentService - Mapped StudentCreateDto to Student entity: Hermione Granger
+2025-11-13 03:44:13.349 [http-nio-auto-1-exec-2] DEBUG r.h.school.service.StudentService - No Faculty specidied for Student with ID: null
+2025-11-13 03:44:13.352 [http-nio-auto-1-exec-2] DEBUG r.h.school.service.StudentService - Student saved to database with ID: 2
+2025-11-13 03:44:13.352 [http-nio-auto-1-exec-2] INFO  r.h.school.service.StudentService - Student successfully created with ID: 2 and Name: Hermione Granger
+2025-11-13 03:44:13.360 [http-nio-auto-1-exec-3] INFO  r.h.school.service.StudentService - Was invoked method for CREATE Student with Name: Ron Weasley
+2025-11-13 03:44:13.360 [http-nio-auto-1-exec-3] DEBUG r.h.school.service.StudentService - Mapped StudentCreateDto to Student entity: Ron Weasley
+2025-11-13 03:44:13.360 [http-nio-auto-1-exec-3] DEBUG r.h.school.service.StudentService - No Faculty specidied for Student with ID: null
+2025-11-13 03:44:13.362 [http-nio-auto-1-exec-3] DEBUG r.h.school.service.StudentService - Student saved to database with ID: 3
+2025-11-13 03:44:13.362 [http-nio-auto-1-exec-3] INFO  r.h.school.service.StudentService - Student successfully created with ID: 3 and Name: Ron Weasley
+2025-11-13 03:44:13.370 [http-nio-auto-1-exec-5] INFO  r.h.school.service.StudentService - Was invoked method for GET all student names
+2025-11-13 03:44:13.463 [http-nio-auto-1-exec-5] DEBUG r.h.school.service.StudentService - Found 3 student names
+2025-11-13 03:44:28.519 [http-nio-auto-1-exec-1] INFO  r.h.school.service.StudentService - Was invoked method for CREATE Student with Name: Harry Potter
+2025-11-13 03:44:28.520 [http-nio-auto-1-exec-1] DEBUG r.h.school.service.StudentService - Mapped StudentCreateDto to Student entity: Harry Potter
+2025-11-13 03:44:28.520 [http-nio-auto-1-exec-1] DEBUG r.h.school.service.StudentService - No Faculty specidied for Student with ID: null
+2025-11-13 03:44:28.613 [http-nio-auto-1-exec-1] DEBUG r.h.school.service.StudentService - Student saved to database with ID: 1
+2025-11-13 03:44:28.619 [http-nio-auto-1-exec-1] INFO  r.h.school.service.StudentService - Student successfully created with ID: 1 and Name: Harry Potter
+2025-11-13 03:44:28.681 [http-nio-auto-1-exec-2] INFO  r.h.school.service.StudentService - Was invoked method for CREATE Student with Name: Hermione Granger
+2025-11-13 03:44:28.681 [http-nio-auto-1-exec-2] DEBUG r.h.school.service.StudentService - Mapped StudentCreateDto to Student entity: Hermione Granger
+2025-11-13 03:44:28.681 [http-nio-auto-1-exec-2] DEBUG r.h.school.service.StudentService - No Faculty specidied for Student with ID: null
+2025-11-13 03:44:28.682 [http-nio-auto-1-exec-2] DEBUG r.h.school.service.StudentService - Student saved to database with ID: 2
+2025-11-13 03:44:28.683 [http-nio-auto-1-exec-2] INFO  r.h.school.service.StudentService - Student successfully created with ID: 2 and Name: Hermione Granger
+2025-11-13 03:44:28.688 [http-nio-auto-1-exec-3] INFO  r.h.school.service.StudentService - Was invoked method for GET all student names
+2025-11-13 03:44:28.765 [http-nio-auto-1-exec-3] DEBUG r.h.school.service.StudentService - Found 2 student names
+2025-11-13 03:44:46.694 [http-nio-auto-1-exec-1] INFO  r.h.school.service.StudentService - Was invoked method for CREATE Student with Name: Harry Potter
+2025-11-13 03:44:46.695 [http-nio-auto-1-exec-1] DEBUG r.h.school.service.StudentService - Mapped StudentCreateDto to Student entity: Harry Potter
+2025-11-13 03:44:46.695 [http-nio-auto-1-exec-1] DEBUG r.h.school.service.StudentService - No Faculty specidied for Student with ID: null
+2025-11-13 03:44:46.785 [http-nio-auto-1-exec-1] DEBUG r.h.school.service.StudentService - Student saved to database with ID: 1
+2025-11-13 03:44:46.785 [http-nio-auto-1-exec-1] INFO  r.h.school.service.StudentService - Student successfully created with ID: 1 and Name: Harry Potter
+2025-11-13 03:44:46.848 [http-nio-auto-1-exec-2] INFO  r.h.school.service.StudentService - Was invoked method for CREATE Student with Name: Hermione Granger
+2025-11-13 03:44:46.848 [http-nio-auto-1-exec-2] DEBUG r.h.school.service.StudentService - Mapped StudentCreateDto to Student entity: Hermione Granger
+2025-11-13 03:44:46.848 [http-nio-auto-1-exec-2] DEBUG r.h.school.service.StudentService - No Faculty specidied for Student with ID: null
+2025-11-13 03:44:46.850 [http-nio-auto-1-exec-2] DEBUG r.h.school.service.StudentService - Student saved to database with ID: 2
+2025-11-13 03:44:46.850 [http-nio-auto-1-exec-2] INFO  r.h.school.service.StudentService - Student successfully created with ID: 2 and Name: Hermione Granger
+2025-11-13 03:44:46.856 [http-nio-auto-1-exec-3] INFO  r.h.school.service.StudentService - Was invoked method for CREATE Student with Name: Ron Weasley
+2025-11-13 03:44:46.856 [http-nio-auto-1-exec-3] DEBUG r.h.school.service.StudentService - Mapped StudentCreateDto to Student entity: Ron Weasley
+2025-11-13 03:44:46.856 [http-nio-auto-1-exec-3] DEBUG r.h.school.service.StudentService - No Faculty specidied for Student with ID: null
+2025-11-13 03:44:46.858 [http-nio-auto-1-exec-3] DEBUG r.h.school.service.StudentService - Student saved to database with ID: 3
+2025-11-13 03:44:46.859 [http-nio-auto-1-exec-3] INFO  r.h.school.service.StudentService - Student successfully created with ID: 3 and Name: Ron Weasley
+2025-11-13 03:44:46.865 [http-nio-auto-1-exec-4] INFO  r.h.school.service.StudentService - Was invoked method for CREATE Student with Name: Abigail Grey
+2025-11-13 03:44:46.866 [http-nio-auto-1-exec-4] DEBUG r.h.school.service.StudentService - Mapped StudentCreateDto to Student entity: Abigail Grey
+2025-11-13 03:44:46.866 [http-nio-auto-1-exec-4] DEBUG r.h.school.service.StudentService - No Faculty specidied for Student with ID: null
+2025-11-13 03:44:46.867 [http-nio-auto-1-exec-4] DEBUG r.h.school.service.StudentService - Student saved to database with ID: 4
+2025-11-13 03:44:46.867 [http-nio-auto-1-exec-4] INFO  r.h.school.service.StudentService - Student successfully created with ID: 4 and Name: Abigail Grey
+2025-11-13 03:44:46.874 [http-nio-auto-1-exec-5] INFO  r.h.school.service.StudentService - Was invoked method for CREATE Student with Name: Luna Lovegood
+2025-11-13 03:44:46.874 [http-nio-auto-1-exec-5] DEBUG r.h.school.service.StudentService - Mapped StudentCreateDto to Student entity: Luna Lovegood
+2025-11-13 03:44:46.874 [http-nio-auto-1-exec-5] DEBUG r.h.school.service.StudentService - No Faculty specidied for Student with ID: null
+2025-11-13 03:44:46.876 [http-nio-auto-1-exec-5] DEBUG r.h.school.service.StudentService - Student saved to database with ID: 5
+2025-11-13 03:44:46.876 [http-nio-auto-1-exec-5] INFO  r.h.school.service.StudentService - Student successfully created with ID: 5 and Name: Luna Lovegood
+2025-11-13 03:44:46.882 [http-nio-auto-1-exec-6] INFO  r.h.school.service.StudentService - Was invoked method for CREATE Student with Name: Neville Longbottom
+2025-11-13 03:44:46.883 [http-nio-auto-1-exec-6] DEBUG r.h.school.service.StudentService - Mapped StudentCreateDto to Student entity: Neville Longbottom
+2025-11-13 03:44:46.883 [http-nio-auto-1-exec-6] DEBUG r.h.school.service.StudentService - No Faculty specidied for Student with ID: null
+2025-11-13 03:44:46.884 [http-nio-auto-1-exec-6] DEBUG r.h.school.service.StudentService - Student saved to database with ID: 6
+2025-11-13 03:44:46.884 [http-nio-auto-1-exec-6] INFO  r.h.school.service.StudentService - Student successfully created with ID: 6 and Name: Neville Longbottom
+2025-11-13 03:44:46.890 [http-nio-auto-1-exec-7] INFO  r.h.school.service.StudentService - Was invoked method for GET all student names
+2025-11-13 03:44:46.969 [http-nio-auto-1-exec-7] DEBUG r.h.school.service.StudentService - Found 6 student names
+2025-11-13 03:45:18.794 [http-nio-auto-1-exec-3] INFO  r.h.school.service.StudentService - Was invoked method for CREATE Student with Name: Harry Potter
+2025-11-13 03:45:18.795 [http-nio-auto-1-exec-3] DEBUG r.h.school.service.StudentService - Mapped StudentCreateDto to Student entity: Harry Potter
+2025-11-13 03:45:18.795 [http-nio-auto-1-exec-3] DEBUG r.h.school.service.StudentService - No Faculty specidied for Student with ID: null
+2025-11-13 03:45:18.889 [http-nio-auto-1-exec-3] DEBUG r.h.school.service.StudentService - Student saved to database with ID: 1
+2025-11-13 03:45:18.889 [http-nio-auto-1-exec-3] INFO  r.h.school.service.StudentService - Student successfully created with ID: 1 and Name: Harry Potter
+2025-11-13 03:45:18.958 [http-nio-auto-1-exec-1] INFO  r.h.school.service.StudentService - Was invoked method for CREATE Student with Name: Hermione Granger
+2025-11-13 03:45:18.958 [http-nio-auto-1-exec-1] DEBUG r.h.school.service.StudentService - Mapped StudentCreateDto to Student entity: Hermione Granger
+2025-11-13 03:45:18.958 [http-nio-auto-1-exec-1] DEBUG r.h.school.service.StudentService - No Faculty specidied for Student with ID: null
+2025-11-13 03:45:18.960 [http-nio-auto-1-exec-1] DEBUG r.h.school.service.StudentService - Student saved to database with ID: 2
+2025-11-13 03:45:18.960 [http-nio-auto-1-exec-1] INFO  r.h.school.service.StudentService - Student successfully created with ID: 2 and Name: Hermione Granger
+2025-11-13 03:45:18.966 [http-nio-auto-1-exec-6] INFO  r.h.school.service.StudentService - Was invoked method for CREATE Student with Name: Ron Weasley
+2025-11-13 03:45:18.966 [http-nio-auto-1-exec-6] DEBUG r.h.school.service.StudentService - Mapped StudentCreateDto to Student entity: Ron Weasley
+2025-11-13 03:45:18.967 [http-nio-auto-1-exec-6] DEBUG r.h.school.service.StudentService - No Faculty specidied for Student with ID: null
+2025-11-13 03:45:18.968 [http-nio-auto-1-exec-6] DEBUG r.h.school.service.StudentService - Student saved to database with ID: 3
+2025-11-13 03:45:18.969 [http-nio-auto-1-exec-6] INFO  r.h.school.service.StudentService - Student successfully created with ID: 3 and Name: Ron Weasley
+2025-11-13 03:45:18.975 [http-nio-auto-1-exec-9] INFO  r.h.school.service.StudentService - Was invoked method for CREATE Student with Name: Abigail Grey
+2025-11-13 03:45:18.975 [http-nio-auto-1-exec-9] DEBUG r.h.school.service.StudentService - Mapped StudentCreateDto to Student entity: Abigail Grey
+2025-11-13 03:45:18.975 [http-nio-auto-1-exec-9] DEBUG r.h.school.service.StudentService - No Faculty specidied for Student with ID: null
+2025-11-13 03:45:18.977 [http-nio-auto-1-exec-9] DEBUG r.h.school.service.StudentService - Student saved to database with ID: 4
+2025-11-13 03:45:18.977 [http-nio-auto-1-exec-9] INFO  r.h.school.service.StudentService - Student successfully created with ID: 4 and Name: Abigail Grey
+2025-11-13 03:45:18.983 [http-nio-auto-1-exec-2] INFO  r.h.school.service.StudentService - Was invoked method for CREATE Student with Name: Luna Lovegood
+2025-11-13 03:45:18.983 [http-nio-auto-1-exec-2] DEBUG r.h.school.service.StudentService - Mapped StudentCreateDto to Student entity: Luna Lovegood
+2025-11-13 03:45:18.983 [http-nio-auto-1-exec-2] DEBUG r.h.school.service.StudentService - No Faculty specidied for Student with ID: null
+2025-11-13 03:45:18.985 [http-nio-auto-1-exec-2] DEBUG r.h.school.service.StudentService - Student saved to database with ID: 5
+2025-11-13 03:45:18.985 [http-nio-auto-1-exec-2] INFO  r.h.school.service.StudentService - Student successfully created with ID: 5 and Name: Luna Lovegood
+2025-11-13 03:45:18.991 [http-nio-auto-1-exec-4] INFO  r.h.school.service.StudentService - Was invoked method for CREATE Student with Name: Neville Longbottom
+2025-11-13 03:45:18.992 [http-nio-auto-1-exec-4] DEBUG r.h.school.service.StudentService - Mapped StudentCreateDto to Student entity: Neville Longbottom
+2025-11-13 03:45:18.992 [http-nio-auto-1-exec-4] DEBUG r.h.school.service.StudentService - No Faculty specidied for Student with ID: null
+2025-11-13 03:45:18.994 [http-nio-auto-1-exec-4] DEBUG r.h.school.service.StudentService - Student saved to database with ID: 6
+2025-11-13 03:45:18.994 [http-nio-auto-1-exec-4] INFO  r.h.school.service.StudentService - Student successfully created with ID: 6 and Name: Neville Longbottom
+2025-11-13 03:45:19.000 [http-nio-auto-1-exec-5] INFO  r.h.school.service.StudentService - Was invoked method for GET all student names
+2025-11-13 03:45:19.079 [http-nio-auto-1-exec-5] DEBUG r.h.school.service.StudentService - Found 6 student names

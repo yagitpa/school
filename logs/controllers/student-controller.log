@@ -24,3 +24,127 @@
 2025-11-13 02:32:53.914 [Thread-4] DEBUG r.h.s.controller.StudentController - Parallel Thread 1 completed synchronized printing
 2025-11-13 02:32:53.914 [Thread-5] DEBUG r.h.s.controller.StudentController - Parallel Thread 2 completed synchronized printing
 2025-11-13 02:32:53.914 [http-nio-9090-exec-5] DEBUG r.h.s.controller.StudentController - Parallel synchronized Threads 1 and 2 successfully completed
+2025-11-13 03:16:19.125 [main] INFO  r.h.s.controller.StudentController - Was invoked GET endpoint for PRINT students names in parallel mode
+2025-11-13 03:16:19.151 [main] DEBUG r.h.s.controller.StudentController - Retrieved 0 student names for parallel printing
+2025-11-13 03:16:19.153 [main] WARN  r.h.s.controller.StudentController - Not enough student names for parallel printing. Required: 6, found: 0
+2025-11-13 03:16:50.858 [main] INFO  r.h.s.controller.StudentController - Was invoked GET endpoint for PRINT students names in parallel mode
+2025-11-13 03:16:50.878 [main] DEBUG r.h.s.controller.StudentController - Retrieved 0 student names for parallel printing
+2025-11-13 03:16:50.880 [main] WARN  r.h.s.controller.StudentController - Not enough student names for parallel printing. Required: 6, found: 0
+2025-11-13 03:17:03.767 [main] INFO  r.h.s.controller.StudentController - Was invoked GET endpoint for PRINT student names in synchronized mode
+2025-11-13 03:17:03.786 [main] DEBUG r.h.s.controller.StudentController - Retrieved 0 student names for synchronized printing
+2025-11-13 03:17:03.788 [main] WARN  r.h.s.controller.StudentController - Not enough student names for synchronized printing. Required: 6, found: 0
+2025-11-13 03:34:13.956 [main] INFO  r.h.s.controller.StudentController - Was invoked GET endpoint for PRINT students names in parallel mode
+2025-11-13 03:34:13.959 [main] DEBUG r.h.s.controller.StudentController - Retrieved 6 student names for parallel printing
+2025-11-13 03:34:13.961 [main] INFO  r.h.s.controller.StudentController - Starting parallel printing for 6 student names
+2025-11-13 03:34:13.962 [main] DEBUG r.h.s.controller.StudentController - Main thread printed first two names
+2025-11-13 03:34:13.963 [main] DEBUG r.h.s.controller.StudentController - Parallel Threads 1 and 2 started
+2025-11-13 03:34:13.969 [Thread-2] DEBUG r.h.s.controller.StudentController - Parallel Thread 2 started
+2025-11-13 03:34:13.969 [Thread-2] DEBUG r.h.s.controller.StudentController - Parallel Thread 2 completed
+2025-11-13 03:34:13.969 [Thread-1] DEBUG r.h.s.controller.StudentController - Parallel Thread 1 started
+2025-11-13 03:34:13.970 [Thread-1] DEBUG r.h.s.controller.StudentController - Parallel Thread 1 completed
+2025-11-13 03:34:13.970 [main] DEBUG r.h.s.controller.StudentController - Parallel Threads 1 and 2 successfully completed
+2025-11-13 03:34:45.426 [main] INFO  r.h.s.controller.StudentController - Was invoked GET endpoint for PRINT student names in synchronized mode
+2025-11-13 03:34:45.429 [main] DEBUG r.h.s.controller.StudentController - Retrieved 6 student names for synchronized printing
+2025-11-13 03:34:45.431 [main] INFO  r.h.s.controller.StudentController - Starting synchronized printing of 6 student names
+2025-11-13 03:34:45.433 [main] DEBUG r.h.s.controller.StudentController - Main Thread printed first two names using synchronized method
+2025-11-13 03:34:45.436 [main] DEBUG r.h.s.controller.StudentController - Parallel synchronized Threads 1 and 2 started
+2025-11-13 03:34:45.441 [Thread-2] DEBUG r.h.s.controller.StudentController - Parallel Thread 2 started for synchronized printing
+2025-11-13 03:34:45.441 [Thread-2] DEBUG r.h.s.controller.StudentController - Parallel Thread 2 completed synchronized printing
+2025-11-13 03:34:45.444 [Thread-1] DEBUG r.h.s.controller.StudentController - Parallel Thread 1 started for synchronized printing
+2025-11-13 03:34:45.445 [Thread-1] DEBUG r.h.s.controller.StudentController - Parallel Thread 1 completed synchronized printing
+2025-11-13 03:34:45.445 [main] DEBUG r.h.s.controller.StudentController - Parallel synchronized Threads 1 and 2 successfully completed
+2025-11-13 03:37:58.102 [main] INFO  r.h.s.controller.StudentController - Was invoked GET endpoint for PRINT students names in parallel mode
+2025-11-13 03:37:58.105 [main] DEBUG r.h.s.controller.StudentController - Retrieved 3 student names for parallel printing
+2025-11-13 03:37:58.107 [main] WARN  r.h.s.controller.StudentController - Not enough student names for parallel printing. Required: 6, found: 3
+2025-11-13 03:38:10.423 [main] INFO  r.h.s.controller.StudentController - Was invoked GET endpoint for PRINT student names in synchronized mode
+2025-11-13 03:38:10.426 [main] DEBUG r.h.s.controller.StudentController - Retrieved 2 student names for synchronized printing
+2025-11-13 03:38:10.428 [main] WARN  r.h.s.controller.StudentController - Not enough student names for synchronized printing. Required: 6, found: 2
+2025-11-13 03:38:23.052 [main] INFO  r.h.s.controller.StudentController - Was invoked GET endpoint for PRINT students names in parallel mode
+2025-11-13 03:38:23.055 [main] DEBUG r.h.s.controller.StudentController - Retrieved 0 student names for parallel printing
+2025-11-13 03:38:23.057 [main] WARN  r.h.s.controller.StudentController - Not enough student names for parallel printing. Required: 6, found: 0
+2025-11-13 03:38:33.591 [main] INFO  r.h.s.controller.StudentController - Was invoked GET endpoint for PRINT student names in synchronized mode
+2025-11-13 03:38:33.595 [main] DEBUG r.h.s.controller.StudentController - Retrieved 0 student names for synchronized printing
+2025-11-13 03:38:33.597 [main] WARN  r.h.s.controller.StudentController - Not enough student names for synchronized printing. Required: 6, found: 0
+2025-11-13 03:43:41.197 [http-nio-auto-1-exec-1] INFO  r.h.s.controller.StudentController - Was invoked GET endpoint for PRINT student names in synchronized mode
+2025-11-13 03:43:41.341 [http-nio-auto-1-exec-1] DEBUG r.h.s.controller.StudentController - Retrieved 0 student names for synchronized printing
+2025-11-13 03:43:41.341 [http-nio-auto-1-exec-1] WARN  r.h.s.controller.StudentController - Not enough student names for synchronized printing. Required: 6, found: 0
+2025-11-13 03:43:56.844 [http-nio-auto-1-exec-1] INFO  r.h.s.controller.StudentController - Was invoked GET endpoint for PRINT students names in parallel mode
+2025-11-13 03:43:56.962 [http-nio-auto-1-exec-1] DEBUG r.h.s.controller.StudentController - Retrieved 0 student names for parallel printing
+2025-11-13 03:43:56.962 [http-nio-auto-1-exec-1] WARN  r.h.s.controller.StudentController - Not enough student names for parallel printing. Required: 6, found: 0
+2025-11-13 03:44:13.159 [http-nio-auto-1-exec-1] INFO  r.h.s.controller.StudentController - Was invoked POST endpoint for CREATE Student with name: Harry Potter
+2025-11-13 03:44:13.160 [http-nio-auto-1-exec-1] DEBUG r.h.s.controller.StudentController - Student creation data - Name: Harry Potter, Age: 15, FacultyID: null
+2025-11-13 03:44:13.289 [http-nio-auto-1-exec-1] INFO  r.h.s.controller.StudentController - Student was successfully created with ID: 1 and Name: Harry Potter
+2025-11-13 03:44:13.349 [http-nio-auto-1-exec-2] INFO  r.h.s.controller.StudentController - Was invoked POST endpoint for CREATE Student with name: Hermione Granger
+2025-11-13 03:44:13.349 [http-nio-auto-1-exec-2] DEBUG r.h.s.controller.StudentController - Student creation data - Name: Hermione Granger, Age: 16, FacultyID: null
+2025-11-13 03:44:13.353 [http-nio-auto-1-exec-2] INFO  r.h.s.controller.StudentController - Student was successfully created with ID: 2 and Name: Hermione Granger
+2025-11-13 03:44:13.359 [http-nio-auto-1-exec-3] INFO  r.h.s.controller.StudentController - Was invoked POST endpoint for CREATE Student with name: Ron Weasley
+2025-11-13 03:44:13.359 [http-nio-auto-1-exec-3] DEBUG r.h.s.controller.StudentController - Student creation data - Name: Ron Weasley, Age: 16, FacultyID: null
+2025-11-13 03:44:13.363 [http-nio-auto-1-exec-3] INFO  r.h.s.controller.StudentController - Student was successfully created with ID: 3 and Name: Ron Weasley
+2025-11-13 03:44:13.370 [http-nio-auto-1-exec-5] INFO  r.h.s.controller.StudentController - Was invoked GET endpoint for PRINT student names in synchronized mode
+2025-11-13 03:44:13.463 [http-nio-auto-1-exec-5] DEBUG r.h.s.controller.StudentController - Retrieved 3 student names for synchronized printing
+2025-11-13 03:44:13.463 [http-nio-auto-1-exec-5] WARN  r.h.s.controller.StudentController - Not enough student names for synchronized printing. Required: 6, found: 3
+2025-11-13 03:44:28.512 [http-nio-auto-1-exec-1] INFO  r.h.s.controller.StudentController - Was invoked POST endpoint for CREATE Student with name: Harry Potter
+2025-11-13 03:44:28.512 [http-nio-auto-1-exec-1] DEBUG r.h.s.controller.StudentController - Student creation data - Name: Harry Potter, Age: 15, FacultyID: null
+2025-11-13 03:44:28.630 [http-nio-auto-1-exec-1] INFO  r.h.s.controller.StudentController - Student was successfully created with ID: 1 and Name: Harry Potter
+2025-11-13 03:44:28.680 [http-nio-auto-1-exec-2] INFO  r.h.s.controller.StudentController - Was invoked POST endpoint for CREATE Student with name: Hermione Granger
+2025-11-13 03:44:28.680 [http-nio-auto-1-exec-2] DEBUG r.h.s.controller.StudentController - Student creation data - Name: Hermione Granger, Age: 16, FacultyID: null
+2025-11-13 03:44:28.683 [http-nio-auto-1-exec-2] INFO  r.h.s.controller.StudentController - Student was successfully created with ID: 2 and Name: Hermione Granger
+2025-11-13 03:44:28.688 [http-nio-auto-1-exec-3] INFO  r.h.s.controller.StudentController - Was invoked GET endpoint for PRINT students names in parallel mode
+2025-11-13 03:44:28.765 [http-nio-auto-1-exec-3] DEBUG r.h.s.controller.StudentController - Retrieved 2 student names for parallel printing
+2025-11-13 03:44:28.765 [http-nio-auto-1-exec-3] WARN  r.h.s.controller.StudentController - Not enough student names for parallel printing. Required: 6, found: 2
+2025-11-13 03:44:46.686 [http-nio-auto-1-exec-1] INFO  r.h.s.controller.StudentController - Was invoked POST endpoint for CREATE Student with name: Harry Potter
+2025-11-13 03:44:46.686 [http-nio-auto-1-exec-1] DEBUG r.h.s.controller.StudentController - Student creation data - Name: Harry Potter, Age: 17, FacultyID: null
+2025-11-13 03:44:46.793 [http-nio-auto-1-exec-1] INFO  r.h.s.controller.StudentController - Student was successfully created with ID: 1 and Name: Harry Potter
+2025-11-13 03:44:46.847 [http-nio-auto-1-exec-2] INFO  r.h.s.controller.StudentController - Was invoked POST endpoint for CREATE Student with name: Hermione Granger
+2025-11-13 03:44:46.847 [http-nio-auto-1-exec-2] DEBUG r.h.s.controller.StudentController - Student creation data - Name: Hermione Granger, Age: 17, FacultyID: null
+2025-11-13 03:44:46.850 [http-nio-auto-1-exec-2] INFO  r.h.s.controller.StudentController - Student was successfully created with ID: 2 and Name: Hermione Granger
+2025-11-13 03:44:46.856 [http-nio-auto-1-exec-3] INFO  r.h.s.controller.StudentController - Was invoked POST endpoint for CREATE Student with name: Ron Weasley
+2025-11-13 03:44:46.856 [http-nio-auto-1-exec-3] DEBUG r.h.s.controller.StudentController - Student creation data - Name: Ron Weasley, Age: 16, FacultyID: null
+2025-11-13 03:44:46.859 [http-nio-auto-1-exec-3] INFO  r.h.s.controller.StudentController - Student was successfully created with ID: 3 and Name: Ron Weasley
+2025-11-13 03:44:46.865 [http-nio-auto-1-exec-4] INFO  r.h.s.controller.StudentController - Was invoked POST endpoint for CREATE Student with name: Abigail Grey
+2025-11-13 03:44:46.865 [http-nio-auto-1-exec-4] DEBUG r.h.s.controller.StudentController - Student creation data - Name: Abigail Grey, Age: 18, FacultyID: null
+2025-11-13 03:44:46.867 [http-nio-auto-1-exec-4] INFO  r.h.s.controller.StudentController - Student was successfully created with ID: 4 and Name: Abigail Grey
+2025-11-13 03:44:46.873 [http-nio-auto-1-exec-5] INFO  r.h.s.controller.StudentController - Was invoked POST endpoint for CREATE Student with name: Luna Lovegood
+2025-11-13 03:44:46.873 [http-nio-auto-1-exec-5] DEBUG r.h.s.controller.StudentController - Student creation data - Name: Luna Lovegood, Age: 16, FacultyID: null
+2025-11-13 03:44:46.876 [http-nio-auto-1-exec-5] INFO  r.h.s.controller.StudentController - Student was successfully created with ID: 5 and Name: Luna Lovegood
+2025-11-13 03:44:46.882 [http-nio-auto-1-exec-6] INFO  r.h.s.controller.StudentController - Was invoked POST endpoint for CREATE Student with name: Neville Longbottom
+2025-11-13 03:44:46.882 [http-nio-auto-1-exec-6] DEBUG r.h.s.controller.StudentController - Student creation data - Name: Neville Longbottom, Age: 16, FacultyID: null
+2025-11-13 03:44:46.885 [http-nio-auto-1-exec-6] INFO  r.h.s.controller.StudentController - Student was successfully created with ID: 6 and Name: Neville Longbottom
+2025-11-13 03:44:46.889 [http-nio-auto-1-exec-7] INFO  r.h.s.controller.StudentController - Was invoked GET endpoint for PRINT student names in synchronized mode
+2025-11-13 03:44:46.969 [http-nio-auto-1-exec-7] DEBUG r.h.s.controller.StudentController - Retrieved 6 student names for synchronized printing
+2025-11-13 03:44:46.969 [http-nio-auto-1-exec-7] INFO  r.h.s.controller.StudentController - Starting synchronized printing of 6 student names
+2025-11-13 03:44:46.969 [http-nio-auto-1-exec-7] DEBUG r.h.s.controller.StudentController - Main Thread printed first two names using synchronized method
+2025-11-13 03:44:46.970 [http-nio-auto-1-exec-7] DEBUG r.h.s.controller.StudentController - Parallel synchronized Threads 1 and 2 started
+2025-11-13 03:44:46.971 [Thread-2] DEBUG r.h.s.controller.StudentController - Parallel Thread 2 started for synchronized printing
+2025-11-13 03:44:46.971 [Thread-1] DEBUG r.h.s.controller.StudentController - Parallel Thread 1 started for synchronized printing
+2025-11-13 03:44:46.971 [Thread-2] DEBUG r.h.s.controller.StudentController - Parallel Thread 2 completed synchronized printing
+2025-11-13 03:44:46.971 [Thread-1] DEBUG r.h.s.controller.StudentController - Parallel Thread 1 completed synchronized printing
+2025-11-13 03:44:46.971 [http-nio-auto-1-exec-7] DEBUG r.h.s.controller.StudentController - Parallel synchronized Threads 1 and 2 successfully completed
+2025-11-13 03:45:18.786 [http-nio-auto-1-exec-3] INFO  r.h.s.controller.StudentController - Was invoked POST endpoint for CREATE Student with name: Harry Potter
+2025-11-13 03:45:18.786 [http-nio-auto-1-exec-3] DEBUG r.h.s.controller.StudentController - Student creation data - Name: Harry Potter, Age: 17, FacultyID: null
+2025-11-13 03:45:18.900 [http-nio-auto-1-exec-3] INFO  r.h.s.controller.StudentController - Student was successfully created with ID: 1 and Name: Harry Potter
+2025-11-13 03:45:18.957 [http-nio-auto-1-exec-1] INFO  r.h.s.controller.StudentController - Was invoked POST endpoint for CREATE Student with name: Hermione Granger
+2025-11-13 03:45:18.957 [http-nio-auto-1-exec-1] DEBUG r.h.s.controller.StudentController - Student creation data - Name: Hermione Granger, Age: 17, FacultyID: null
+2025-11-13 03:45:18.960 [http-nio-auto-1-exec-1] INFO  r.h.s.controller.StudentController - Student was successfully created with ID: 2 and Name: Hermione Granger
+2025-11-13 03:45:18.966 [http-nio-auto-1-exec-6] INFO  r.h.s.controller.StudentController - Was invoked POST endpoint for CREATE Student with name: Ron Weasley
+2025-11-13 03:45:18.966 [http-nio-auto-1-exec-6] DEBUG r.h.s.controller.StudentController - Student creation data - Name: Ron Weasley, Age: 16, FacultyID: null
+2025-11-13 03:45:18.969 [http-nio-auto-1-exec-6] INFO  r.h.s.controller.StudentController - Student was successfully created with ID: 3 and Name: Ron Weasley
+2025-11-13 03:45:18.975 [http-nio-auto-1-exec-9] INFO  r.h.s.controller.StudentController - Was invoked POST endpoint for CREATE Student with name: Abigail Grey
+2025-11-13 03:45:18.975 [http-nio-auto-1-exec-9] DEBUG r.h.s.controller.StudentController - Student creation data - Name: Abigail Grey, Age: 18, FacultyID: null
+2025-11-13 03:45:18.977 [http-nio-auto-1-exec-9] INFO  r.h.s.controller.StudentController - Student was successfully created with ID: 4 and Name: Abigail Grey
+2025-11-13 03:45:18.982 [http-nio-auto-1-exec-2] INFO  r.h.s.controller.StudentController - Was invoked POST endpoint for CREATE Student with name: Luna Lovegood
+2025-11-13 03:45:18.983 [http-nio-auto-1-exec-2] DEBUG r.h.s.controller.StudentController - Student creation data - Name: Luna Lovegood, Age: 16, FacultyID: null
+2025-11-13 03:45:18.985 [http-nio-auto-1-exec-2] INFO  r.h.s.controller.StudentController - Student was successfully created with ID: 5 and Name: Luna Lovegood
+2025-11-13 03:45:18.990 [http-nio-auto-1-exec-4] INFO  r.h.s.controller.StudentController - Was invoked POST endpoint for CREATE Student with name: Neville Longbottom
+2025-11-13 03:45:18.991 [http-nio-auto-1-exec-4] DEBUG r.h.s.controller.StudentController - Student creation data - Name: Neville Longbottom, Age: 16, FacultyID: null
+2025-11-13 03:45:18.994 [http-nio-auto-1-exec-4] INFO  r.h.s.controller.StudentController - Student was successfully created with ID: 6 and Name: Neville Longbottom
+2025-11-13 03:45:19.000 [http-nio-auto-1-exec-5] INFO  r.h.s.controller.StudentController - Was invoked GET endpoint for PRINT students names in parallel mode
+2025-11-13 03:45:19.079 [http-nio-auto-1-exec-5] DEBUG r.h.s.controller.StudentController - Retrieved 6 student names for parallel printing
+2025-11-13 03:45:19.079 [http-nio-auto-1-exec-5] INFO  r.h.s.controller.StudentController - Starting parallel printing for 6 student names
+2025-11-13 03:45:19.080 [http-nio-auto-1-exec-5] DEBUG r.h.s.controller.StudentController - Main thread printed first two names
+2025-11-13 03:45:19.080 [http-nio-auto-1-exec-5] DEBUG r.h.s.controller.StudentController - Parallel Threads 1 and 2 started
+2025-11-13 03:45:19.081 [Thread-1] DEBUG r.h.s.controller.StudentController - Parallel Thread 1 started
+2025-11-13 03:45:19.081 [Thread-1] DEBUG r.h.s.controller.StudentController - Parallel Thread 1 completed
+2025-11-13 03:45:19.081 [Thread-2] DEBUG r.h.s.controller.StudentController - Parallel Thread 2 started
+2025-11-13 03:45:19.081 [Thread-2] DEBUG r.h.s.controller.StudentController - Parallel Thread 2 completed
+2025-11-13 03:45:19.081 [http-nio-auto-1-exec-5] DEBUG r.h.s.controller.StudentController - Parallel Threads 1 and 2 successfully completed

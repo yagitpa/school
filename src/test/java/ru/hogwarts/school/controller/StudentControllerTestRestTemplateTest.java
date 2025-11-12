@@ -182,6 +182,38 @@ public class StudentControllerTestRestTemplateTest {
         assertEquals(17, postResponse.getBody().age());
     }
 
+    @Test
+    @DisplayName("Positive. Should print students in parallel mode successfully")
+    void printStudentsParallel_sufficientStudents_shouldReturnOk() {
+        // Given
+        createSixStudentsInDatabase();
+
+        // When
+        ResponseEntity<String> getResponse = testRestTemplate.getForEntity(
+                testUrl + "/print-parallel", String.class
+        );
+
+        // Then
+        assertEquals(HttpStatus.OK, getResponse.getStatusCode());
+        assertEquals("Students printed in parallel mode", getResponse.getBody());
+    }
+
+    @Test
+    @DisplayName("Positive. Should print students in synchronized mode successfully")
+    void printStudentsSynchronized_sufficientStudents_shouldReturnOk() {
+        // Given
+        createSixStudentsInDatabase();
+
+        // When
+        ResponseEntity<String> getResponse = testRestTemplate.getForEntity(
+                testUrl + "/print-synchronized", String.class
+        );
+
+        // Then
+        assertEquals(HttpStatus.OK, getResponse.getStatusCode());
+        assertEquals("Students printed in synchronized mode", getResponse.getBody());
+    }
+
     // ========== NEGATIVE TESTS ==========
 
     @Test
@@ -307,6 +339,69 @@ public class StudentControllerTestRestTemplateTest {
                 postResponse.getStatusCode().is4xxClientError());
     }
 
+    @Test
+    @DisplayName("Negative. Should return 400 when insufficient students for parallel printing")
+    void printStudentsParallel_insufficientStudents_shouldReturnBadRequest() {
+        // Given
+        createStudentInDatabase("Harry Potter", 15);
+        createStudentInDatabase("Hermione Granger", 16);
+        // Only 2 students created, need 6
+
+        // When
+        ResponseEntity<String> getResponse = testRestTemplate.getForEntity(
+                testUrl + "/print-parallel", String.class
+        );
+
+        // Then
+        assertEquals(HttpStatus.BAD_REQUEST, getResponse.getStatusCode());
+        assertNotNull(getResponse.getBody());
+    }
+
+    @Test
+    @DisplayName("Negative. Should return 400 when insufficient students for synchronized printing")
+    void printStudentsSynchronized_insufficientStudents_shouldReturnBadRequest() {
+        // Given
+        createStudentInDatabase("Harry Potter", 15);
+        createStudentInDatabase("Hermione Granger", 16);
+        createStudentInDatabase("Ron Weasley", 16);
+        // Only 3 students created, need 6
+
+        // When
+        ResponseEntity<String> getResponse = testRestTemplate.getForEntity(
+                testUrl + "/print-synchronized", String.class
+        );
+
+        // Then
+        assertEquals(HttpStatus.BAD_REQUEST, getResponse.getStatusCode());
+        assertNotNull(getResponse.getBody());
+    }
+
+    @Test
+    @DisplayName("Negative. Should return 400 when no students for parallel printing")
+    void printStudentsParallel_noStudents_shouldReturnBadRequest() {
+        // When
+        ResponseEntity<String> getResponse = testRestTemplate.getForEntity(
+                testUrl + "/print-parallel", String.class
+        );
+
+        // Then
+        assertEquals(HttpStatus.BAD_REQUEST, getResponse.getStatusCode());
+        assertNotNull(getResponse.getBody());
+    }
+
+    @Test
+    @DisplayName("Negative. Should return 400 when no students for synchronized printing")
+    void printStudentsSynchronized_noStudents_shouldReturnBadRequest() {
+        // When
+        ResponseEntity<String> getResponse = testRestTemplate.getForEntity(
+                testUrl + "/print-synchronized", String.class
+        );
+
+        // Then
+        assertEquals(HttpStatus.BAD_REQUEST, getResponse.getStatusCode());
+        assertNotNull(getResponse.getBody());
+    }
+
     // ========== HELPER METHODS ==========
 
     private HttpEntity<String> createHttpEntity(String jsonBody) {
@@ -393,5 +488,14 @@ public class StudentControllerTestRestTemplateTest {
                         "Student age " + student.age() + " should be between " + minAge + " and " + maxAge);
             }
         }
+    }
+
+    private void createSixStudentsInDatabase() {
+        createStudentInDatabase("Harry Potter", 17);
+        createStudentInDatabase("Hermione Granger", 17);
+        createStudentInDatabase("Ron Weasley", 16);
+        createStudentInDatabase("Abigail Grey", 18);
+        createStudentInDatabase("Luna Lovegood", 16);
+        createStudentInDatabase("Neville Longbottom", 16);
     }
 }
