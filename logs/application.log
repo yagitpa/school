@@ -1,31 +1,31 @@
-2025-11-10 00:26:42.365 [main] INFO  r.hogwarts.school.SchoolApplication - Starting SchoolApplication using Java 17.0.16 with PID 2288 (C:\Users\username\YandexDisk\skypro\school\target\classes started by username in C:\Users\username\YandexDisk\skypro\school)
-2025-11-10 00:26:42.372 [main] DEBUG r.hogwarts.school.SchoolApplication - Running with Spring Boot v3.5.6, Spring v6.2.11
-2025-11-10 00:26:42.373 [main] INFO  r.hogwarts.school.SchoolApplication - No active profile set, falling back to 1 default profile: "default"
-2025-11-10 00:26:44.044 [main] INFO  o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-9090"]
-2025-11-10 00:26:44.047 [main] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
-2025-11-10 00:26:44.047 [main] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.46]
-2025-11-10 00:26:44.114 [main] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
-2025-11-10 00:26:44.301 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
-2025-11-10 00:26:44.625 [main] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@22f02996
-2025-11-10 00:26:44.626 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
-2025-11-10 00:26:44.849 [main] INFO  liquibase.database - Set default schema name to public
-2025-11-10 00:26:45.198 [main] INFO  liquibase.changelog - Reading from public.databasechangelog
-2025-11-10 00:26:45.249 [main] INFO  liquibase.ui - Database is up to date, no changesets to execute
-2025-11-10 00:26:45.252 [main] INFO  liquibase.changelog - Reading from public.databasechangelog
-2025-11-10 00:26:45.263 [main] INFO  liquibase.util - UPDATE SUMMARY
-2025-11-10 00:26:45.263 [main] INFO  liquibase.util - Run:                          0
-2025-11-10 00:26:45.263 [main] INFO  liquibase.util - Previously run:               2
-2025-11-10 00:26:45.263 [main] INFO  liquibase.util - Filtered out:                 0
-2025-11-10 00:26:45.263 [main] INFO  liquibase.util - -------------------------------
-2025-11-10 00:26:45.263 [main] INFO  liquibase.util - Total change sets:            2
-2025-11-10 00:26:45.264 [main] INFO  liquibase.util - Update summary generated
-2025-11-10 00:26:45.266 [main] INFO  liquibase.command - Command execution complete
-2025-11-10 00:26:47.214 [main] WARN  org.hibernate.orm.deprecation - HHH90000021: Encountered deprecated setting [hibernate.temp.use_jdbc_metadata_defaults], use [hibernate.boot.allow_jdbc_metadata_access] instead
-2025-11-10 00:26:47.238 [main] WARN  org.hibernate.orm.deprecation - HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
-2025-11-10 00:26:49.636 [main] WARN  o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
-2025-11-10 00:26:50.107 [main] INFO  o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-9090"]
-2025-11-10 00:26:50.142 [main] INFO  r.hogwarts.school.SchoolApplication - Started SchoolApplication in 8.402 seconds (process running for 9.549)
-2025-11-10 00:27:16.385 [http-nio-9090-exec-2] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
-2025-11-10 00:27:17.340 [http-nio-9090-exec-8] INFO  o.s.api.AbstractOpenApiResource - Init duration for springdoc-openapi is: 504 ms
-2025-11-10 00:30:33.785 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
-2025-11-10 00:30:33.788 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
+2025-11-13 02:26:12.948 [main] INFO  r.hogwarts.school.SchoolApplication - Starting SchoolApplication using Java 17.0.16 with PID 18392 (C:\Users\username\YandexDisk\skypro\school\target\classes started by username in C:\Users\username\YandexDisk\skypro\school)
+2025-11-13 02:26:12.955 [main] DEBUG r.hogwarts.school.SchoolApplication - Running with Spring Boot v3.5.6, Spring v6.2.11
+2025-11-13 02:26:12.956 [main] INFO  r.hogwarts.school.SchoolApplication - No active profile set, falling back to 1 default profile: "default"
+2025-11-13 02:26:14.754 [main] INFO  o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-9090"]
+2025-11-13 02:26:14.757 [main] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+2025-11-13 02:26:14.757 [main] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.46]
+2025-11-13 02:26:14.890 [main] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2025-11-13 02:26:15.103 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2025-11-13 02:26:15.413 [main] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@22f02996
+2025-11-13 02:26:15.415 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2025-11-13 02:26:15.595 [main] INFO  liquibase.database - Set default schema name to public
+2025-11-13 02:26:15.937 [main] INFO  liquibase.changelog - Reading from public.databasechangelog
+2025-11-13 02:26:15.990 [main] INFO  liquibase.ui - Database is up to date, no changesets to execute
+2025-11-13 02:26:15.993 [main] INFO  liquibase.changelog - Reading from public.databasechangelog
+2025-11-13 02:26:16.003 [main] INFO  liquibase.util - UPDATE SUMMARY
+2025-11-13 02:26:16.003 [main] INFO  liquibase.util - Run:                          0
+2025-11-13 02:26:16.003 [main] INFO  liquibase.util - Previously run:               2
+2025-11-13 02:26:16.003 [main] INFO  liquibase.util - Filtered out:                 0
+2025-11-13 02:26:16.003 [main] INFO  liquibase.util - -------------------------------
+2025-11-13 02:26:16.003 [main] INFO  liquibase.util - Total change sets:            2
+2025-11-13 02:26:16.004 [main] INFO  liquibase.util - Update summary generated
+2025-11-13 02:26:16.006 [main] INFO  liquibase.command - Command execution complete
+2025-11-13 02:26:17.948 [main] WARN  org.hibernate.orm.deprecation - HHH90000021: Encountered deprecated setting [hibernate.temp.use_jdbc_metadata_defaults], use [hibernate.boot.allow_jdbc_metadata_access] instead
+2025-11-13 02:26:17.971 [main] WARN  org.hibernate.orm.deprecation - HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2025-11-13 02:26:20.368 [main] WARN  o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-11-13 02:26:20.832 [main] INFO  o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-9090"]
+2025-11-13 02:26:20.865 [main] INFO  r.hogwarts.school.SchoolApplication - Started SchoolApplication in 8.587 seconds (process running for 9.748)
+2025-11-13 02:27:56.380 [http-nio-9090-exec-1] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2025-11-13 02:27:57.816 [http-nio-9090-exec-5] INFO  o.s.api.AbstractOpenApiResource - Init duration for springdoc-openapi is: 606 ms
+2025-11-13 02:35:40.477 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+2025-11-13 02:35:40.481 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.

@@ -24,7 +24,10 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static ru.hogwarts.school.testconfig.TestConstants.*;
@@ -221,6 +224,40 @@ public class StudentControllerWebMvcTest {
                .andDo(print());
     }
 
+    @Test
+    @DisplayName("Positive. Should print students in parallel mode successfully")
+    void printStudentsParallel_sufficientStudents_shouldReturnOk() throws Exception {
+        // Given
+        List<String> studentNames = Arrays.asList(
+                "Harry Potter", "Hermione Granger", "Ron Weasley",
+                "Draco Malfoy", "Luna Lovegood", "Neville Longbottom"
+        );
+        when(studentService.getAllStudentNames()).thenReturn(studentNames);
+
+        // When & Then
+        mockMvc.perform(get(StudentConst.ENDPOINT + "/print-parallel"))
+               .andExpect(status().isOk())
+               .andExpect(content().string("Students printed in parallel mode"))
+               .andDo(print());
+    }
+
+    @Test
+    @DisplayName("Positive. Should print students in synchronized mode successfully")
+    void printStudentsSynchronized_sufficientStudents_shouldReturnOk() throws Exception {
+        // Given
+        List<String> studentNames = Arrays.asList(
+                "Harry Potter", "Hermione Granger", "Ron Weasley",
+                "Draco Malfoy", "Luna Lovegood", "Neville Longbottom"
+        );
+        when(studentService.getAllStudentNames()).thenReturn(studentNames);
+
+        // When & Then
+        mockMvc.perform(get(StudentConst.ENDPOINT + "/print-synchronized"))
+               .andExpect(status().isOk())
+               .andExpect(content().string("Students printed in synchronized mode"))
+               .andDo(print());
+    }
+
     // ========== NEGATIVE TESTS ==========
 
     @Test
@@ -347,6 +384,66 @@ public class StudentControllerWebMvcTest {
                .andExpect(status().isCreated())
                .andExpect(jsonPath("$.name").value("Student with Invalid Faculty"))
                .andExpect(jsonPath("$.facultyId").value(StudentConst.NON_EXISTENT_FACULTY_ID))
+               .andDo(print());
+    }
+
+    @Test
+    @DisplayName("Negative. Should return 400 when insufficient students for parallel printing")
+    void printStudentsParallel_insufficientStudents_shouldReturnBadRequest() throws Exception {
+        // Given
+        List<String> studentNames = Arrays.asList("Harry Potter", "Hermione Granger", "Ron Weasley");
+        when(studentService.getAllStudentNames()).thenReturn(studentNames);
+
+        // When & Then
+        mockMvc.perform(get(StudentConst.ENDPOINT + "/print-parallel"))
+               .andExpect(status().isBadRequest())
+               .andExpect(jsonPath("$.message").value("Insufficient students for operation. Required: 6, found: 3"))
+               .andExpect(jsonPath("$.details[0]").value("INSUFFICIENT_STUDENTS"))
+               .andDo(print());
+    }
+
+    @Test
+    @DisplayName("Negative. Should return 400 when insufficient students for synchronized printing")
+    void printStudentsSynchronized_insufficientStudents_shouldReturnBadRequest() throws Exception {
+        // Given
+        List<String> studentNames = Arrays.asList("Harry Potter", "Hermione Granger");
+        when(studentService.getAllStudentNames()).thenReturn(studentNames);
+
+        // When & Then
+        mockMvc.perform(get(StudentConst.ENDPOINT + "/print-synchronized"))
+               .andExpect(status().isBadRequest())
+               .andExpect(jsonPath("$.message").value("Insufficient students for operation. Required: 6, found: 2"))
+               .andExpect(jsonPath("$.details[0]").value("INSUFFICIENT_STUDENTS"))
+               .andDo(print());
+    }
+
+    @Test
+    @DisplayName("Negative. Should return 400 when no students for parallel printing")
+    void printStudentsParallel_noStudents_shouldReturnBadRequest() throws Exception {
+        // Given
+        List<String> studentNames = Collections.emptyList();
+        when(studentService.getAllStudentNames()).thenReturn(studentNames);
+
+        // When & Then
+        mockMvc.perform(get(StudentConst.ENDPOINT + "/print-parallel"))
+               .andExpect(status().isBadRequest())
+               .andExpect(jsonPath("$.message").value("Insufficient students for operation. Required: 6, found: 0"))
+               .andExpect(jsonPath("$.details[0]").value("INSUFFICIENT_STUDENTS"))
+               .andDo(print());
+    }
+
+    @Test
+    @DisplayName("Negative. Should return 400 when no students for synchronized printing")
+    void printStudentsSynchronized_noStudents_shouldReturnBadRequest() throws Exception {
+        // Given
+        List<String> studentNames = Collections.emptyList();
+        when(studentService.getAllStudentNames()).thenReturn(studentNames);
+
+        // When & Then
+        mockMvc.perform(get(StudentConst.ENDPOINT + "/print-synchronized"))
+               .andExpect(status().isBadRequest())
+               .andExpect(jsonPath("$.message").value("Insufficient students for operation. Required: 6, found: 0"))
+               .andExpect(jsonPath("$.details[0]").value("INSUFFICIENT_STUDENTS"))
                .andDo(print());
     }
 

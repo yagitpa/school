@@ -103,6 +103,18 @@
         </encoder>
     </appender>
 
+    <!-- Appender для StudentController -->
+    <appender name="STUDENT_CONTROLLER_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_PATH}/controllers/student-controller.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_PATH}/archive/controllers/student-controller.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <maxHistory>${MAX_HISTORY}</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <pattern>${LOG_PATTERN}</pattern>
+        </encoder>
+    </appender>
+
     <!-- Appender для ошибок -->
     <appender name="ERROR_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>${LOG_PATH}/errors.log</file>
@@ -172,6 +184,13 @@
     <!-- Логирование для AnalyticsController -->
     <logger name="ru.hogwarts.school.controller.AnalyticsController" level="DEBUG" additivity="false">
         <appender-ref ref="ANALYTICS_CONTROLLER_FILE"/>
+        <appender-ref ref="ERROR_FILE"/>
+        <appender-ref ref="CONSOLE"/>
+    </logger>
+
+    <!-- Логирование для StudentController -->
+    <logger name="ru.hogwarts.school.controller.StudentController" level="DEBUG" additivity="false">
+        <appender-ref ref="STUDENT_CONTROLLER_FILE"/>
         <appender-ref ref="ERROR_FILE"/>
         <appender-ref ref="CONSOLE"/>
     </logger>

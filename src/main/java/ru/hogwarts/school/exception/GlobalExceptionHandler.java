@@ -63,7 +63,7 @@ public class GlobalExceptionHandler {
     private HttpStatus determineHttpStatus(HogwartsException ex) {
         return switch (ex.getErrorCode()) {
             case "STUDENT_NOT_FOUND", "FACULTY_NOT_FOUND", "AVATAR_NOT_FOUND" -> HttpStatus.NOT_FOUND;
-            case "INVALID_FILE" -> HttpStatus.BAD_REQUEST;
+            case "INVALID_FILE", "INSUFFICIENT_STUDENTS" -> HttpStatus.BAD_REQUEST;
             default -> HttpStatus.INTERNAL_SERVER_ERROR;
         };
     }
