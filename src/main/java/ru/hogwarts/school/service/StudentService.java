@@ -206,4 +206,15 @@ public class StudentService {
 
         return facultyDto;
     }
+
+    public List<String> getAllStudentNames() {
+        logger.info("Was invoked method for GET all student names");
+
+        List<String> names = studentRepository.findAll().stream()
+                                              .map(Student::getName)
+                                              .toList();
+
+        logger.debug("Found {} student names", names.size());
+        return names;
+    }
 }

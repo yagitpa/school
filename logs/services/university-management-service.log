@@ -4,3 +4,7 @@
 2025-11-06 23:04:01.454 [http-nio-8081-exec-2] DEBUG r.h.s.s.UniversityManagementService - Faculty entity found: Gryffindor (ID: 34)
 2025-11-06 23:04:40.500 [http-nio-8081-exec-3] DEBUG r.h.s.s.UniversityManagementService - Was invoked method for FIND faculty entity by ID: 34
 2025-11-06 23:04:40.502 [http-nio-8081-exec-3] DEBUG r.h.s.s.UniversityManagementService - Faculty entity found: Gryffindor (ID: 34)
+2025-11-13 02:28:33.372 [http-nio-9090-exec-7] DEBUG r.h.s.s.UniversityManagementService - Was invoked method for FIND faculty entity by ID: 34
+2025-11-13 02:28:33.465 [http-nio-9090-exec-7] DEBUG r.h.s.s.UniversityManagementService - Faculty entity found: Gryffindor (ID: 34)
+2025-11-13 02:30:44.489 [http-nio-9090-exec-2] DEBUG r.h.s.s.UniversityManagementService - Was invoked method for FIND faculty entity by ID: 34
+2025-11-13 02:30:44.491 [http-nio-9090-exec-2] DEBUG r.h.s.s.UniversityManagementService - Faculty entity found: Gryffindor (ID: 34)

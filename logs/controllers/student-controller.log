@@ -1,0 +1,26 @@
+2025-11-13 02:28:33.362 [http-nio-9090-exec-7] INFO  r.h.s.controller.StudentController - Was invoked POST endpoint for CREATE Student with name: Harry James Potter
+2025-11-13 02:28:33.362 [http-nio-9090-exec-7] DEBUG r.h.s.controller.StudentController - Student creation data - Name: Harry James Potter, Age: 17, FacultyID: 34
+2025-11-13 02:28:33.515 [http-nio-9090-exec-7] INFO  r.h.s.controller.StudentController - Student was successfully created with ID: 14 and Name: Harry James Potter
+2025-11-13 02:30:44.488 [http-nio-9090-exec-2] INFO  r.h.s.controller.StudentController - Was invoked POST endpoint for CREATE Student with name: Abigail Grey
+2025-11-13 02:30:44.488 [http-nio-9090-exec-2] DEBUG r.h.s.controller.StudentController - Student creation data - Name: Abigail Grey, Age: 18, FacultyID: 34
+2025-11-13 02:30:44.494 [http-nio-9090-exec-2] INFO  r.h.s.controller.StudentController - Student was successfully created with ID: 15 and Name: Abigail Grey
+2025-11-13 02:31:18.784 [http-nio-9090-exec-6] INFO  r.h.s.controller.StudentController - Was invoked GET endpoint for PRINT students names in parallel mode
+2025-11-13 02:31:18.878 [http-nio-9090-exec-6] DEBUG r.h.s.controller.StudentController - Retrieved 6 student names for parallel printing
+2025-11-13 02:31:18.878 [http-nio-9090-exec-6] INFO  r.h.s.controller.StudentController - Starting parallel printing for 6 student names
+2025-11-13 02:31:18.878 [http-nio-9090-exec-6] DEBUG r.h.s.controller.StudentController - Main thread printed first two names
+2025-11-13 02:31:18.879 [http-nio-9090-exec-6] DEBUG r.h.s.controller.StudentController - Parallel Threads 1 and 2 started
+2025-11-13 02:31:18.879 [Thread-2] DEBUG r.h.s.controller.StudentController - Parallel Thread 1 started
+2025-11-13 02:31:18.879 [Thread-3] DEBUG r.h.s.controller.StudentController - Parallel Thread 2 started
+2025-11-13 02:31:18.879 [Thread-2] DEBUG r.h.s.controller.StudentController - Parallel Thread 1 completed
+2025-11-13 02:31:18.879 [Thread-3] DEBUG r.h.s.controller.StudentController - Parallel Thread 2 completed
+2025-11-13 02:31:18.879 [http-nio-9090-exec-6] DEBUG r.h.s.controller.StudentController - Parallel Threads 1 and 2 successfully completed
+2025-11-13 02:32:53.900 [http-nio-9090-exec-5] INFO  r.h.s.controller.StudentController - Was invoked GET endpoint for PRINT student names in synchronized mode
+2025-11-13 02:32:53.912 [http-nio-9090-exec-5] DEBUG r.h.s.controller.StudentController - Retrieved 6 student names for synchronized printing
+2025-11-13 02:32:53.912 [http-nio-9090-exec-5] INFO  r.h.s.controller.StudentController - Starting synchronized printing of 6 student names
+2025-11-13 02:32:53.913 [http-nio-9090-exec-5] DEBUG r.h.s.controller.StudentController - Main Thread printed first two names using synchronized method
+2025-11-13 02:32:53.914 [http-nio-9090-exec-5] DEBUG r.h.s.controller.StudentController - Parallel synchronized Threads 1 and 2 started
+2025-11-13 02:32:53.914 [Thread-4] DEBUG r.h.s.controller.StudentController - Parallel Thread 1 started for synchronized printing
+2025-11-13 02:32:53.914 [Thread-5] DEBUG r.h.s.controller.StudentController - Parallel Thread 2 started for synchronized printing
+2025-11-13 02:32:53.914 [Thread-4] DEBUG r.h.s.controller.StudentController - Parallel Thread 1 completed synchronized printing
+2025-11-13 02:32:53.914 [Thread-5] DEBUG r.h.s.controller.StudentController - Parallel Thread 2 completed synchronized printing
+2025-11-13 02:32:53.914 [http-nio-9090-exec-5] DEBUG r.h.s.controller.StudentController - Parallel synchronized Threads 1 and 2 successfully completed
