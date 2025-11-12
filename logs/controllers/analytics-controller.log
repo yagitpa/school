@@ -1,0 +1,15 @@
+2025-11-10 00:27:36.751 [http-nio-9090-exec-10] INFO  r.h.s.controller.AnalyticsController - Was invoked GET endpoint for original sum calculation
+2025-11-10 00:28:06.025 [http-nio-9090-exec-2] INFO  r.h.s.controller.AnalyticsController - Was invoked GET endpoint for optimized sum calculation
+2025-11-10 00:28:39.447 [http-nio-9090-exec-4] INFO  r.h.s.controller.AnalyticsController - Was invoked GET endpoint for optimized sum calculation
+2025-11-10 00:28:51.063 [http-nio-9090-exec-9] INFO  r.h.s.controller.AnalyticsController - Was invoked GET endpoint for optimized sum calculation
+2025-11-10 00:29:10.566 [http-nio-9090-exec-7] INFO  r.h.s.controller.AnalyticsController - Was invoked GET endpoint for original sum calculation
+2025-11-10 00:29:17.295 [http-nio-9090-exec-8] INFO  r.h.s.controller.AnalyticsController - Was invoked GET endpoint for optimized sum calculation
+2025-11-10 00:29:31.528 [http-nio-9090-exec-10] INFO  r.h.s.controller.AnalyticsController - Was invoked GET endpoint for student names starting with A
+2025-11-10 00:29:40.608 [http-nio-9090-exec-2] INFO  r.h.s.controller.AnalyticsController - Was invoked GET endpoint for student names starting with H
+2025-11-10 00:29:56.397 [http-nio-9090-exec-5] INFO  r.h.s.controller.AnalyticsController - Was invoked GET endpoint for longest faculty name
+2025-11-10 00:30:17.551 [http-nio-9090-exec-6] INFO  r.h.s.controller.AnalyticsController - Was invoked GET endpoint for average age of students
+2025-11-10 01:06:00.817 [http-nio-9090-exec-5] INFO  r.h.s.controller.AnalyticsController - Was invoked GET endpoint for original sum calculation
+2025-11-10 01:06:15.255 [http-nio-9090-exec-7] INFO  r.h.s.controller.AnalyticsController - Was invoked GET endpoint for optimized sum calculation
+2025-11-10 01:06:32.123 [http-nio-9090-exec-8] INFO  r.h.s.controller.AnalyticsController - Was invoked GET endpoint for optimized sum calculation
+2025-11-10 01:06:39.465 [http-nio-9090-exec-6] INFO  r.h.s.controller.AnalyticsController - Was invoked GET endpoint for original sum calculation
+2025-11-10 02:07:42.962 [http-nio-9090-exec-7] INFO  r.h.s.controller.AnalyticsController - Was invoked GET endpoint for mathematical sum calculation

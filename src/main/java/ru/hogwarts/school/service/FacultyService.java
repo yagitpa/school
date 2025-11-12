@@ -133,7 +133,6 @@ public class FacultyService {
             throw new FacultyNotFoundException(facultyId);
         }
 
-        logger.info("Faculty exist, retrieving students");
         List<Student> students = universityManagementService.getStudentsByFaculty(facultyId);
         logger.debug("Found {} total students for Faculty with ID: {}", students.size(), facultyId);
 
